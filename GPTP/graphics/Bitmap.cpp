@@ -67,7 +67,7 @@ void Bitmap::blitKoreanChar(const char *ch, int &x, int &y, u8 fontSize, u8 colo
   if (!gulim_9pt) {
     HDC screenDc = GetDC(NULL);
     LOGFONT lFont = {};
-	strcpy_s(lFont.lfFaceName, "±¼¸²");
+	strcpy_s(lFont.lfFaceName, "Â±Â¼Â¸Â²");
     lFont.lfCharSet = HANGUL_CHARSET;
     
     lFont.lfHeight = -MulDiv(8, GetDeviceCaps(screenDc, LOGPIXELSY), 72); //Not in StarCraft
@@ -400,6 +400,84 @@ void Bitmap::drawFilledCircle(int x, int y, int radius, ColorId color) {
     if (r <= py) err += ++py * 2 + 1;            /* e_xy+e_y < 0 */
     if (r > px || err > py) err += ++px * 2 + 1; /* e_xy+e_x > 0 or no 2nd y-step */
   } while (px < 0);
+}
+
+//-------- Ellipse drawing --------//
+
+void Bitmap::drawEllipse(int left, int top, int right, int bottom, ColorId color) {
+
+    if (left > right) std::swap(left, right);
+    if (right < 0 || left >= this->getWidth()) return;
+
+    if (top > bottom) std::swap(top, bottom);
+    if (bottom < 0 || top >= this->getHeight()) return;
+
+	int x0 = left;
+	int y0 = bottom;
+	int x1 = right; 
+	int y1 = top;
+
+	//Bresenham's circle algorithm
+	//Code taken from http://members.chello.at/easyfilter/bresenham.html  
+
+	int a = abs(x1-x0), b = abs(y1-y0), b1 = b&1; /* values of diameter */
+	long dx = 4*(1-a)*b*b, dy = 4*(b1+1)*a*a; /* error increment */
+	long err = dx+dy+b1*a*a, e2; /* error of 1.step */
+
+	if (x0 > x1) { x0 = x1; x1 += a; } /* if called with swapped points */
+	if (y0 > y1) y0 = y1; /* .. exchange them */
+	y0 += (b+1)/2; y1 = y0-b1;   /* starting pixel */
+	a *= 8*a; b1 = 8*b*b;
+
+	do {
+	   this->drawDot(x1, y0, color); /*   I. Quadrant */
+	   this->drawDot(x0, y0, color); /*  II. Quadrant */
+	   this->drawDot(x0, y1, color); /* III. Quadrant */
+	   this->drawDot(x1, y1, color); /*  IV. Quadrant */
+	   e2 = 2*err;
+	   if (e2 <= dy) { y0++; y1--; err += dy += a; }  /* y step */ 
+	   if (e2 >= dx || 2*err > dy) { x0++; x1--; err += dx += b1; } /* x step */
+	} while (x0 <= x1);
+
+	while (y0-y1 < b) {  /* too early stop of flat ellipses a=1 */
+	   this->drawDot(x0-1, y0, color); /* -> finish tip of ellipse */
+	   this->drawDot(x1+1, y0++, color); 
+	   this->drawDot(x0-1, y1, color);
+	   this->drawDot(x1+1, y1--, color); 
+	}
+
+}
+
+//-------- Triangle drawing --------//
+
+void Bitmap::drawTriangle(int xA, int yA, int xB, int yB, int xC, int yC, ColorId color) {
+	this->drawLine(xA, yA, xB, yB, color);
+	this->drawLine(xA, yA, xC, yC, color);
+	this->drawLine(xB, yB, xC, yC, color);
+}
+
+//-------- Dotted line drawing --------//
+
+void Bitmap::drawDottedLine(int x1, int y1, int x2, int y2, ColorId color) {
+
+	int nIgnoreHalf = 0;
+
+	const int dx =  abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
+	const int dy = -abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
+	int err = dx + dy;
+
+	int x = x1, y = y1;
+	if(nIgnoreHalf%20 < 5)
+		this->drawDot(x, y, color);
+	nIgnoreHalf++;
+	while (x != x2 || y != y2) {
+		const int e2 = err * 2;
+		if (e2 >= dy) { err += dy; x += sx; }
+		if (e2 <= dx) { err += dx; y += sy; }
+		if(nIgnoreHalf%20 < 5)
+			this->drawDot(x, y, color);
+		nIgnoreHalf++;
+	}
 }
 
 
