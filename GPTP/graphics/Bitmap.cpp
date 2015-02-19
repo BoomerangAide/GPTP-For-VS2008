@@ -448,14 +448,6 @@ void Bitmap::drawEllipse(int left, int top, int right, int bottom, ColorId color
 
 }
 
-//-------- Triangle drawing --------//
-
-void Bitmap::drawTriangle(int xA, int yA, int xB, int yB, int xC, int yC, ColorId color) {
-	this->drawLine(xA, yA, xB, yB, color);
-	this->drawLine(xA, yA, xC, yC, color);
-	this->drawLine(xB, yB, xC, yC, color);
-}
-
 //-------- Dotted line drawing --------//
 
 void Bitmap::drawDottedLine(int x1, int y1, int x2, int y2, ColorId color) {
