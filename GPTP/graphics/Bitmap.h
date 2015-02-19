@@ -19,6 +19,8 @@ class Bitmap {
     void drawFilledBox(int left, int top, int right, int bottom, ColorId color);
     void drawCircle(int x, int y, int radius, ColorId color);
     void drawFilledCircle(int x, int y, int radius, ColorId color);
+    void drawEllipse(int left, int top, int right, int bottom, ColorId color);
+    void drawDottedLine(int x1, int y1, int x2, int y2, ColorId color);
 
   private:
     u16 width, height;
