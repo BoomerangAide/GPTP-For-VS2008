@@ -1,5 +1,3 @@
-#ifdef MOD_IN_PROGRESS
-
 #pragma once
 #include "common.h"
 
@@ -15,4 +13,3 @@ struct PLAYER {
   u8 getColor();
 
 };
-#endif
