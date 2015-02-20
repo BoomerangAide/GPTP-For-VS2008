@@ -1,5 +1,3 @@
-#ifdef MOD_IN_PROGRESS
-
 #include <cassert>
 #include "Player.h"
 #include "../api.h"
@@ -36,5 +34,3 @@ graphics::ColorId PLAYER::getColor() {
 	return return_value;
 
 }
-
-#endif
