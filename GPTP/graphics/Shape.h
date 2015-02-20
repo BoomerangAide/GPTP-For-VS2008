@@ -19,6 +19,8 @@ class Shape {
     void setCircle(int x, int y, int radius, ColorId color, CoordType coordType);
     void setFilledBox(int left, int top, int right, int bottom, ColorId color, CoordType coordType);
     void setFilledCircle(int x, int y, int radius, ColorId color, CoordType coordType);
+    void setEllipse(int left, int top, int right, int bottom, ColorId color, CoordType coordType);
+    void setDottedLine(int x1, int y1, int x2, int y2, ColorId color, CoordType coordType);
     void draw() const;
 
   private:
@@ -30,7 +32,9 @@ class Shape {
       BOX,
       CIRCLE,
       FILLED_BOX,
-      FILLED_CIRCLE
+      FILLED_CIRCLE,
+      ELLIPSE,
+      DOTTED_LINE      
     } type;
     CoordType coordType;
     Point32 p1;

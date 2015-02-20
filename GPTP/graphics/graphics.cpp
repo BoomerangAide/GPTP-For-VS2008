@@ -83,6 +83,22 @@ void drawFilledCircle(int x, int y, int radius, ColorId color, CoordType ct) {
   shapes[shapeCount++].setFilledCircle(x, y, radius, color, ct);
 }
 
+void drawEllipse(int left, int top, int right, int bottom, ColorId color, CoordType ct) {
+  if (shapeCount >= MAX_SHAPES) {
+    setError(ERR_TOO_MANY_SHAPES);
+    return;
+  }
+  shapes[shapeCount++].setEllipse(left, top, right, bottom, color, ct);
+}
+
+void drawDottedLine(int x1, int y1, int x2, int y2, ColorId color, CoordType ct) {
+  if (shapeCount >= MAX_SHAPES) {
+    setError(ERR_TOO_MANY_SHAPES);
+    return;
+  }
+  shapes[shapeCount++].setDottedLine(x1, y1, x2, y2, color, ct);
+}
+
 const std::string& getStringFromIndex(int stringIndex) {
   assert(0 <= stringIndex && stringIndex < MAX_STRINGS);
   return strings[stringIndex];
