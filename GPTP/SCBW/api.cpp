@@ -203,7 +203,7 @@ s32 getPolarY(s32 distance, u8 angle) {
 
 s32 getSupplyRemaining(u8 playerId, u8 raceId) {
   assert(raceId <= 2);
-  assert(playerId < 12);
+  assert(playerId < PLAYER_COUNT);
 
   s32 supplyProvided;
   if (isCheatEnabled(CheatFlags::FoodForThought))
