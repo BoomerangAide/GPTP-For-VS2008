@@ -98,7 +98,7 @@ enum Enum {
   NoBrkCodeStart        = 0x00002000,  /**< Unbreakable code section in iscript */
   UNKNOWN2              = 0x00004000,  /**< @todo Unknown */
   CanNotAttack          = 0x00008000,  /**< @todo Unknown */
-  CanTurnAroundToAttack = 0x00010000,  // canAttack? /**< @todo Unknown */
+  CanTurnAroundToAttack = 0x00010000,  // canAttack? /**< @todo Unknown */ named IsAUnit in BWAPI
   IsBuilding            = 0x00020000,
   IgnoreTileCollision   = 0x00040000,
   Unmovable             = 0x00080000,
@@ -181,7 +181,7 @@ enum Enum {
 
 // For use with scbw::playIscriptAnim()
 namespace IscriptAnimation {
-enum Enum {
+enum Enum : u8 {
 Init          = 0x00,
 Death         = 0x01,
 GndAttkInit   = 0x02,
