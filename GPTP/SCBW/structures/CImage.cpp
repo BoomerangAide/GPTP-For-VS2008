@@ -62,11 +62,16 @@ void CImage::initializeData(CSprite *parent, u16 imageId, s8 x, s8 y) {
   this->iscriptOffset = 0;
   this->unknown2[0] = 0;
   this->unknown2[1] = 0;
-  this->animation = 0;
+  this->animation = IscriptAnimation::Init;
   this->wait = 0;
 
   if (images_dat::RLE_Function[imageId] == 14)
     *(u32*)(&this->coloringData) = parent->playerId;
   if (images_dat::RLE_Function[imageId] == 9)
     this->coloringData = colorShift[images_dat::Remapping[imageId]].data;
+}
+
+GrpFrame* CImage::getCurrentFrame() const {
+	assert(this);
+	return &this->grpOffset->frames[this->frameIndex];
 }
