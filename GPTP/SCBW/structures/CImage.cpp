@@ -65,9 +65,9 @@ void CImage::initializeData(CSprite *parent, u16 imageId, s8 x, s8 y) {
   this->animation = IscriptAnimation::Init;
   this->wait = 0;
 
-  if (images_dat::RLE_Function[imageId] == 14)
+  if (images_dat::RLE_Function[imageId] == PaletteType::RLE_PLAYER_SIDE)
     *(u32*)(&this->coloringData) = parent->playerId;
-  if (images_dat::RLE_Function[imageId] == 9)
+  if (images_dat::RLE_Function[imageId] == PaletteType::RLE_EFFECT)
     this->coloringData = colorShift[images_dat::Remapping[imageId]].data;
 }
 
