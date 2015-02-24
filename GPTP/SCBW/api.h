@@ -241,7 +241,7 @@ inline void playFrame(CImage* image, u16 frameset) {
     image->frameSet = frameset;
     u16 frameIndex = frameset + image->direction;
     if (image->frameIndex != frameIndex) {
-      image->flags |= 0x1;	//Order the game to redraw the image
+      image->flags |= CImage_Flags::Redraw;	//Order the game to redraw the image
       image->frameIndex = frameIndex;
     }
   }
