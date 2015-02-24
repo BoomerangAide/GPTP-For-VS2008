@@ -108,9 +108,8 @@ CUnit* UnitFinder::getNearest(int x, int y,
   UnitFinderData* right, UnitFinderData* bottom,
   UnitFinderCallbackMatchInterface &match, const CUnit *sourceUnit)
 {
-  //using scbw::getDistanceFast;
 
-	int bestDistance = getDistanceFast(0, 0,
+	int bestDistance = scbw::getDistanceFast(0, 0,
     std::max(x - boundsLeft, boundsRight - x),
     std::max(y - boundsTop, boundsBottom - y));
 
@@ -151,7 +150,7 @@ CUnit* UnitFinder::getNearest(int x, int y,
       if (unit->getX() < boundsRight) {
         if (boundsTop <= unit->getY() && unit->getY() < boundsBottom) {
 			if (unit != sourceUnit && match.match(unit)) {
-            int distance = getDistanceFast(x, y, unit->getX(), unit->getY());
+            int distance = scbw::getDistanceFast(x, y, unit->getX(), unit->getY());
             if (distance < bestDistance) {
               bestDistance = distance;
               bestUnit = unit;
@@ -174,7 +173,7 @@ CUnit* UnitFinder::getNearest(int x, int y,
       if (boundsTop <= unit->getY()) {
         if (boundsLeft <= unit->getX() && unit->getX() < boundsRight) {
           if (unit != sourceUnit && match.match(unit)) {
-            int distance = getDistanceFast(x, y, unit->getX(), unit->getY());
+            int distance = scbw::getDistanceFast(x, y, unit->getX(), unit->getY());
             if (distance < bestDistance) {
               bestDistance = distance;
               bestUnit = unit;
@@ -197,7 +196,7 @@ CUnit* UnitFinder::getNearest(int x, int y,
       if (unit->getY() < boundsBottom) {
         if (boundsLeft <= unit->getX() && unit->getX() < boundsRight) {
 			if (unit != sourceUnit && match.match(unit)) {
-            int distance = getDistanceFast(x, y, unit->getX(), unit->getY());
+            int distance = scbw::getDistanceFast(x, y, unit->getX(), unit->getY());
             if (distance < bestDistance) {
               bestDistance = distance;
               bestUnit = unit;
@@ -231,7 +230,7 @@ CUnit* UnitFinder::getNearestTarget(int left, int top, int right, int bottom,
   UnitFinderData *searchLeft, *searchTop, *searchRight, *searchBottom;
 
   //If the unit sprite is hidden
-  if (sourceUnit->sprite->flags & 0x20) {
+  if (sourceUnit->sprite->flags & CSprite_Flags::Hidden) {
     UnitFinderData temp;
     temp.position = sourceUnit->getX();
     searchRight   = std::lower_bound(getStartX(), getEndX(), temp);
