@@ -35,14 +35,13 @@ const char* getDamageTooltipString(u8 weaponId, const CUnit *unit, u16 entryStrI
   const u16 bonusDamage = weapons_dat::DamageBonus[weaponId] * damageFactor * upgradeLevel;
 
   if (weaponId == WeaponId::HaloRockets) {
-    if (bonusDamage > 0) {
-      const char *perRocketStr = statTxtTbl->getString(1301);   //"per rocket"
+    const char *perRocketStr = statTxtTbl->getString(1301);   //"per rocket"
+    if (bonusDamage > 0)
       sprintf_s(buffer, sizeof(buffer), "%s\n%s %d+%d %s",
                 entryName, damageStr, baseDamage, bonusDamage, perRocketStr);
-    }
     else
       sprintf_s(buffer, sizeof(buffer), "%s\n%s %d %s",
-                entryName, damageStr, baseDamage, bonusDamage);
+                entryName, damageStr, baseDamage, perRocketStr);
   }
   else {
     if (bonusDamage > 0)
