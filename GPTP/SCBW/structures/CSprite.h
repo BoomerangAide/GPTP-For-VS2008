@@ -10,6 +10,21 @@
 
 struct CImage;
 
+//note: the flag number is chosen according to the value used in 
+//<< flag operations, that's why it start with 0.
+namespace CSprite_Flags {
+enum Enum : u8 {
+	DrawSelCircle	= 0x01,		//flag 0: 0x01, Draw selection circle.
+	Flag01			= 0x02,		//flag 1: 0x02
+	Flag02			= 0x04,		//flag 2: 0x04
+	Selected		= 0x08,		//flag 3: 0x08, Selected.
+	Flag04			= 0x10,		//flag 4: 0x10
+	Hidden			= 0x20,		//flag 5: 0x20, Hidden
+	Burrowed		= 0x40,		//flag 6: 0x40, Burrowed
+	IscriptCode		= 0x80,		//flag 7: 0x80, Iscript unbreakable code section.
+};
+}
+
 struct CSprite {
 //Utility method definitions added by pastelmind
 
@@ -56,18 +71,11 @@ struct CSprite {
   /*0x0B*/ u8        selectionIndex;    // 0 <= selectionIndex <= 11. Index in the selection area at bottom of screen.
   /*0x0C*/ u8        visibilityFlags;   // Determines whether the sprite is visible (not hidden by the fog-of-war).
   /*0x0D*/ u8        elevationLevel;
-  /*0x0E*/ u8        flags;
-                     /*   0x01  Draw selection circle.
-                          0x02
-                          0x04
-                          0x08  Selected.
-                          0x10
-                          0x20  Hidden
-                          0x40  Burrowed
-                          0x80  Iscript unbreakable code section.
-                     */
+  /*0x0E*/ u8        flags;				// Use CSprite_Flags
   /*0x0F*/ u8        selectionTimer;
-  /*0x10*/ u32       index;
+  /*0x10*/ u16       index;				//u32->u16 based on BWAPI/Source/BW/CSprite.h
+  /*0x12*/ UNK		   unkflags_12;		//based on BWAPI/Source/BW/CSprite.h
+  /*0x13*/ UNK		   unkflags_13;		//based on BWAPI/Source/BW/CSprite.h
   /*0x14*/ Point16   position;
   /*0x18*/ CImage    *mainGraphic;    // officially "pImagePrimary"
   /*0x1C*/ CList<CImage> images;      // officially "pImageHead" and "pImageTail"
