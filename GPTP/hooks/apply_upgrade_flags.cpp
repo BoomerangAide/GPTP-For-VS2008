@@ -13,39 +13,38 @@ namespace hooks {
 //This hook function is called when creating a new unit.
 void applyUpgradeFlagsToNewUnitHook(CUnit *unit) {
   //Default StarCraft behavior
-  using scbw::getUpgradeLevel;
 
   u8 speedUpgradeLevel = 0, cooldownUpgradeLevel = 0;
 
   switch (unit->id) {
     case UnitId::vulture:
     case UnitId::jim_raynor_vulture:
-      speedUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::IonThrusters);
+      speedUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::IonThrusters);
       break;
     case UnitId::overlord:
-      speedUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::PneumatizedCarapace);
+      speedUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::PneumatizedCarapace);
       break;
     case UnitId::zergling:
-      speedUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::MetabolicBoost);
-      cooldownUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::AdrenalGlands);
+      speedUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::MetabolicBoost);
+      cooldownUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::AdrenalGlands);
       break;
     case UnitId::hydralisk:
-      speedUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::MuscularAugments);
+      speedUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::MuscularAugments);
       break;
     case UnitId::ultralisk:
-      speedUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::AnabolicSynthesis);
+      speedUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::AnabolicSynthesis);
       break;
     case UnitId::zealot:
-      speedUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::LegEnhancements);
+      speedUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::LegEnhancements);
       break;
     case UnitId::scout:
-      speedUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::GraviticThrusters);
+      speedUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::GraviticThrusters);
       break;
     case UnitId::shuttle:
-      speedUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::GraviticDrive);
+      speedUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::GraviticDrive);
       break;
     case UnitId::observer:
-      speedUpgradeLevel = getUpgradeLevel(unit->playerId, UpgradeId::GraviticBoosters);
+      speedUpgradeLevel = scbw::getUpgradeLevel(unit->playerId, UpgradeId::GraviticBoosters);
       break;
     case UnitId::Hero_DevouringOne:
       cooldownUpgradeLevel = 1;
