@@ -41,7 +41,7 @@ void createBunkerAttackThingyHook(const CUnit *unit) {
   const LO_Header *loFile = lo_files->attackOverlays[bunkerImage->id];
   Point8 offset = loFile->getOffset(bunkerImage->frameIndex, frameDirection);
   
-  if (bunkerImage->flags & 0x2) //Is inverted
+  if (bunkerImage->flags & CImage_Flags::Mirrored) //Is inverted
     offset.x = -offset.x;
 
   u8 frameAngle;
