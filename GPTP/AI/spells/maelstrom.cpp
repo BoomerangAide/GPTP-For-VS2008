@@ -30,7 +30,7 @@ namespace AI {
 			  return false;
 
 			if (target->id == UnitId::overlord
-				&& target->movementFlags & 0x2  //Is moving(?)
+				&& target->movementFlags & MovementFlags::Accelerating
 				&& target->hasLoadedUnit())
 			  return true;
 
