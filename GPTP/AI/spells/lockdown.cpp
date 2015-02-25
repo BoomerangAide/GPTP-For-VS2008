@@ -25,7 +25,7 @@ namespace AI {
 			  return false;
 
 			if (target->id == UnitId::dropship || target->id == UnitId::shuttle) {
-			  if (target->movementFlags & 0x2 && target->hasLoadedUnit())
+			  if (target->movementFlags & MovementFlags::Accelerating && target->hasLoadedUnit())
 				return true;
 			}
 
