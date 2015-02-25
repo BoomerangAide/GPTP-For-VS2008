@@ -120,8 +120,8 @@ void setResourceAmountCarried(CUnit *worker, u8 amountCarried, u32 chunkImageId,
   worker->resourceType = isMineral ? 2 : 1;
   
   CImage *chunkImage = worker->sprite->createOverlay(chunkImageId);
-  if (chunkImage && !(chunkImage->flags & 0x80)) {
-    chunkImage->flags |= 0x80;
+  if (chunkImage && !(chunkImage->flags & CImage_Flags::Flag07)) {
+    chunkImage->flags |= CImage_Flags::Flag07;
     updateImagePositionOffset(chunkImage);
   }
 
