@@ -16,7 +16,6 @@ namespace hooks {
 /// cloaking units.
 void updateUnitEnergy(CUnit *unit) {
   //Default StarCraft behavior
-  using scbw::isCheatEnabled;
 
   //If the unit is not a spellcaster, don't regenerate energy
   if (!unit->isValidCaster())
@@ -29,7 +28,7 @@ void updateUnitEnergy(CUnit *unit) {
   //Spend energy for cloaked units
   if (unit->status & (UnitStatus::Cloaked | UnitStatus::RequiresDetection)  //If the unit is cloaked
       && !(unit->status & UnitStatus::CloakingForFree)                      //...and must consume energy to stay cloaked (i.e. not under an Arbiter)
-      && !isCheatEnabled(CheatFlags::TheGathering))                         //...and the energy cheat is not available
+      && !scbw::isCheatEnabled(CheatFlags::TheGathering))                   //...and the energy cheat is not available
   {
     u16 cloakingEnergyCost = 0;
     if (unit->id == UnitId::TerranGhost
@@ -64,10 +63,10 @@ void updateUnitEnergy(CUnit *unit) {
   }
 
   //If the unit is currently selected, redraw its graphics
-  if (unit->sprite->flags & 8) {
+  if (unit->sprite->flags & CSprite_Flags::Selected) {
     for (CImage *i = unit->sprite->images.head; i; i = i->link.next)
-      if (i->paletteType == 11)
-        i->flags |= 1;
+      if (i->paletteType == PaletteType::RLE_HPFLOATDRAW)
+        i->flags |= CImage_Flags::Redraw;
   }
 }
 
@@ -93,10 +92,10 @@ void updateUnitStateHook(CUnit* unit) {
       unit->shields += 7;
       if (unit->shields > maxShields)
         unit->shields = maxShields;
-      if (unit->sprite->flags & 8) {  //If the unit is currently selected, redraw its graphics
+      if (unit->sprite->flags & CSprite_Flags::Selected) {  //If the unit is currently selected, redraw its graphics
         for (CImage *i = unit->sprite->images.head; i; i = i->link.next)
-          if (i->paletteType == 11)
-            i->flags |= 1;
+          if (i->paletteType == PaletteType::RLE_HPFLOATDRAW)
+            i->flags |= CImage_Flags::Redraw;
       }
     }
   }
@@ -110,7 +109,7 @@ void updateUnitStateHook(CUnit* unit) {
   unit->isBeingHealed = 0;
 
   //Update unit status effects (stim, maelstrom, plague, etc.)
-  if (unit->status & UnitStatus::Completed || !(unit->sprite->flags & 0x20)) {
+  if (unit->status & UnitStatus::Completed || !(unit->sprite->flags & CSprite_Flags::Hidden)) {
     unit->cycleCounter++;
     if (unit->cycleCounter >= 8) {
       unit->cycleCounter = 0;
