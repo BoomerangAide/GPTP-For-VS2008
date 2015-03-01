@@ -101,6 +101,8 @@ u32 CUnit::getMaxHpInGame() const {
     if (maxHp == 0)
       maxHp = 1;
   }
+  else
+    maxHp = maxHp >> 8;
 
   return maxHp;
 }
