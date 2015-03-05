@@ -10,6 +10,8 @@
 #include "enumerations/TechId.h"
 #include "enumerations/OrderId.h"
 #include "enumerations/ImageId.h"
+#include "enumerations/SpriteId.h"
+#include "enumerations/FlingyId.h"
 
 namespace RaceId {
 enum Enum : u8 {
