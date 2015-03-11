@@ -12,6 +12,7 @@
 #include "enumerations/ImageId.h"
 #include "enumerations/SpriteId.h"
 #include "enumerations/FlingyId.h"
+#include "enumerations/SoundId.h"
 
 namespace RaceId {
 enum Enum : u8 {
