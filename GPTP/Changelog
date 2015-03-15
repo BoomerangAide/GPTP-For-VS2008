@@ -4,3 +4,5 @@ Add new enum and flags, and use them instead of raw values
 Remove some comments in structures thanks to enum and flags
 Update some values/comments based on BWAPI data
 Remove "using" in middle of files (unsafe use for this keyword)
+Add new enumeration files (like SpriteId.h or SoundId.h)
+Fixed function getMaxHpInGame (wasn't always doing what it was supposed to do)
