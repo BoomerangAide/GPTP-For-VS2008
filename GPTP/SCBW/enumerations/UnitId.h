@@ -400,5 +400,10 @@ enum Enum {
   Powerup_TerranGasTankType1      = 226,
   Powerup_TerranGasTankType2      = 227,
   None                            = 228,
+  AnyUnit                         = 229,
+  Men                             = 230,
+  Buildings                       = 231,
+  Factories                       = 232,
+  TrigMax                         = 233  
 };
 }
