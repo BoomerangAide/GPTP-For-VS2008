@@ -93,10 +93,7 @@ s16 getUnitVerticalOffsetOnBirth(const CUnit *unit) {
     return 0;
 
   //Hovering units (?) float 7 pixels above ground
-  //Note: This is not a mistake; SC actually uses a "==" comparison to check flags (I know it's a WTF).
-  if (units_dat::MovementFlags[unit->id] == (MovementFlags::OrderedAtLeastOnce | 
-	  MovementFlags::unknown1 | MovementFlags::_alwaysZero1)
-	  )
+  if (units_dat::MovementFlags[unit->id] == MovementFlags::HoverUnit)
     return -7;
 
   //Air units float 42 pixels above ground
