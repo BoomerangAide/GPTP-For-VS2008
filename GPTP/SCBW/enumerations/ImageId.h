@@ -1005,5 +1005,6 @@ enum Enum {
   AcidSpores_4_5_Overlay_Large        = 996,
   AcidSpores_6_9_Overlay_Large        = 997,
   MaelstromHit                        = 998,
+  None                                = 999
 };
 }
