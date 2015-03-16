@@ -18,6 +18,7 @@ namespace MovementFlags
 {
 enum Enum
 {
+	
 	OrderedAtLeastOnce = 0x01, /**< @todo investigate more.
 	* It get's to 0 after the first move-involved command - sometimes get's to 1 again
 	*/
@@ -27,7 +28,10 @@ enum Enum
 	Moving = 0x10, /**< Still moving, but not accelerating */
 	Lifted = 0x20, /**< Lifted cc has this on (just before it moves) */
 	unknown1 = 0x40, /**< The value is unknown, but it has something to do with changing direction& accelerating */
-	_alwaysZero1 = 0x80 //Hover units (like vultures) are defined by having 0x01,0x40 and 0x80 set, flying units also have it
+	_alwaysZero1 = 0x80,
+	
+	HoverUnit = 0xC1 // OrderedAtLeastOnce | unknown1 | _alwaysZero1
+	
 };
 }
 
