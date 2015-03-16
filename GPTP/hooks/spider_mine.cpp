@@ -23,9 +23,7 @@ class SpiderMineTargetFinder: public scbw::UnitFinderCallbackMatchInterface {
 		  return false;
 
 		//Don't attack hovering units
-		if (units_dat::MovementFlags[target->id] == 
-			(MovementFlags::OrderedAtLeastOnce | MovementFlags::unknown1 | 
-			MovementFlags::_alwaysZero1))  //Note: This is not a mistake; SC actually uses a "==" comparison to check flags (I know it's a WTF).
+		if (units_dat::MovementFlags[target->id] == MovementFlags::HoverUnit)
 		  return false;
 
 		return true;
