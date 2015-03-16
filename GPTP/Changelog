@@ -1,3 +1,5 @@
+Update "1st-big-update" :
+
 Fix Valkyrie Text
 Add new image-related and colors-related functions
 Add new enum and flags, and use them instead of raw values
@@ -7,3 +9,4 @@ Remove "using" in middle of files (unsafe use for this keyword)
 Add new enumeration files (like SpriteId.h or SoundId.h)
 Fixed function getMaxHpInGame (wasn't always doing what it was supposed to do)
 Add a few lines in existing enums (mainly "None" entries). 
+Adding the combined UnitMovement flag for hover units and using it
