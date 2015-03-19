@@ -10,3 +10,6 @@ Add new enumeration files (like SpriteId.h or SoundId.h)
 Fixed function getMaxHpInGame (wasn't always doing what it was supposed to do)
 Add a few lines in existing enums (mainly "None" entries). 
 Adding the combined UnitMovement flag for hover units and using it
+Updated the .vcproj file (though I'm not sure if this is enough to allow a fully downloaded source to work immediately)
+Added a different message than the "incorrect starcraft version" message for StarEdit.
+**Added the new hook files infestation.h, infestation.cpp and infestation_inject.cpp**
