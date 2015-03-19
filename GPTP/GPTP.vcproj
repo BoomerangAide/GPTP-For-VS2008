@@ -194,6 +194,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\infestation.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\infestation_inject.cpp"
+				>
+			</File>
+			<File			
 				RelativePath=".\initialize.cpp"
 				>
 			</File>
@@ -644,9 +652,17 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SCBW\enumerations\FlingyId.h"
+				>
+			</File>			
+			<File
 				RelativePath=".\hook_tools.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\infestation.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\logger.h"
 				>
@@ -663,6 +679,14 @@
 				RelativePath=".\Plugin.h"
 				>
 			</File>
+			<File
+				RelativePath=".\SCBW\enumerations\SoundId.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SCBW\enumerations\SpriteId.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\types.h"
 				>
