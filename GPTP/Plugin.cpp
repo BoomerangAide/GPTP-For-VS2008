@@ -105,6 +105,22 @@ BOOL Plugin::checkStarCraftExeVersion(LPCSTR exePath) const {
       {
         result = TRUE;
       }
+      else
+	    if (currentVersion[0] == 1
+          && currentVersion[1] == 0
+          && currentVersion[2] == 0
+          && currentVersion[3] == 2) 
+  	  {
+  	  sprintf_s(
+  		  errorMessage,
+  		  "Error: GPTP cannot patch %s"
+  		  "\n"
+  		  "\n StarEdit may be able to be loaded, but the plugin features"
+  		  "\n cannot connect, so the mod is more likely to be incompatible"
+  		  "\n with the map editor than mods not using GPTP.",
+  		  exePath
+  		  );
+  	  }
       else {
         sprintf_s(errorMessage,
           "Error: Cannot patch %s"
