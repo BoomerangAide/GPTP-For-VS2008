@@ -198,7 +198,7 @@ void __fastcall cancelUnitWrapper(CUnit *unit) {
     unit->remainingBuildTime = 0;
     unit->buildQueue[unit->buildQueueSlot] = UnitId::None;
     replaceSpriteImages(unit->sprite,
-      sprites_dat::ImageId[flingy_dat::SpriteID[units_dat::Graphic[unit->displayedUnitId]]], 0);
+      sprites_dat::ImageId[flingy_dat::SpriteID[units_dat::Graphic[unit->previousUnitType]]], 0);
 
     unit->orderSignal &= ~0x4;
     unit->playIscriptAnim(IscriptAnimation::SpecialState2);
@@ -268,7 +268,7 @@ void __declspec(naked) isRallyableEggUnitWrapper() {
     MOV unit, EDI
   }
 
-  if (hooks::isRallyableEggUnitHook(unit->displayedUnitId)) {
+  if (hooks::isRallyableEggUnitHook(unit->previousUnitType)) {
     __asm {
       POPAD
       JMP Hook_IsRallyableEggUnit_Yes

@@ -20,8 +20,6 @@ int getUnitMovementState(const CUnit *unit);
 //This function is called every frame when a unit recharges shields.
 void rechargeShieldsProc(CUnit *target, CUnit *battery) {
   //Default StarCraft behavior
-  using scbw::isCheatEnabled;
-  using CheatFlags::TheGathering;
 
   s32 shieldGain = 1280, energySpent = 640;
   const s32 maxShields = units_dat::MaxShieldPoints[target->id] << 8;
@@ -40,7 +38,7 @@ void rechargeShieldsProc(CUnit *target, CUnit *battery) {
     shields = maxShields;
   target->shields = shields;
 
-  if (!isCheatEnabled(TheGathering))
+  if (!scbw::isCheatEnabled(CheatFlags::TheGathering))
     battery->energy -= energySpent;
 }
 
@@ -49,12 +47,10 @@ namespace hooks {
 /// Decides whether the @p target can recharge shields from the @p battery.
 bool unitCanRechargeShieldsHook(const CUnit *target, const CUnit *battery) {
   //Default StarCraft behavior
-  using units_dat::ShieldsEnabled;
-  using units_dat::MaxShieldPoints;
 
   //Check target conditions
   if (target->playerId != battery->playerId   //Is not owned by the player
-      || !(ShieldsEnabled[target->id])  //Does not have shields
+      || !(units_dat::ShieldsEnabled[target->id])  //Does not have shields
       || !(target->status & (UnitStatus::Completed | UnitStatus::IsBuilding)) //Is incomplete?
       || target->status & UnitStatus::GroundedBuilding)                       //Is a building
     return false;
@@ -64,7 +60,7 @@ bool unitCanRechargeShieldsHook(const CUnit *target, const CUnit *battery) {
     return false;
 
   //Check target shield amount
-  if (target->shields >= (MaxShieldPoints[target->id] << 8)) //Already has max shields
+  if (target->shields >= (units_dat::MaxShieldPoints[target->id] << 8)) //Already has max shields
     return false;
 
   //Check battery conditions

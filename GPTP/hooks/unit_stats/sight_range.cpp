@@ -11,7 +11,6 @@ namespace hooks {
 /// Note: sight ranges cannot exceed 11, unless extended.
 u32 getSightRangeHook(const CUnit *unit, bool isForSpellCasting) {
   //Default StarCraft logic
-  using scbw::getUpgradeLevel;
 
   //Check if the unit is a constructing building (exclude remorphing buildings)
   if (unit->status & UnitStatus::GroundedBuilding
@@ -26,19 +25,19 @@ u32 getSightRangeHook(const CUnit *unit, bool isForSpellCasting) {
   //Sight range upgrades
   switch (unit->id) {
     case UnitId::ghost:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::OcularImplants))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::OcularImplants))
         return 11;
       break;
     case UnitId::overlord:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::Antennae))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::Antennae))
         return 11;
       break;
     case UnitId::observer:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::SensorArray))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::SensorArray))
         return 11;
       break;
     case UnitId::scout:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::ApialSensors))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::ApialSensors))
         return 11;
       break;
   }

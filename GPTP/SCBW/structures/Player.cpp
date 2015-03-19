@@ -4,18 +4,37 @@
 #include "../enumerations.h"
 #include "../../graphics/graphics.h"
 
-// Return the proper ColorId to use an unit current color with graphics function
+// ----------------------------------------------------------------------------//
+// Return the proper ColorId to use a player color with graphics function
+// ----------------------------------------------------------------------------//
+
 graphics::ColorId PLAYER::getColor() {
 	assert(this);
+	return playersColors[(u8)this->id];
+}
+
+graphics::ColorId PLAYER::getColor(u8 playerId) {
+	if(playerId < PLAYER_COUNT)
+		return playersColors[playerId];
+	else
+		return graphics::BLACK; // return 0/Black if error
+}
+
+graphics::ColorId PLAYER::getFactionColor() {
+	assert(this);
+	return getFactionColor(this->id);
+}
+
+graphics::ColorId PLAYER::getFactionColor(u8 playerId) {
 
 	//store a playerId until the end where it will properly store a ColorId
 	graphics::ColorId return_value;
 
 	//for normal players, apply colors switching
-	if(this->id >= 0 && this->id <= 7) {
+	if(playerId < PLAYABLE_PLAYER_COUNT) {
 
 		// get the proper playerId in multiplayer game (don't break campaigns/UMS)
-		return_value = colorReordering[this->id];
+		return_value = factionsColorsOrdering[playerId];
 
 		//fix BROWN to GREEN color swap in Desert map
 		if(*CURRENT_TILESET == TilesetType::Desert && return_value == 5)
@@ -27,9 +46,12 @@ graphics::ColorId PLAYER::getColor() {
 
 	}
 	else
-		return_value = this->id;
+		return_value = playerId;
 
-	return_value = graphics::playersColors[return_value];
+	if(playerId < PLAYER_COUNT)
+		return_value = graphics::standardColors[return_value];
+	else
+		return_value = graphics::BLACK; // return 0/Black if error
 
 	return return_value;
 

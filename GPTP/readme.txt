@@ -3,6 +3,7 @@ It was made by taking v2.39 (last version compatible with Visual Studio 2008)
 and applying changes from v2.41 to the files in a way that would preserve
 compatibility with Visual Studio 2008.
 Main changes:
+
 -Replaced c++11 assert by c_assert. This mean the loss of a custom error message, but the protection is still there.
 -Replaced lambda functions as they are not compatible with VS 2008 (and a bit ugly too xD).
 -Modified compilation options (though I'm not confident outside of simple source code editing) from v2.39 
@@ -11,6 +12,7 @@ and added importing of version.lib in link editor.
 -Adding somes changes I proposed as UndeadStar at http://www.broodwarai.com/forums/index.php regarding color
 getting (also proposed as issues at original project, but it was so buggy there I decided to try and create
 this).
+-Will add any others changes into the "changelog" file
 
 Here is the original readme that was available with v2.41.
 Besides the part about being adapted to Visual Studio 2010, it can be used.

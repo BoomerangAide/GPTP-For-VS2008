@@ -101,6 +101,8 @@ u32 CUnit::getMaxHpInGame() const {
     if (maxHp == 0)
       maxHp = 1;
   }
+  else
+    maxHp = maxHp >> 8;
 
   return maxHp;
 }
@@ -527,37 +529,85 @@ void CUnit::removeOverlay(u32 imageId) {
     this->subunit->sprite->removeOverlay(imageId);
 }
 
-// Return the proper ColorId to use an unit current color with graphics function
-graphics::ColorId CUnit::getColor() {
+// ----------------------------------------------------------------------------//
+// Return the proper ColorId to use an unit color with graphics function
+// ----------------------------------------------------------------------------//
+
+graphics::ColorId CUnit::getFactionColor() {
 	assert(this);
+	return getFactionColor(this);
+}
+
+graphics::ColorId CUnit::getFactionColor(CUnit* unit) {
 
 	//store a playerId until the end where it will properly store a ColorId
 	graphics::ColorId return_value;
 
-	if(this->sprite != NULL)
-		// note: using the sprite playerId to preserve recruitable units color
-		return_value = this->sprite->playerId;
-	else
-		// note: using player color for spriteless units (if that exist)
-		return_value = this->playerId;
+	if(unit != NULL) {
 
-	//for normal players, apply colors switching
-	if(this->playerId >= 0 && this->playerId <= 7) {
+		if(unit->sprite != NULL)
+			// note: using the sprite playerId to preserve recruitable units color
+			return_value = unit->sprite->playerId;
+		else
+			// note: using player color for spriteless units (if that exist)
+			return_value = unit->playerId;
 
-		// get the proper playerId in multiplayer game (don't break campaigns/UMS)
-		return_value = colorReordering[return_value];
+		//for normal players, apply colors switching
+		if(unit->playerId < PLAYABLE_PLAYER_COUNT) {
 
-		//fix BROWN to GREEN color swap in Desert map
-		if(*CURRENT_TILESET == TilesetType::Desert && return_value == 5)
-			return_value = 8;
-		
-		//fix WHITE to GREEN color swap in Ice map
-		if(*CURRENT_TILESET == TilesetType::Ice && return_value == 6)
-			return_value = 8;
+			// get the proper playerId in multiplayer game (don't break campaigns/UMS)
+			return_value = factionsColorsOrdering[return_value];
+
+			//fix BROWN to GREEN color swap in Desert map
+			if(*CURRENT_TILESET == TilesetType::Desert && return_value == 5)
+				return_value = 8;
+			
+			//fix WHITE to GREEN color swap in Ice map
+			if(*CURRENT_TILESET == TilesetType::Ice && return_value == 6)
+				return_value = 8;
+
+		}
+
+		if(return_value < PLAYER_COUNT)
+			return_value = graphics::standardColors[return_value];
+		else
+			return_value = graphics::BLACK; // will return 0/black if abnormal playerId
 
 	}
+	else
+		return_value = graphics::BLACK; // will return 0/black if null pointer is the argument
 
-	return_value = graphics::playersColors[return_value];
+	return return_value;
+
+}
+
+graphics::ColorId CUnit::getColor() {
+	assert(this);
+	return getColor(this);
+}
+
+graphics::ColorId CUnit::getColor(CUnit* unit) {
+
+	//store a playerId until the end where it will properly store a ColorId
+	graphics::ColorId return_value;
+
+	if(unit != NULL) {
+
+		if(unit->sprite != NULL)
+			// note: using the sprite playerId to preserve recruitable units color
+			return_value = unit->sprite->playerId;
+		else
+			// note: using player color for spriteless units (if that exist)
+			return_value = unit->playerId;
+
+		if(return_value < PLAYER_COUNT)
+			return_value = playersColors[return_value];
+		else
+			return_value = graphics::BLACK; // will return 0/black if abnormal playerId
+
+	}
+	else
+		return_value = graphics::BLACK; // will return 0/black if null pointer is the argument
 
 	return return_value;
 

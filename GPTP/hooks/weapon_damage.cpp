@@ -36,14 +36,12 @@ void weaponDamageHook(s32     damage,
                       s8      direction,
                       u8      dmgDivisor) {
   //Default StarCraft behavior
-  using scbw::isCheatEnabled;
-  using CheatFlags::PowerOverwhelming;
 
   //Don't bother if the unit is already dead or invincible
   if (target->hitPoints == 0 || (target->status & UnitStatus::Invincible))
     return;
 
-  if (isCheatEnabled(PowerOverwhelming)                           //If Power Overwhelming is enabled
+  if (scbw::isCheatEnabled(CheatFlags::PowerOverwhelming)         //If Power Overwhelming is enabled
       && playerTable[attackingPlayer].type != PlayerType::Human)  //and the attacker is not a human player
     damage = 0;
 

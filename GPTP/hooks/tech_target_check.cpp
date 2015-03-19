@@ -2,15 +2,7 @@
 #include "tech_target_check.h"
 #include <SCBW/scbwdata.h>
 #include <SCBW/enumerations.h>
-
-//V241 for VS2008
-
-//-------- Helper function declarations. Do NOT modify! --------//
-namespace {
-bool isInfestableCC(const CUnit *unit);
-} //Unnamed namespace
-
-//-------- Actual hook functions --------//
+#include "infestation.h"
 
 namespace hooks {
 
@@ -79,23 +71,3 @@ u16 getTechUseErrorMessageHook(const CUnit *target, u8 castingPlayer, u16 techId
 }
 
 } //hooks
-
-//-------- Helper function definitions. Do NOT modify! --------//
-namespace {
-
-const u32 Func_IsInfestable = 0x00402210;
-bool isInfestableCC(const CUnit *unit) {
-  static Bool32 result;
-  
-  __asm {
-    PUSHAD
-    MOV EDX, unit
-    CALL Func_IsInfestable
-    MOV result, EAX
-    POPAD
-  }
-
-  return result != 0;
-}
-
-} //Unnamed namespace

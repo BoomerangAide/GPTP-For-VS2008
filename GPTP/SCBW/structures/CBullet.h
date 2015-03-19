@@ -15,7 +15,7 @@ struct CBullet {
 // v-- POSSIBLE SHARED CBullet/CUnit STRUCTURE BEGIN
   /*0x00*/ CBullet      *previous;
   /*0x04*/ CBullet      *next;
-  /*0x08*/ u32          unknown_0x08; //usually holds 1 (exists?)
+  /*0x08*/ u32          exists; //usually holds 1 (exists?)
   /*0x0C*/ CSprite      *sprite; // sprite pointer
   /*0x10*/ Target       moveTarget; //address? animation related? changes a during the same bullet
   /*0x18*/ Point16      targetPosition;
@@ -36,7 +36,7 @@ struct CBullet {
   /*0x48*/ u16          flingyAcceleration;
   /*0x4A*/ u8           currentDirection;
   /*0x4B*/ u8           velocityDirection; //seems to always be the same as currentDirection
-  /*0x4C*/ u8           unknown_0x4C;
+  /*0x4C*/ u8           srcPlayer; // the player ID of the bullet owner
   /*0x4D*/ u8           behaviourTypeInternal; // 0 = none
                                                // 1 = fly
                                                // 2 = fly & follow target

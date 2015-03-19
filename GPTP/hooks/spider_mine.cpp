@@ -19,14 +19,11 @@ class SpiderMineTargetFinder: public scbw::UnitFinderCallbackMatchInterface {
 		  return false;
 
 		//Don't attack invincible units / air units / buildings
-		using UnitStatus::Invincible;
-		using UnitStatus::InAir;
-		using UnitStatus::GroundedBuilding;
-		if (target->status & (Invincible | InAir | GroundedBuilding))
+		if (target->status & (UnitStatus::Invincible | UnitStatus::InAir | UnitStatus::GroundedBuilding))
 		  return false;
 
 		//Don't attack hovering units
-		if (units_dat::MovementFlags[target->id] == (0x01 | 0x40 | 0x80))  //Note: This is not a mistake; SC actually uses a "==" comparison to check flags (I know it's a WTF).
+		if (units_dat::MovementFlags[target->id] == MovementFlags::HoverUnit)
 		  return false;
 
 		return true;

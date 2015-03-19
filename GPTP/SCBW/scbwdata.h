@@ -81,6 +81,10 @@ SCBW_DATA(s32*,         screenY,                0x00628470);
 /// Mouse position relative to the screen
 SCBW_DATA(const Point32*, mouse,                0x006CDDC4);
 
+/// Maybe used by Map triggers to init a progressive movement toward the corresponding location, see GameImpl::setScreenPosition of BWAPI
+SCBW_DATA(u32*,		MoveToX,		0x0062848C);
+SCBW_DATA(u32*,		MoveToY,		0x006284A8);
+
 /// Contains various information (names, player types, race types, and associated forces) of each player in the current game
 SCBW_DATA(const PLAYER*,  playerTable,          0x0057EEE0);
 
@@ -92,6 +96,7 @@ struct SupplyData {
 SCBW_DATA(SupplyData*,    raceSupply,           0x00582144);  //Array; Use CUnit::getRace() to get the index.
 
 SCBW_DATA(const u32*,     elapsedTimeFrames,    0x0057F23C);  //Elapsed game time in frames
+SCBW_DATA(const u32*,     CountdownTimer,	0x0058D6F4);  //Countdown Timer (in seconds) (From BWAPI Offsets.h)
 SCBW_DATA(const u32*,     elapsedTimeSeconds,   0x0058D6F8);  //Elapsed game time in seconds
 SCBW_DATA(const u8*,      GAME_TYPE,            0x00596820);  //Part of a larger structure; Compare with GameType::Enum.
 SCBW_DATA(const s32*,     ACTIVE_NATION_ID,     0x00512678);  //AKA g_ActiveNationID
@@ -99,6 +104,11 @@ SCBW_DATA(const s32*,     LOCAL_NATION_ID,      0x00512684);  //AKA g_LocalNatio
 SCBW_DATA(const s32*,     LOCAL_HUMAN_ID,       0x00512688);  //AKA g_LocalHumanID; Invalid in replay games.
 SCBW_DATA(const u8*,      CURRENT_TILESET,      0x00596828);  //Tileset of current map. Compare with TilesetType::Enum
 ////possible values were 0057F1DC and [00596828]
+
+// Added from BWAPI Offsets.h, but made const since it would not be safe to modify those
+SCBW_DATA(const char*,	  CurrentMapFileName,	0x0057FD3C);
+SCBW_DATA(const char*,	  CurrentMapName,	0x0057FE40);
+SCBW_DATA(const _uavail*, UnitAvailability,	0x0057F27C);
 
 //////////////////////////////////////////////////////////////// @}
 
@@ -278,8 +288,18 @@ SCBW_DATA(u8*,          refreshRegions,         0x006CEFF8);  //640 x 480 divide
 SCBW_DATA(Layers*,      screenLayers,           0x006CEF50);
 typedef void (__stdcall *DrawGameProc)(graphics::Bitmap *surface, Bounds *bounds);
 static DrawGameProc const oldDrawGameProc = (DrawGameProc) 0x004BD580;
-SCBW_DATA(int*,          colorReordering,		0x0057F21C);	//array used in multiplayer to randomize colors
-																//used by unit.getColor() and player.getColor()
+
+//Array used in multiplayer to randomize factions
+//used by unit.getFactionColor() and
+//player.getFactionColor()
+//Max index is PLAYABLE_PLAYER_COUNT-1
+SCBW_DATA(int*,         factionsColorsOrdering,	0x0057F21C);
+
+///Access to true player colors that differ from
+///standard versions from graphics.h
+///This is the PlayerColors from BWAPI
+///Max index is PLAYER_COUNT-1
+SCBW_DATA(u8*,         	playersColors,		0x00581DD6);
 
 const CListExtern<CImage, &CImage::link> unusedImages(0x0057EB68, 0x0057EB70);
 SCBW_DATA(CList<CSprite>*, unusedSprites,       0x0063FE30);
@@ -340,6 +360,10 @@ struct _bwTechs {
   u8 isEnabled[PLAYER_COUNT][20];
   u8 isResearched[PLAYER_COUNT][20];
 };
+
+// Available and Researched techs are exactly next to each other,
+// that's why with 2 entries structures, only 2 addresses are
+// needed here when BWAPI got 4 of them.
 SCBW_DATA(_scTechs*, TechSc,   0x0058CE24); //Use with ScTech::Enum
 SCBW_DATA(_bwTechs*, TechBw,   0x0058F050); //Use with BwTech::Enum
 

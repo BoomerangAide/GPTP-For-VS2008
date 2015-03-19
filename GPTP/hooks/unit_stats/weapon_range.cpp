@@ -12,9 +12,6 @@ namespace hooks {
 /// This hook affects the behavior of CUnit::getSeekRange().
 u8 getSeekRangeHook(const CUnit *unit) {
   //Default StarCraft behavior
-  using UnitStatus::Cloaked;
-  using UnitStatus::RequiresDetection;
-  using scbw::getUpgradeLevel;
 
   const u16 unitId = unit->id;
 
@@ -24,22 +21,22 @@ u8 getSeekRangeHook(const CUnit *unit) {
        || unitId == UnitId::Hero_AlexeiStukov
        || unitId == UnitId::Hero_SamirDuran
        || unitId == UnitId::Hero_InfestedDuran)
-      && unit->status & (Cloaked | RequiresDetection)
+      && unit->status & (UnitStatus::Cloaked | UnitStatus::RequiresDetection)
       && unit->mainOrderId != OrderId::HoldPosition2)
     return 0;
 
   u8 bonusAmount = 0;
   switch (unitId) {
     case UnitId::marine:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::U_238Shells))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::U_238Shells))
         bonusAmount = 1;
       break;
     case UnitId::hydralisk:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::GroovedSpines))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::GroovedSpines))
         bonusAmount = 1;
       break;
     case UnitId::dragoon:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::SingularityCharge))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::SingularityCharge))
         bonusAmount = 2;
       break;
     case UnitId::fenix_dragoon:
@@ -48,7 +45,7 @@ u8 getSeekRangeHook(const CUnit *unit) {
       break;
     case UnitId::goliath:
     case UnitId::goliath_turret:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::CharonBooster))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::CharonBooster))
         bonusAmount = 3;
       break;
     case UnitId::alan_schezar:
@@ -70,7 +67,6 @@ u8 getSeekRangeHook(const CUnit *unit) {
 /// @param  unit      The unit that owns the weapon. Use this to check upgrades.
 u32 getMaxWeaponRangeHook(const CUnit *unit, u8 weaponId) {
   //Default StarCraft behavior
-  using scbw::getUpgradeLevel;
 
   u32 bonusAmount = 0;
 
@@ -80,15 +76,15 @@ u32 getMaxWeaponRangeHook(const CUnit *unit, u8 weaponId) {
 
   switch (unit->id) {
     case UnitId::marine:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::U_238Shells))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::U_238Shells))
         bonusAmount += 32;
       break;
     case UnitId::hydralisk:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::GroovedSpines))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::GroovedSpines))
         bonusAmount += 32;
       break;
     case UnitId::dragoon:
-      if (getUpgradeLevel(unit->playerId, UpgradeId::SingularityCharge))
+      if (scbw::getUpgradeLevel(unit->playerId, UpgradeId::SingularityCharge))
         bonusAmount += 64;
       break;
     case UnitId::fenix_dragoon:
@@ -98,7 +94,7 @@ u32 getMaxWeaponRangeHook(const CUnit *unit, u8 weaponId) {
     case UnitId::goliath:
     case UnitId::goliath_turret:
       if (weaponId == WeaponId::HellfireMissilePack
-          && getUpgradeLevel(unit->playerId, UpgradeId::CharonBooster))
+          && scbw::getUpgradeLevel(unit->playerId, UpgradeId::CharonBooster))
         bonusAmount += 96;
       break;
     case UnitId::alan_schezar:

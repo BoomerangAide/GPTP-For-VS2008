@@ -203,8 +203,17 @@ struct CUnit: public CUnitLayout {
   /// Removes the first image overlay with the given image ID.
   void removeOverlay(u32 imageId);
 
-  /// Get the player (creator) color of current unit
+  /// Get the faction (brood,tribe,squad...) color of current unit
+  graphics::ColorId getFactionColor();
+
+  /// Get the faction (brood,tribe,squad...) color of an unit
+  static graphics::ColorId getFactionColor(CUnit* unit);
+
+  /// Get the (possibly non-standard) color of current unit
   graphics::ColorId getColor();
+
+  /// Get the (possibly non-standard) color of an unit
+  static graphics::ColorId getColor(CUnit* unit);
 
   //////////////////////////////////////////////////////////////// @}
 

@@ -5,16 +5,17 @@
 
 #pragma once
 
-const int PLAYER_COUNT        = 12;
-const int UNIT_ARRAY_LENGTH   = 1700;
-const int BULLET_ARRAY_LENGTH = 100;
-const int SPRITE_ARRAY_LENGTH = 2500;
-const int UNIT_TYPE_COUNT     = 228;
-const int TECH_TYPE_COUNT     = 44;
-const int UPGRADE_TYPE_COUNT  = 61;
-const int WEAPON_TYPE_COUNT   = 130;
-const int FLINGY_TYPE_COUNT   = 209;
-const int IMAGE_TYPE_COUNT    = 999;
+const int PLAYER_COUNT			    = 12;
+const int PLAYABLE_PLAYER_COUNT = 8;
+const int UNIT_ARRAY_LENGTH		  = 1700;
+const int BULLET_ARRAY_LENGTH	  = 100;
+const int SPRITE_ARRAY_LENGTH	  = 2500;
+const int UNIT_TYPE_COUNT		    = 228;
+const int TECH_TYPE_COUNT		    = 44;
+const int UPGRADE_TYPE_COUNT	  = 61;
+const int WEAPON_TYPE_COUNT		  = 130;
+const int FLINGY_TYPE_COUNT		  = 209;
+const int IMAGE_TYPE_COUNT		  = 999;
 
 #include "structures/CUnit.h"
 #include "structures/CBullet.h"
@@ -408,6 +409,11 @@ struct AiCaptain {
 
 C_ASSERT(sizeof(AiCaptain) == 52); 
 //static_assert(sizeof(AiCaptain) == 52, "The size of the AiCaptain structure is invalid");
+
+/// From BWAPI Offsets.h, used in scbwdata.h by UnitAvailability
+struct _uavail {
+	u8 available[PLAYER_COUNT][UNIT_TYPE_COUNT];
+};
 
 class StringTbl {
   public:

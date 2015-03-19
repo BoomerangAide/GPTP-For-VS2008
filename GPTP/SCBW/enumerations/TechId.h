@@ -49,7 +49,9 @@ enum Enum {
   UnusedTech41      = 0x29, // (unused)
   UnusedTech42      = 0x2A, // (unused)
   UnusedTech43      = 0x2B, // (unused)
-  None              = 0x2C
+  None              = 0x2C,
+  NuclearStrike		  = 0x2D, //based on bwapi/BWMemoryEdit/Enums/TechType.cs
+  UnknownLastEntry  = 0x2E	//based on bwapi/BWMemoryEdit/Enums/TechType.cs
 };
 }
 

@@ -53,7 +53,7 @@ void CSprite::setPosition(u16 x, u16 y) {
   }
 
   for (CImage *i = this->images.head; i; i = i->link.next)
-    i->flags |= 1;
+    i->flags |= CImage_Flags::Redraw;
 }
 
 
