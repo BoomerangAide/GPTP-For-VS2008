@@ -2,7 +2,6 @@
 #include <SCBW/api.h>
 #include <SCBW/scbwdata.h>
 #include <cassert>
-#include "logger.h"
 
 //Helper functions reusable
 
@@ -266,7 +265,7 @@ namespace hooks {
 		u32 unitMaxHp;
 		bool returnValue;
 
-		returnValue = (unit->status & UnitStatus::Completed) /*&& (unit->id == UnitId::command_center)*/;
+		returnValue = (unit->status & UnitStatus::Completed) && (unit->id == UnitId::command_center);
 
 		if (returnValue) {
 
@@ -294,8 +293,6 @@ namespace hooks {
 
 		bErrorReturnToIdle = (unitInfesting == NULL || !isInfestableUnit(unitInfested));
 
-		GPTP::logger<<"part A"<<std::endl;
-
 		if(!bErrorReturnToIdle) {
 
 			if(unitInfested->mainOrderState == 0) {
@@ -306,8 +303,6 @@ namespace hooks {
 				bStopFunction = true;
 
 			}
-
-			GPTP::logger<<"part B"<<std::endl;
 
 			if(!bStopFunction) {
 
@@ -335,7 +330,7 @@ namespace hooks {
 						unitInfested->rally.unit = unitInfested;
 
 					//left like that, anybody would change that if using this file anyway
-					infestedUnitNewId = /* *(u16*)(0x006648AC + 2*unitInfested->id); */ UnitId::ZergInfestedCommandCenter;
+					infestedUnitNewId =  *(u16*)(0x006648AC + 2*unitInfested->id);
 
 					//not infesting unit kills, maybe for global score?
 					incrementDeathScores(unitInfested, unitInfesting->playerId);
@@ -345,8 +340,6 @@ namespace hooks {
 
 					//structures razed applied to infesting player (maybe change depending on unit type)
 					incrementUnitScores(unitInfested, 1);
-
-					GPTP::logger<<"part D"<<std::endl;
 
 					//the unit receive the new id (infested id)
 					unitInfested->id = infestedUnitNewId;
@@ -358,16 +351,12 @@ namespace hooks {
 					//Related to infestation process
 					unitInfested->setSecondaryOrder(0x17);
 
-					GPTP::logger<<"part E"<<std::endl;
-
 					//refund what the unit was producing
 					refundAllQueueSlots(unitInfested);
 
 					//clear the orders queue of the unit
 					while(unitInfested->orderQueueHead != NULL)
 						removeOrderFromUnitQueue(unitInfested);
-
-					GPTP::logger<<"part F"<<std::endl;
 
 					if(!(unitInfested->status & UnitStatus::GroundedBuilding)) {
 
@@ -386,8 +375,6 @@ namespace hooks {
 
 					}
 
-					GPTP::logger<<"part G"<<std::endl;
-
 					//Just use ImageId::InfestedCommandCenterOverlay instead 
 					//if you're modding this file and you're going for the
 					//default infestation overlay for any target.
@@ -397,16 +384,12 @@ namespace hooks {
 					if(infestationOverlayId != ImageId::None)
 						unitInfested->sprite->createOverlay(infestationOverlayId);
 
-					GPTP::logger<<"part H"<<std::endl;
-
 					//Assembly code is using
 					//*(u16*)(0x00662350 + unitInfested->id)
 					unitInfested->setHp(units_dat::MaxHitPoints[unitInfested->id]);
 
 					//function named according to the content
 					reEnableUnit(unitInfested,unitInfested->id);
-
-					GPTP::logger<<"part I"<<std::endl;
 
 					unknownInfestationLastCommands();
 
@@ -416,12 +399,8 @@ namespace hooks {
 
 		} //if(!bErrorReturnToIdle)
 
-		GPTP::logger<<"part J"<<std::endl;
-
 		if(!bStopFunction)
 			scbw::orderReturnToIdle(unitInfested);
-
-		GPTP::logger<<"part K"<<std::endl;
 
 	}
 
