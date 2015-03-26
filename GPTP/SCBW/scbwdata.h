@@ -129,130 +129,189 @@ struct DatLoad {
 namespace units_dat {
 SCBW_DATA(const DatLoad*, unitsDat, 0x00513C30);
 
-SCBW_DATA(u8*,  Graphic,            unitsDat[0].address);
-SCBW_DATA(u16*, SubUnit,            unitsDat[1].address);
-SCBW_DATA(u32*, ConstructionGraphic,  unitsDat[4].address);
-SCBW_DATA(u8*,  ShieldsEnabled,     unitsDat[6].address);
-SCBW_DATA(u16*, MaxShieldPoints,    unitsDat[7].address);
-SCBW_DATA(s32*, MaxHitPoints,       unitsDat[8].address);
-SCBW_DATA(u8*,  Elevation,          unitsDat[9].address);
-SCBW_DATA(u8*,  MovementFlags,      unitsDat[10].address);
-SCBW_DATA(u8*,  Rank,               unitsDat[11].address);
-SCBW_DATA(u8*,  ComputerIdleOrder,  unitsDat[12].address);
-SCBW_DATA(u8*,  HumanIdleOrder,     unitsDat[13].address);
-SCBW_DATA(u8*,  ReturnToIdleOrder,  unitsDat[14].address);
-SCBW_DATA(u8*,  AttackUnitOrder,    unitsDat[15].address);
-SCBW_DATA(u8*,  AttackMoveOrder,    unitsDat[16].address);
-SCBW_DATA(u8*,  GroundWeapon,       unitsDat[17].address);
-SCBW_DATA(u8*,  MaxGroundHits,      unitsDat[18].address);
-SCBW_DATA(u8*,  AirWeapon,          unitsDat[19].address);
-SCBW_DATA(u8*,  MaxAirHits,         unitsDat[20].address);
-SCBW_DATA(u32*, BaseProperty,       unitsDat[22].address);  // AKA SpecialAbilityFlags, UnitProperty, etc. Use with UnitProperty::Enum.
-SCBW_DATA(u8*,  SeekRange,          unitsDat[23].address);  // AKA Target Acquisition Range, Acquire Target Range, etc.
-SCBW_DATA(u8*,  SightRange,         unitsDat[24].address);
-SCBW_DATA(u8*,  ArmorUpgrade,       unitsDat[25].address);
-SCBW_DATA(u8*,  SizeType,           unitsDat[26].address);
-SCBW_DATA(u8*,  ArmorAmount,        unitsDat[27].address);
-SCBW_DATA(Box16*, UnitBounds,       unitsDat[38].address);
-SCBW_DATA(u16*, MineralCost,        unitsDat[40].address);
-SCBW_DATA(u16*, GasCost,            unitsDat[41].address);
-SCBW_DATA(u16*, TimeCost,           unitsDat[42].address);
-SCBW_DATA(GroupFlag*, GroupFlags,   unitsDat[44].address);
-SCBW_DATA(u8*,  SupplyProvided,     unitsDat[45].address);  // Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
-SCBW_DATA(u8*,  SupplyRequired,     unitsDat[46].address);  // Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
-SCBW_DATA(u8*,  SpaceRequired,      unitsDat[47].address);
-SCBW_DATA(u8*,  SpaceProvided,      unitsDat[48].address);
-SCBW_DATA(u16*, BuildScore,         unitsDat[49].address);
-SCBW_DATA(u16*, DestroyScore,       unitsDat[50].address);
-SCBW_DATA(u16*, MapStringId,        unitsDat[51].address);
-SCBW_DATA(u8*,  BroodwarOnly,       unitsDat[52].address);
-} //units_dat
+SCBW_DATA(u8*,  Graphic,				unitsDat[0].address);	//006644F8
+SCBW_DATA(u16*, SubUnit,				unitsDat[1].address);	//006607C0
+//SCBW_DATA(u16*, ???,					unitsDat[2].address);	//00660C38
+SCBW_DATA(u16*, InfestedUnitPartial,	unitsDat[3].address);	//00664980, (Id - UnitId::TerranCommandCenter) for it to work, last valid id is UnitId::Special_OvermindCocoon
+SCBW_DATA(u32*, ConstructionGraphic,	unitsDat[4].address);	//006610B0
+//SCBW_DATA(u8*, ???,					unitsDat[5].address);	//006605F0
+SCBW_DATA(u8*,  ShieldsEnabled,			unitsDat[6].address);	//006647B0
+SCBW_DATA(u16*, MaxShieldPoints,		unitsDat[7].address);	//00660E00
+SCBW_DATA(s32*, MaxHitPoints,			unitsDat[8].address);	//00662350
+SCBW_DATA(u8*,  Elevation,				unitsDat[9].address);	//00663150
+SCBW_DATA(u8*,  MovementFlags,			unitsDat[10].address);	//00660FC8
+SCBW_DATA(u8*,  Rank,					unitsDat[11].address);	//00663DD0
+SCBW_DATA(u8*,  ComputerIdleOrder,		unitsDat[12].address);	//00662EA0
+SCBW_DATA(u8*,  HumanIdleOrder,			unitsDat[13].address);	//00662268
+SCBW_DATA(u8*,  ReturnToIdleOrder,		unitsDat[14].address);	//00664898
+SCBW_DATA(u8*,  AttackUnitOrder,		unitsDat[15].address);	//00663320
+SCBW_DATA(u8*,  AttackMoveOrder,		unitsDat[16].address);	//00663A50
+SCBW_DATA(u8*,  GroundWeapon,			unitsDat[17].address);	//006636B8
+SCBW_DATA(u8*,  MaxGroundHits,			unitsDat[18].address);	//006645E0
+SCBW_DATA(u8*,  AirWeapon,				unitsDat[19].address);	//006616E0
+SCBW_DATA(u8*,  MaxAirHits,				unitsDat[20].address);	//0065FC18
+//SCBW_DATA(u8*, ???,					unitsDat[21].address);	//00660178
+SCBW_DATA(u32*, BaseProperty,			unitsDat[22].address);  //00664080 AKA SpecialAbilityFlags, UnitProperty, etc. Use with UnitProperty::Enum.
+SCBW_DATA(u8*,  SeekRange,				unitsDat[23].address);  //00662DB8 AKA Target Acquisition Range, Acquire Target Range, etc.
+SCBW_DATA(u8*,  SightRange,				unitsDat[24].address);	//00663238
+SCBW_DATA(u8*,  ArmorUpgrade,			unitsDat[25].address);	//006635D0
+SCBW_DATA(u8*,  SizeType,				unitsDat[26].address);	//00662180
+SCBW_DATA(u8*,  ArmorAmount,			unitsDat[27].address);	//0065FEC8
+//SCBW_DATA(u8*, ???,					unitsDat[28].address);	//00662098
+SCBW_DATA(u16*, SoundReady,				unitsDat[29].address);	//00661FC0
+SCBW_DATA(u16*, SoundWhatFirst,			unitsDat[30].address);	//0065FFB0
+SCBW_DATA(u16*, SoundWhatLast,			unitsDat[31].address);	//00662BF0
+SCBW_DATA(u16*, SoundAnnoyedFirst,		unitsDat[32].address);	//00663B38
+SCBW_DATA(u16*, SoundAnnoyedLast,		unitsDat[33].address);	//00661EE8
+SCBW_DATA(u16*, SoundYesFirst,			unitsDat[34].address);	//00663C10
+SCBW_DATA(u16*, SoundYesLast,			unitsDat[35].address);	//00661440
+//SCBW_DATA(u16*, ???,					unitsDat[36].address);	//00662860
+//SCBW_DATA(u16*, ???,					unitsDat[37].address);	//006626E0
+SCBW_DATA(Box16*, UnitBounds,			unitsDat[38].address);	//006617C8
+//SCBW_DATA(u16*, ???,					unitsDat[39].address);	//00662F88
+SCBW_DATA(u16*, MineralCost,			unitsDat[40].address);	//00663888
+SCBW_DATA(u16*, GasCost,				unitsDat[41].address);	//0065FD00
+SCBW_DATA(u16*, TimeCost,				unitsDat[42].address);	//00660428
+//SCBW_DATA(u16*, ???,					unitsDat[43].address);	//00660A70
+SCBW_DATA(GroupFlag*, GroupFlags,		unitsDat[44].address);	//006637A0
+SCBW_DATA(u8*,  SupplyProvided,			unitsDat[45].address);  //006646C8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
+SCBW_DATA(u8*,  SupplyRequired,			unitsDat[46].address);  //00663CE8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
+SCBW_DATA(u8*,  SpaceRequired,			unitsDat[47].address);	//00664410
+SCBW_DATA(u8*,  SpaceProvided,			unitsDat[48].address);	//00660988
+SCBW_DATA(u16*, BuildScore,				unitsDat[49].address);	//00663408
+SCBW_DATA(u16*, DestroyScore,			unitsDat[50].address);	//00663EB8
+SCBW_DATA(u16*, MapStringId,			unitsDat[51].address);	//00660260
+SCBW_DATA(u8*,  BroodwarOnly,			unitsDat[52].address);	//006606D8
+//SCBW_DATA(u16*, ???,					unitsDat[53].address);	//00661518
+} //units_dat (last entry at 0x00513EAC)
 
 namespace flingy_dat {
 SCBW_DATA(const DatLoad*, flingyDat, 0x00515A38);
 
-SCBW_DATA(u16*, SpriteID,           flingyDat[0].address);
-SCBW_DATA(u32*, TopSpeed,           flingyDat[1].address);
-SCBW_DATA(u16*, Acceleration,       flingyDat[2].address);
-SCBW_DATA(u32*, HaltDistance,       flingyDat[3].address);
-SCBW_DATA(u8*,  TurnSpeed,          flingyDat[4].address);  //Incorrectly known as "Turn Radius"
-SCBW_DATA(u8*,  MovementControl,    flingyDat[6].address);
-} //flingy_dat
+SCBW_DATA(u16*, SpriteID,           flingyDat[0].address);	//006CA318
+SCBW_DATA(u32*, TopSpeed,           flingyDat[1].address);	//006C9EF8
+SCBW_DATA(u16*, Acceleration,       flingyDat[2].address);	//006C9C78
+SCBW_DATA(u32*, HaltDistance,       flingyDat[3].address);	//006C9930
+SCBW_DATA(u8*,  TurnSpeed,          flingyDat[4].address);	//006C9E20 Incorrectly known as "Turn Radius"
+//SCBW_DATA(u8*, ???,				flingyDat[5].address);	//006CA240
+SCBW_DATA(u8*,  MovementControl,    flingyDat[6].address);	//006C9858
+} //flingy_dat (last entry at 0x00515A80)
 
 namespace weapons_dat {
 SCBW_DATA(const DatLoad*, weaponsDat, 0x00513868);
 
-SCBW_DATA(u16*, Label,              weaponsDat[0].address);
-SCBW_DATA(u32*, FlingyId,           weaponsDat[1].address);
-SCBW_DATA(TargetFlag*, TargetFlags, weaponsDat[3].address);
-SCBW_DATA(u32*, MinRange,           weaponsDat[4].address);
-SCBW_DATA(u32*, MaxRange,           weaponsDat[5].address);
-SCBW_DATA(u8*,  DamageUpgrade,      weaponsDat[6].address);
-SCBW_DATA(u8*,  DamageType,         weaponsDat[7].address); //Normal, Explosive, etc.. Use with DamageType::Enum.
-SCBW_DATA(u8*,  Behavior,           weaponsDat[8].address); //Fly and follow target, appear on target unit, etc. Use with WeaponBehavior::Enum.
-SCBW_DATA(u8*,  RemoveAfter,        weaponsDat[9].address);
-SCBW_DATA(u8*,  ExplosionType,      weaponsDat[10].address);  //NormalHit, RadialSplash, EnemySplash, etc. Use with WeaponEffect::Enum.
-SCBW_DATA(u16*, InnerSplashRadius,  weaponsDat[11].address);
-SCBW_DATA(u16*, MediumSplashRadius, weaponsDat[12].address);
-SCBW_DATA(u16*, OuterSplashRadius,  weaponsDat[13].address);
-SCBW_DATA(u16*, DamageAmount,       weaponsDat[14].address);
-SCBW_DATA(u16*, DamageBonus,        weaponsDat[15].address);
-SCBW_DATA(u8*,  Cooldown,           weaponsDat[16].address);
-SCBW_DATA(u8*,  DamageFactor,       weaponsDat[17].address);
-SCBW_DATA(u8*,  AttackAngle,        weaponsDat[18].address);
-SCBW_DATA(u8*,  LaunchSpin,         weaponsDat[19].address);
-SCBW_DATA(u8*,  ForwardOffset,      weaponsDat[20].address);
-SCBW_DATA(u8*,  VerticalOffset,     weaponsDat[21].address);
-} //weapons_dat
+SCBW_DATA(u16*, Label,              weaponsDat[0].address); //006572E0
+SCBW_DATA(u32*, FlingyId,           weaponsDat[1].address); //00656CA8
+//SCBW_DATA(u8*, ???,				weaponsDat[2].address); //006573E8
+SCBW_DATA(TargetFlag*, TargetFlags, weaponsDat[3].address); //00657998
+SCBW_DATA(u32*, MinRange,           weaponsDat[4].address); //00656A18
+SCBW_DATA(u32*, MaxRange,           weaponsDat[5].address); //00657470
+SCBW_DATA(u8*,  DamageUpgrade,      weaponsDat[6].address); //006571D0
+SCBW_DATA(u8*,  DamageType,         weaponsDat[7].address); //00657258 Normal, Explosive, etc.. Use with DamageType::Enum.
+SCBW_DATA(u8*,  Behavior,           weaponsDat[8].address); //00656670 Fly and follow target, appear on target unit, etc. Use with WeaponBehavior::Enum.
+SCBW_DATA(u8*,  RemoveAfter,        weaponsDat[9].address); //00657040
+SCBW_DATA(u8*,  ExplosionType,      weaponsDat[10].address);//006566F8 NormalHit, RadialSplash, EnemySplash, etc. Use with WeaponEffect::Enum.
+SCBW_DATA(u16*, InnerSplashRadius,  weaponsDat[11].address);//00656888
+SCBW_DATA(u16*, MediumSplashRadius, weaponsDat[12].address);//006570C8
+SCBW_DATA(u16*, OuterSplashRadius,  weaponsDat[13].address);//00657780
+SCBW_DATA(u16*, DamageAmount,       weaponsDat[14].address);//00656EB0
+SCBW_DATA(u16*, DamageBonus,        weaponsDat[15].address);//00657678
+SCBW_DATA(u8*,  Cooldown,           weaponsDat[16].address);//00656FB8
+SCBW_DATA(u8*,  DamageFactor,       weaponsDat[17].address);//006564E0
+SCBW_DATA(u8*,  AttackAngle,        weaponsDat[18].address);//00656990
+SCBW_DATA(u8*,  LaunchSpin,         weaponsDat[19].address);//00657888
+SCBW_DATA(u8*,  ForwardOffset,      weaponsDat[20].address);//00657910
+SCBW_DATA(u8*,  VerticalOffset,     weaponsDat[21].address);//00656C20
+//SCBW_DATA(u16*, ???,				weaponsDat[22].address);//00656568
+//SCBW_DATA(u16*, ???,				weaponsDat[23].address);//00656780
+} //weapons_dat (last entry at 0x0051397C)
 
 namespace upgrades_dat {
 SCBW_DATA(const DatLoad*, upgradesDat, 0x005136E0);
 
-SCBW_DATA(u16*, MineralCostBase,    upgradesDat[0].address);
-SCBW_DATA(u16*, MineralCostFactor,  upgradesDat[1].address);
-SCBW_DATA(u16*, GasCostBase,        upgradesDat[2].address);
-SCBW_DATA(u16*, GasCostFactor,      upgradesDat[3].address);
-SCBW_DATA(u16*, TimeCostBase,       upgradesDat[4].address);
-SCBW_DATA(u16*, TimeCostFactor,     upgradesDat[5].address);
-SCBW_DATA(u16*, Label,              upgradesDat[8].address);
-SCBW_DATA(u8*,  Race,               upgradesDat[9].address);
-SCBW_DATA(u8*,  MaxRepeats,         upgradesDat[10].address);
-} //upgrades_dat
+SCBW_DATA(u16*, MineralCostBase,    upgradesDat[0].address);	//00656740
+SCBW_DATA(u16*, MineralCostFactor,  upgradesDat[1].address);	//006559C0
+SCBW_DATA(u16*, GasCostBase,        upgradesDat[2].address);	//00655840
+SCBW_DATA(u16*, GasCostFactor,      upgradesDat[3].address);	//006557C0
+SCBW_DATA(u16*, TimeCostBase,       upgradesDat[4].address);	//00655B80
+SCBW_DATA(u16*, TimeCostFactor,     upgradesDat[5].address);	//00655940
+//SCBW_DATA(u16*, ???,              upgradesDat[6].address);	//006558C0
+//SCBW_DATA(u16*, ???,              upgradesDat[7].address);	//00655AC0
+SCBW_DATA(u16*, Label,              upgradesDat[8].address);	//00655A40
+SCBW_DATA(u8*,  Race,               upgradesDat[9].address);	//00655BFC
+SCBW_DATA(u8*,  MaxRepeats,         upgradesDat[10].address);	//00655700
+//SCBW_DATA(u8*, ???,				upgradesDat[11].address);	//00655B3C
+} //upgrades_dat (last entry at 0x00513764)
 
 namespace techdata_dat {
 SCBW_DATA(const DatLoad*, techdataDat, 0x005137D8);
 
-SCBW_DATA(u16*, MineralCost,        techdataDat[0].address);
-SCBW_DATA(u16*, GasCost,            techdataDat[1].address);
-SCBW_DATA(u16*, TimeCost,           techdataDat[2].address);
-SCBW_DATA(u16*, EnergyCost,         techdataDat[3].address);
-SCBW_DATA(u16*, Label,              techdataDat[7].address);
-} //techdata_dat
+SCBW_DATA(u16*, MineralCost,        techdataDat[0].address);	//00656248
+SCBW_DATA(u16*, GasCost,            techdataDat[1].address);	//006561F0
+SCBW_DATA(u16*, TimeCost,           techdataDat[2].address);	//006563D8
+SCBW_DATA(u16*, EnergyCost,         techdataDat[3].address);	//00656380
+//SCBW_DATA(u16*, ???,				techdataDat[4].address);	//00656198
+//SCBW_DATA(u16*, ???,				techdataDat[5].address);	//006562F8
+//SCBW_DATA(u16*, ???,				techdataDat[6].address);	//00656430
+SCBW_DATA(u16*, Label,              techdataDat[7].address);	//006562A0
+//SCBW_DATA(u8*, ???,				techdataDat[8].address);	//00656488
+//SCBW_DATA(u8*, ???,				techdataDat[9].address);	//00656350
+//SCBW_DATA(u8*, ???,				techdataDat[10].address);	//006564B4
+} //techdata_dat (last entry at 0x00513850)
 
 namespace orders_dat {
 SCBW_DATA(const DatLoad*, ordersDat, 0x00513EC8);
 
-SCBW_DATA(u16*, Label,              ordersDat[0].address);
-SCBW_DATA(u8*,  UseWeaponTargeting, ordersDat[1].address);
-SCBW_DATA(u8*,  TechUsed,           ordersDat[14].address);
-} //orders_dat
+SCBW_DATA(u16*, Label,              ordersDat[0].address);	//00665280
+SCBW_DATA(u8*,  UseWeaponTargeting, ordersDat[1].address);	//00664B00
+//SCBW_DATA(u8*,  ???,				ordersDat[2].address);	//00665940
+//SCBW_DATA(u8*,  ???,				ordersDat[3].address);	//00665A00
+//SCBW_DATA(u8*,  ???,				ordersDat[4].address);	//00664A40
+//SCBW_DATA(u8*,  ???,				ordersDat[5].address);	//006657C0
+//SCBW_DATA(u8*,  ???,				ordersDat[6].address);	//00665040
+//SCBW_DATA(u8*,  ???,				ordersDat[7].address);	//00665100
+//SCBW_DATA(u8*,  ???,				ordersDat[8].address);	//00665700
+//SCBW_DATA(u8*,  ???,				ordersDat[9].address);	//006651C0
+//SCBW_DATA(u8*,  ???,				ordersDat[10].address);	//006654C0
+//SCBW_DATA(u8*,  ???,				ordersDat[11].address);	//00664C80
+//SCBW_DATA(u8*,  ???,				ordersDat[12].address);	//00664BC0
+//SCBW_DATA(u8*,  ???,				ordersDat[13].address);	//00665880
+SCBW_DATA(u8*,  TechUsed,           ordersDat[14].address);	//00664E00
+//SCBW_DATA(u8*,  ???,				ordersDat[15].address);	//00664D40
+//SCBW_DATA(u16*,  ???,				ordersDat[16].address);	//00664EC0
+//SCBW_DATA(u16*,  ???,				ordersDat[17].address);	//00665580
+//SCBW_DATA(u8*,  ???,				ordersDat[18].address);	//00665400
+} //orders_dat (last entry at 0x00513FA0)
 
 namespace sprites_dat {
 SCBW_DATA(const DatLoad*, spritesDat, 0x00513FB8);
 
-SCBW_DATA(u16*, ImageId,            spritesDat[0].address);
-SCBW_DATA(s8*,  HpBarSize,          spritesDat[1].address);
-SCBW_DATA(u8*,  IsVisible,          spritesDat[3].address);
-} //sprites_dat
+SCBW_DATA(u16*, ImageId,            spritesDat[0].address);		//00666160
+SCBW_DATA(s8*,  HpBarSize,          spritesDat[1].address);		//00665E50
+//SCBW_DATA(s8*,  ???,				spritesDat[2].address);		//00666570
+SCBW_DATA(u8*,  IsVisible,          spritesDat[3].address);		//00665C48
+//SCBW_DATA(s8*,  ???,				spritesDat[4].address);		//00665AC0
+//SCBW_DATA(s8*,  ???,				spritesDat[5].address);		//00665FD8
+} //sprites_dat (last entry at 0x00513FF4)
 
 namespace images_dat {
 SCBW_DATA(const DatLoad*, imagesDat, 0x00514010);
 
-SCBW_DATA(const u8*,  IsTurnable,   imagesDat[1].address);
-SCBW_DATA(const u8*,  IsClickable,  imagesDat[2].address);
-SCBW_DATA(const u8*,  RLE_Function, imagesDat[5].address);
-SCBW_DATA(const u8*,  Remapping,    imagesDat[6].address);
-} //images_dat
+//SCBW_DATA(const u32*,  ???,		imagesDat[0].address);	//00668AA0
+SCBW_DATA(const u8*,  IsTurnable,   imagesDat[1].address);	//0066E860
+SCBW_DATA(const u8*,  IsClickable,  imagesDat[2].address);	//0066C150
+//SCBW_DATA(const u8*,  ???,		imagesDat[3].address);	//0066D4D8
+//SCBW_DATA(const u8*,  ???,		imagesDat[4].address);	//00667718
+SCBW_DATA(const u8*,  RLE_Function, imagesDat[5].address);	//00669E28
+SCBW_DATA(const u8*,  Remapping,    imagesDat[6].address);	//00669A40
+//SCBW_DATA(const u32*,  ???,		imagesDat[7].address);	//0066EC48
+//SCBW_DATA(const u32*,  ???,		imagesDat[8].address);	//0066C538
+//SCBW_DATA(const u32*,  ???,		imagesDat[9].address);	//0066B1B0
+//SCBW_DATA(const u32*,  ???,		imagesDat[10].address);	//0066A210
+//SCBW_DATA(const u32*,  ???,		imagesDat[11].address);	//00667B00
+//SCBW_DATA(const u32*,  ???,		imagesDat[12].address);	//00666778
+//SCBW_DATA(const u32*,  ???,		imagesDat[13].address);	//0066D8C0
+} //images_dat (last entry at 0x005140AC)
 
 
 //////////////////////////////////////////////////////////////// @}
