@@ -323,8 +323,6 @@ namespace hooks {
 						scbw::disconnectFromAddOn(unitInfested);
 					}
 
-					GPTP::logger<<"part C"<<std::endl;
-
 					//this is the same as calling 0047B2E0 unitIsFactoryUnit like original code but faster 
 					if(units_dat::GroupFlags[unitInfested->id].isFactory)
 						unitInfested->rally.unit = unitInfested;
