@@ -186,36 +186,20 @@ void removeOrderFromUnitQueue(const CUnit *unit) {
 //code based on Func_Sub_4E5D60 related to RemoveOverlays
 void reEnableUnit(CUnit *unit, u16 unitId) {
 
-	//So many jump, it was hard to convert it into
-	//something that make sense, this is the solution
-	//I chose
+	if( !(unit->status & UnitStatus::DoodadStatesThing) || //original is "MOV EDX,unit->status";"test DH"
+		unit->lockdownTimer != 0 ||
+		unit->stasisTimer != 0 ||
+		unit->maelstromTimer != 0) {
 
-	u8 jumpPoint = 0;
-
-	if (!(unit->status & UnitStatus::InAir))
-		jumpPoint = 1;
-
-	if (jumpPoint == 0 && unit->lockdownTimer != 0)
-		jumpPoint = 1;
-
-	if (jumpPoint == 0 && unit->stasisTimer != 0)
-		jumpPoint = 1;
-
-	if (jumpPoint == 0 &&  unit->maelstromTimer == 0)
-		jumpPoint = 2;
-
-	if(jumpPoint != 0) {
-
-		//original is "if byte ptr[ edx*4 + Starcraft.exe+264080 ] != 01"
-		if ( (*(u8*)(0x00664080 + 4 * unitId)) != 1 )
-			jumpPoint = 2;
-
-		if(jumpPoint != 2 && unitId != UnitId::None)
-			jumpPoint = 3;
+			//original is "test byte ptr[ edx*4 + Starcraft.exe+264080 ] != 01"
+			if ( !(units_dat::BaseProperty[unitId] & UnitProperty::MorphFromOtherUnit) )
+				unit->currentButtonSet = unit->id;
+			else
+			if(unitId == UnitId::None)
+				unit->currentButtonSet = unit->id;
 
 	}
-
-	if(jumpPoint != 3)
+	else
 		unit->currentButtonSet = unit->id;
 
 }
