@@ -257,7 +257,7 @@ namespace hooks {
 			unitHpTest = unit->getCurrentHpInGame();
 
 			//if HP/maxHP higher than 50%, not damaged enough
-			if( ( (100 * unitHpTest) / unitMaxHp ) > 50 )
+			if( ( (100 * unitHpTest) / unitMaxHp ) >= 50 )
 				returnValue = false;
 
 		}
