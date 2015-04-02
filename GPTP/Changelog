@@ -3,17 +3,19 @@ Update 2:
 Improving DatLoad for researchers (though some features will be useful for ordinary modders)
 Fixing an error in SoundId.h
 [Planned] 
-  * Adding something in SoundId.h: namespace DeathSoundId { const u16 deathSoundIdList[UnitId::None+1][2]; }
-    This is meant to be used by something like 
-    scbw::playSound(
-      scbw::randBetween(
-	      DeathSoundId::deathSoundIdList[unit->id][0],
-		    DeathSoundId::deathSoundIdList[unit->id][1]
-	    );
-	  );
+ * Adding something in SoundId.h: namespace DeathSoundId { const u16 deathSoundIdList[UnitId::None+1][2]; }
+	This is meant to be used by something like 
+	scbw::playSound(
+		scbw::randBetween(
+			DeathSoundId::deathSoundIdList[unit->id][0],
+			DeathSoundId::deathSoundIdList[unit->id][1]
+		);
+	);
 	to play a random death sound, according to the ones used in Iscript.bin.
-	* Infestation hook infesting unit side
-	* Some improvements (identified DatLoad arrays and others things) in the infestation hook
+ * Infestation hook infesting unit side
+ * Some improvements (identified DatLoad arrays and others things) in the infestation hook
+ * Cleaned helpers functions
+ * An actual reliable undestanding of asm test functions (I'm going to apply some fix right after writing this >_<)
 
 Update "1st-big-update" :
 
