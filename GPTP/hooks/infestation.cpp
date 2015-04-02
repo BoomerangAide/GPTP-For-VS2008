@@ -17,7 +17,7 @@ void orderReturnToIdle(CUnit *unit) {
 
   __asm {
     PUSHAD
-	MOV ESI, unit
+    MOV ESI, unit
     CALL Func_OrderReturnToIdle
     POPAD
   }
@@ -186,13 +186,13 @@ void removeOrderFromUnitQueue(const CUnit *unit) {
 //code based on Func_Sub_4E5D60 related to RemoveOverlays
 void reEnableUnit(CUnit *unit, u16 unitId) {
 
-	if( !(unit->status & UnitStatus::DoodadStatesThing) || //original is "MOV EDX,unit->status";"test DH"
+	if( (unit->status & UnitStatus::DoodadStatesThing) || //original is "MOV EDX,unit->status";"test DH, 04;";jne
 		unit->lockdownTimer != 0 ||
 		unit->stasisTimer != 0 ||
 		unit->maelstromTimer != 0) {
 
-			//original is "test byte ptr[ edx*4 + Starcraft.exe+264080 ] != 01"
-			if ( !(units_dat::BaseProperty[unitId] & UnitProperty::MorphFromOtherUnit) )
+			//original is "test byte ptr[ edx*4 + Starcraft.exe+264080 ], 01";jne
+			if ( units_dat::BaseProperty[unitId] & UnitProperty::Building )
 				unit->currentButtonSet = unit->id;
 			else
 			if(unitId == UnitId::None)
@@ -340,10 +340,9 @@ namespace hooks {
 					while(unitInfested->orderQueueHead != NULL)
 						removeOrderFromUnitQueue(unitInfested);
 
-					if(!(unitInfested->status & UnitStatus::GroundedBuilding)) {
+					if(unitInfested->status & UnitStatus::GroundedBuilding) {
 
-						//Damn LIFO, to me it would be more natural if it was head
-						CImage* current_image = unitInfested->sprite->images.tail;
+						CImage* current_image = unitInfested->sprite->images.head;
 
 						while(current_image != NULL) {
 
