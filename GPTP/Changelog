@@ -1,7 +1,21 @@
 Update 2:
 
 Improving DatLoad for researchers (though some features will be useful for ordinary modders)
+Adding more infos on BinDlg in structures.h (since I met this in assembly)
 Fixing an error in SoundId.h
+Re-adding helpers in tech_target_check.cpp (it's better to not have hooks rely too much on others, and it will remains compatible anyways.
+Infestation hook: Identified DatLoad arrays and others things
+Infestation hook: infesting unit side
+
+**Creations of files helpfunc.h and helpfunc.cpp**
+	Those are not supposed to be used directly.
+	It's an attempt to extract some assembly functions I needed a better understanding of,
+	converting them into C/C++ so they are more readable.
+	I may have lost or missed some things on the way (especially things stored in the stack -_-')
+	and one of my common cause of crash is bad management of wrappers code, so you probably would
+	have to make some research and fixes to have theses functions useable (unless I'm being really
+	pessimistic)
+
 [Planned] 
  * Adding something in SoundId.h: namespace DeathSoundId { const u16 deathSoundIdList[UnitId::None+1][2]; }
 	This is meant to be used by something like 
@@ -12,10 +26,7 @@ Fixing an error in SoundId.h
 		);
 	);
 	to play a random death sound, according to the ones used in Iscript.bin.
- * Infestation hook infesting unit side
- * Some improvements (identified DatLoad arrays and others things) in the infestation hook
- * Cleaned helpers functions
- * An actual reliable undestanding of asm test functions (I'm going to apply some fix right after writing this >_<)
+ * Research on various known or unknown functions to have better knowledge on how StarCraft do things.
 
 Update "1st-big-update" :
 
