@@ -6,11 +6,10 @@ namespace hooks {
 	bool isInfestableUnit(const CUnit *unit);
 	bool unitCanInfest(const CUnit *unit);
 
-	//Both units must exist, so normally for internal use only
-	//But the code is there to be modded
-	void orderMorphIntoInfested(CUnit *unitInfested, CUnit *unitInfesting);
+	//infestation order used by infestation victim
+	void orderMorphIntoInfested(CUnit *unitInfested);
 
-	//The injector function that should be called in initialize.cpp
-	void injectInfestationHooks();
+	//infestation order used by the unit that infest
+	void orderInfestTarget(CUnit *unitInfesting);
 
 } //hooks
