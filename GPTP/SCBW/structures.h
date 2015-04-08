@@ -282,27 +282,30 @@ struct Bounds {
 C_ASSERT(sizeof(Bounds) == 12);
 //static_assert(sizeof(Bounds) == 12, "The size of the Bounds structure is invalid");
 
+//BinDlg is defined in https://code.google.com/p/vgce/source/browse/trunk/docs/Blizzard/Starcraft/BIN%20FORMAT.txt
+//as Dialog Structure
+
 struct BinDlg {
-  BinDlg  *next;
-  Bounds  bounds;
-  u8      *buffer;
-  char    *pszText;
-  u32     flags;
-  u32     unk_1c;
-  u16     index;
-  u16     controlType;
-  u16     graphic;
-  u32     *user;
-  void    *fxnInteract;
-  void    *fxnUpdate;
-  BinDlg  *parent;
-  Box16   responseArea;
-  u32     unk_3e;
-  void    *childrenSmk;
-  Point16 textPos;
-  u16     responseAreaWidth;
-  u16     responseAreaHeight;
-  UNK     unk_4e[8];
+/*0x00*/  BinDlg  *next;
+/*0x04*/  Bounds  bounds;
+/*0x10*/  u8      *buffer;
+/*0x14*/  char    *pszText;
+/*0x18*/  u32     flags;
+/*0x1C*/  u32     unk_1c;
+/*0x20*/  u16     index;
+/*0x22*/  u16     controlType;
+/*0x24*/  u16     graphic;
+/*0x26*/  u32     *user;
+/*0x2A*/  void    *fxnInteract;
+/*0x2E*/  void    *fxnUpdate;
+/*0x32*/  BinDlg  *parent;
+/*0x36*/  Box16   responseArea;
+/*0x3E*/  u32     unk_3e;
+/*0x42*/  void    *childrenSmk;
+/*0x46*/  Point16 textPos;
+/*0x4A*/  u16     responseAreaWidth;
+/*0x4C*/  u16     responseAreaHeight;
+/*0x4E*/  UNK     unk_4e[8];
 };
 
 C_ASSERT(sizeof(BinDlg) == 86); 
