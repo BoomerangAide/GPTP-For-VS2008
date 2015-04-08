@@ -54,21 +54,36 @@ void __declspec(naked) unitCanBeInfestedWrapper() {
 void __declspec(naked) unitMorphIntoInfestedOrder() {
 
 	static CUnit *unitInfested; 
-	static CUnit *unitInfesting;
 
 	__asm {
 		PUSHAD
-		PUSH EBP
 		MOV EBP, ESP
 		MOV unitInfested, EAX
 	}
 
-	unitInfesting = unitInfested->orderTarget.unit;
-	hooks::orderMorphIntoInfested(unitInfested, unitInfesting);
+	hooks::orderMorphIntoInfested(unitInfested);
 
 	__asm {
-		MOV ESP, EBP
-		POP EBP
+		POPAD
+		RETN
+	}
+
+}
+
+//Inject with jmpPatch()
+void __declspec(naked) unitInfestOrder() {
+
+	static CUnit *unitInfesting;
+
+	__asm {
+		PUSHAD
+		MOV EBP, ESP
+		MOV unitInfesting, EAX
+	}
+
+	hooks::orderInfestTarget(unitInfesting);
+
+	__asm {
 		POPAD
 		RETN
 	}
@@ -82,6 +97,7 @@ namespace hooks {
 	void injectInfestationHooks() {
 		jmpPatch(unitCanBeInfestedWrapper,		0x00402210);
 		jmpPatch(unitCanInfestWrapper,			0x00402750);
+		jmpPatch(unitInfestOrder,				0x004EA290);
 		jmpPatch(unitMorphIntoInfestedOrder,	0x004EA4C0);
 	}
 
