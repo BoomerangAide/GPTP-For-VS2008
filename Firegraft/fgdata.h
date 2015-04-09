@@ -2462,7 +2462,7 @@ u8 energyUpgradeConnectedToUnit(u8 unit_id) {
 	if(unit_id >= UnitId::TerranGhost && unit_id <= UnitId::ProtossArbiter)
 		return *(u8*)(0x004919e0 + unit_id - UnitId::TerranGhost);
 	else
-		return sightUpgradeEnum::None;
+		return energyUpgradeEnum::None;
 
 }
 
@@ -2762,7 +2762,7 @@ u8 unselectableUnitsStateUnit(u8 unit_id) {
 	if(unit_id >= UnitId::TerranNuclearMissile && unit_id <= UnitId::Special_RightPitDoor)
 		return *(u8*)(0x0046ee6e + unit_id - UnitId::TerranNuclearMissile);
 	else
-		return sightUpgradeEnum::None;
+		return selectableStateEnum::Selectable;
 
 }
 
@@ -3735,7 +3735,6 @@ FG_SCBW_DATA(const s32*, aiOpticalFlareTargetSearchBoundaryUnderAttack,			0x0044
 //AI-controlled Medics will not use Optical Flare on any unit 
 //that passes this AND flag check. 
 //By default, this includes buildings (0x1).
-//Caution: was wrong, fix not verified as it's about AI.
 FG_SCBW_DATA(const u8*, aiOpticalFlareExclusionFlagCheckUnitPrototype,			0x00441b6b);
 
 //Entry 1526
