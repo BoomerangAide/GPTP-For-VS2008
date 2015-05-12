@@ -5,17 +5,17 @@
 
 #pragma once
 
-const int PLAYER_COUNT			    = 12;
-const int PLAYABLE_PLAYER_COUNT = 8;
-const int UNIT_ARRAY_LENGTH		  = 1700;
-const int BULLET_ARRAY_LENGTH	  = 100;
-const int SPRITE_ARRAY_LENGTH	  = 2500;
-const int UNIT_TYPE_COUNT		    = 228;
-const int TECH_TYPE_COUNT		    = 44;
-const int UPGRADE_TYPE_COUNT	  = 61;
-const int WEAPON_TYPE_COUNT		  = 130;
-const int FLINGY_TYPE_COUNT		  = 209;
-const int IMAGE_TYPE_COUNT		  = 999;
+const int PLAYER_COUNT			= 12;
+const int PLAYABLE_PLAYER_COUN	= 8;
+const int UNIT_ARRAY_LENGTH		= 1700;
+const int BULLET_ARRAY_LENGTH	= 100;
+const int SPRITE_ARRAY_LENGTH	= 2500;
+const int UNIT_TYPE_COUNT		= 228;
+const int TECH_TYPE_COUNT		= 44;
+const int UPGRADE_TYPE_COUNT	= 61;
+const int WEAPON_TYPE_COUNT		= 130;
+const int FLINGY_TYPE_COUNT		= 209;
+const int IMAGE_TYPE_COUNT		= 999;
 
 #include "structures/CUnit.h"
 #include "structures/CBullet.h"
@@ -110,14 +110,14 @@ typedef void (__fastcall *ACT_FUNC)(u32,u32);
 //(u32 actVar, u32 shiftClick);
 
 struct BUTTON {
-  u16       position;
-  u16       iconID;
-  REQ_FUNC  *reqFunc;
-  ACT_FUNC  *actFunc;
-  u16       reqVar;
-  u16       actVar;
-  u16       reqStringID;
-  u16       actStringID;
+/*00*/  u16       position;
+/*02*/  u16       iconID;
+/*04*/  REQ_FUNC  *reqFunc;
+/*08*/  ACT_FUNC  *actFunc;
+/*0C*/  u16       reqVar;
+/*0E*/  u16       actVar;
+/*10*/  u16       reqStringID;
+/*12*/  u16       actStringID;
 };
 
 struct BUTTON_SET {
@@ -290,17 +290,17 @@ struct BinDlg {
 /*0x04*/  Bounds  bounds;
 /*0x10*/  u8      *buffer;
 /*0x14*/  char    *pszText;
-/*0x18*/  u32     flags;
+/*0x18*/  u32     flags;			//use BinDlgFlags::Enum
 /*0x1C*/  u32     unk_1c;
 /*0x20*/  u16     index;
-/*0x22*/  u16     controlType;
+/*0x22*/  u16     controlType;		//use DialogControlTypes::Enum
 /*0x24*/  u16     graphic;
 /*0x26*/  u32     *user;
 /*0x2A*/  void    *fxnInteract;
 /*0x2E*/  void    *fxnUpdate;
 /*0x32*/  BinDlg  *parent;
 /*0x36*/  Box16   responseArea;
-/*0x3E*/  u32     unk_3e;
+/*0x3E*/  BinDlg  *unk_3e;
 /*0x42*/  void    *childrenSmk;
 /*0x46*/  Point16 textPos;
 /*0x4A*/  u16     responseAreaWidth;
@@ -308,17 +308,31 @@ struct BinDlg {
 /*0x4E*/  UNK     unk_4e[8];
 };
 
-C_ASSERT(sizeof(BinDlg) == 86); 
+C_ASSERT(sizeof(BinDlg) == 86); //0x56
 //static_assert(sizeof(BinDlg) == 86, "The size of the BinDlg structure is invalid");
 
-struct GuiOverlay {
-  UNK     unk_0[6];
-  u16     overlayType;
-  u16     id;
-  UNK     unk_a[34];
+struct SMK_Structure {
+/*0x00*/ u32		smkOverlayOffset;
+/*0x04*/ u16		flags;				//use SmkFlags::Enum
+/*0x06*/ u32		internalUse1;
+/*0x0A*/ u32		smkFilenameOffset;
+/*0x0E*/ u32		internalUse2;
+/*0x12*/ Point16	smkOverlayPosition;
+/*0x16*/ u32		internalUse3;
+/*0x1A*/ u32		internalUse4;
 };
 
-C_ASSERT(sizeof(GuiOverlay) == 44); 
+C_ASSERT(sizeof(SMK_Structure) == 30); //0x1E
+//static_assert(sizeof(SMK_Structure) == 30, "The size of the SMK_Structure structure is invalid");
+
+struct GuiOverlay {
+/*0x00*/  UNK     unk_0[6];
+/*0x06*/  u16     overlayType;
+/*0x08*/  u16     id;
+/*0x0A*/  UNK     unk_a[34];
+};
+
+C_ASSERT(sizeof(GuiOverlay) == 44); //0x2C
 //static_assert(sizeof(GuiOverlay) == 44, "The size of the GuiOverlay structure is invalid");
 
 //-------- AI related stuff --------//
