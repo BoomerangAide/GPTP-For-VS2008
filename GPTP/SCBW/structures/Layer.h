@@ -8,20 +8,20 @@ namespace graphics { class Bitmap; }
 struct bounds;
 
 struct Layer {
-  u8  buffers;
+/*00*/  u8  buffers;
 //u8  bits;
-  u8  hasBeenRefreshed  : 1;
-  u8  unk               : 7;
-  u16 left;
-  u16 top;
-  u16 width;
-  u16 height;
-  u16 alignment;
-  graphics::Bitmap  *pSurface;
-  void (__stdcall *pUpdate)(graphics::Bitmap *pSurface, bounds *pBounds);
+/*01*/  u8  hasBeenRefreshed  : 1;
+/*01*/  u8  unk               : 7;
+/*02*/  u16 left;
+/*04*/  u16 top;
+/*06*/  u16 width;
+/*08*/  u16 height;
+/*0A*/  u16 alignment;
+/*0C*/  graphics::Bitmap  *pSurface;
+/*10*/  void (__stdcall *pUpdate)(graphics::Bitmap *pSurface, bounds *pBounds);
 };
 
-C_ASSERT(sizeof(Layer) == 20);
+C_ASSERT(sizeof(Layer) == 20); /*0x14*/
 //static_assert(sizeof(Layer) == 20, "The size of the Layer structure is invalid");
 
 
