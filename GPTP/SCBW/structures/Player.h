@@ -4,12 +4,12 @@
 //Not like the advanced BWAPI class
 struct PLAYER {
 
-  u32   id;
-  u32   actions;    //Unused; FF FF FF FF if not a human player
-  u8    type;
-  u8    race;       //Use with scbw::RaceId
-  u8    force;
-  char  name[25];
+/*00*/  u32   id;
+/*04*/  u32   actions;    //Unused; FF FF FF FF if not a human player
+/*08*/	u8    type;
+/*09*/  u8    race;       //Use with scbw::RaceId
+/*0A*/  u8    force;
+/*0B*/  char  name[25];
 
   /// return the possibly non-standard color of the 
   /// current player
