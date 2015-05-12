@@ -24,7 +24,7 @@ SCBW_DATA(CUnit**,      firstScannerSweep,      0x006283F4);
 SCBW_DATA(CUnit**,      firstPsiFieldProvider,  0x0063FF54);
 SCBW_DATA(CBullet**,    firstBullet,            0x0064DEC4);
 
-struct Units12 { CUnit* unit[PLAYER_COUNT]; };
+struct Units12 { CUnit* unit[12]; };
 SCBW_DATA(Units12*,     firstPlayerUnit,        0x006283F8);  //Indexed by player Id
 
 //////////////////////////////////////////////////////////////// @}
@@ -429,12 +429,12 @@ SCBW_DATA(_bwTechs*, TechBw,   0x0058F050); //Use with BwTech::Enum
 //-------- Upgrade levels --------//
 
 struct _scUpgrs {
-  u8 maxLevel[PLAYER_COUNT][46];
-  u8 currentLevel[PLAYER_COUNT][46];
+  u8 maxLevel[PLAYER_COUNT][46];		//0x0058D088
+  u8 currentLevel[PLAYER_COUNT][46];	//0x0058D2B0
 };
 struct _bwUpgrs {
-  u8 maxLevel[PLAYER_COUNT][15];
-  u8 currentLevel[PLAYER_COUNT][15];
+  u8 maxLevel[PLAYER_COUNT][15];		//0x0058F278
+  u8 currentLevel[PLAYER_COUNT][15];	//0x0058F32C
 };
 SCBW_DATA(_scUpgrs*, UpgradesSc,  0x0058D088); //Use with ScUpgrade::Enum
 SCBW_DATA(_bwUpgrs*, UpgradesBw,  0x0058F278); //Use with BwUpgrade::Enum
