@@ -186,6 +186,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\hooks\interface\buttonsets.cpp"
+			>
+			</File>
+			<File
+				RelativePath=".\hooks\interface\buttonsets_inject.cpp"
+			>
+			</File>			
+			<File
 				RelativePath=".\configure.cpp"
 				>
 			</File>
@@ -648,6 +656,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\hooks\interface\buttonsets.h"
+				>
+			</File>			
+			<File
 				RelativePath=".\definitions.h"
 				>
 			</File>
@@ -659,6 +671,10 @@
 				RelativePath=".\hook_tools.h"
 				>
 			</File>
+			<File
+				RelativePath=".\SCBW\enumerations\IconId.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\infestation.h"
 				>
