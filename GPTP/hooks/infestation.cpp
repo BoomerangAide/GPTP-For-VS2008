@@ -100,9 +100,8 @@ namespace hooks {
 					unitInfested->remainingBuildTime--;
 
 					//disconnect terran buildings from their add-on
-					if(unitInfested->building.addon != NULL) {
+					if(unitInfested->building.addon != NULL)
 						disconnectFromAddOn(unitInfested);
-					}
 
 					//this is the same as calling 0047B2E0 unitIsFactoryUnit like original code but faster
 					if(units_dat::GroupFlags[unitInfested->id].isFactory)
