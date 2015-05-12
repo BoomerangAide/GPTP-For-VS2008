@@ -404,6 +404,32 @@ enum Enum {
   Men                             = 230,
   Buildings                       = 231,
   Factories                       = 232,
-  TrigMax                         = 233  
+  TrigMax                         = 233,
+  
+  //Buttonsets using unitid beyond Unit::None
+
+  Buttons_Blank = 228,
+  Buttons_Cancel = 229,
+  Buttons_CancelPlaceBuilding = 230,
+  Buttons_CancelConstruction = 231,
+  Buttons_CancelConstructionWithRallyPt = 232,
+  Buttons_CancelMutation = 233,
+  Buttons_CancelMutationWithRallyPt = 234,
+  Buttons_CancelInfestation = 235,
+  Buttons_HatcheryMorphing = 236,
+  Buttons_CancelNukeStrike = 237,
+  Buttons_BasicZergBuildings = 238,
+  Buttons_BasicTerranBuildings = 239,
+  Buttons_BasicProtossBuildings = 240,
+  Buttons_AdvancedZergBuildings = 241,
+  Buttons_AdvancedTerranBuildings = 242,
+  Buttons_AdvancedProtossBuildings = 243,
+  Buttons_GroupMixed = 244,
+  Buttons_GroupPeons = 245,
+  Buttons_GroupCloaker = 246,
+  Buttons_GroupBurrower = 247,
+  Buttons_ReplayPaused = 248,
+  Buttons_ReplayPlaying = 249
+  
 };
 }
