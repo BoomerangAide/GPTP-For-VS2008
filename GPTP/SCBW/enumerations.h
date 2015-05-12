@@ -13,6 +13,7 @@
 #include "enumerations/SpriteId.h"
 #include "enumerations/FlingyId.h"
 #include "enumerations/SoundId.h"
+#include "enumerations/IconId.h"
 
 namespace RaceId {
 enum Enum : u8 {
