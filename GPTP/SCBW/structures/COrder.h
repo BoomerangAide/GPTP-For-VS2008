@@ -6,11 +6,14 @@
 //V241 for VS2008
 
 struct COrder {
-  COrder*   prev;
-  COrder*   next;
-  u16       orderId;
-  u16       unitId;
-  Target    target;
+/*00*/  COrder*   prev;
+/*04*/  COrder*   next;
+/*08*/  u16       orderId;
+/*0A*/  u16       unitId;
+/*0C*/  Target    target;
+/*0C*/			/*target.pt.x*/
+/*0E*/			/*target.pt.y*/	
+/*10*/			/*target.unit*/
 };
 
 C_ASSERT(sizeof(COrder) == 20);
