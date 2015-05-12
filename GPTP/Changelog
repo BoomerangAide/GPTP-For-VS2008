@@ -6,6 +6,17 @@ Fixing an error in SoundId.h
 Re-adding helpers in tech_target_check.cpp (it's better to not have hooks rely too much on others, and it will remains compatible anyways.
 Infestation hook: Identified DatLoad arrays and others things
 Infestation hook: infesting unit side
+Adding something in SoundId.h: namespace DeathSoundId { const u16 deathSoundIdList[UnitId::None+1][2]; }
+	This is meant to be used by something like 
+	scbw::playSound(
+		scbw::randBetween(
+			DeathSoundId::deathSoundIdList[unit->id][0],
+			DeathSoundId::deathSoundIdList[unit->id][1]
+		);
+	);
+	to play a random death sound, according to the ones used in Iscript.bin.
+Adding IconId enum (because it's used in buttonset hook)
+**Adding buttonsets hook and features related to it.**
 
 **Creations of files helpfunc.h and helpfunc.cpp**
 	Those are not supposed to be used directly.
@@ -17,16 +28,9 @@ Infestation hook: infesting unit side
 	pessimistic)
 
 [Planned] 
- * Adding something in SoundId.h: namespace DeathSoundId { const u16 deathSoundIdList[UnitId::None+1][2]; }
-	This is meant to be used by something like 
-	scbw::playSound(
-		scbw::randBetween(
-			DeathSoundId::deathSoundIdList[unit->id][0],
-			DeathSoundId::deathSoundIdList[unit->id][1]
-		);
-	);
-	to play a random death sound, according to the ones used in Iscript.bin.
  * Research on various known or unknown functions to have better knowledge on how StarCraft do things.
+
+-------------------------
 
 Update "1st-big-update" :
 
