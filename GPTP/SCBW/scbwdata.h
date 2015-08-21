@@ -134,7 +134,7 @@ SCBW_DATA(u16*, SubUnit,				unitsDat[1].address);	//006607C0
 //SCBW_DATA(u16*, ???,					unitsDat[2].address);	//00660C38
 SCBW_DATA(u16*, InfestedUnitPartial,	unitsDat[3].address);	//00664980, (Id - UnitId::TerranCommandCenter) for it to work, last valid id is UnitId::Special_OvermindCocoon
 SCBW_DATA(u32*, ConstructionGraphic,	unitsDat[4].address);	//006610B0
-//SCBW_DATA(u8*, ???,					unitsDat[5].address);	//006605F0
+SCBW_DATA(u8*,  SpecialAngle,			unitsDat[5].address);	//006605F0   (used by Siege Mode ON/OFF and maybe doodad traps)
 SCBW_DATA(u8*,  ShieldsEnabled,			unitsDat[6].address);	//006647B0
 SCBW_DATA(u16*, MaxShieldPoints,		unitsDat[7].address);	//00660E00
 SCBW_DATA(s32*, MaxHitPoints,			unitsDat[8].address);	//00662350
