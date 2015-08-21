@@ -6,6 +6,7 @@ Fixing an error in SoundId.h
 Re-adding helpers in tech_target_check.cpp (it's better to not have hooks rely too much on others, and it will remains compatible anyways.
 Infestation hook: Identified DatLoad arrays and others things
 Infestation hook: infesting unit side
+Siege Transform hook: siege mode and tank mode orders
 Adding something in SoundId.h: namespace DeathSoundId { const u16 deathSoundIdList[UnitId::None+1][2]; }
 	This is meant to be used by something like 
 	scbw::playSound(
