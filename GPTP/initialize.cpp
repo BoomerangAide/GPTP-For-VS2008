@@ -40,6 +40,7 @@
 #include "hooks/interface/weapon_armor_tooltip.h"
 
 #include "hooks/infestation.h"
+#include "hooks/siege_transform.h"
 #include "hooks/interface/buttonsets.h"
 
 #include "AI/spellcasting.h"
@@ -64,6 +65,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
   hooks::injectDrawHook();
   
   hooks::injectInfestationHooks();
+  hooks::injectSiegeTransformHooks();
   hooks::injectButtonSetHooks();
 
   hooks::injectApplyUpgradeFlags();
