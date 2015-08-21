@@ -520,7 +520,7 @@ void changeUnitButtonSet_Sub_4E5D60(CUnit *unit, u16 buttonSetId) {
 
 
 
-//This is what hide the infesting unit...probably
+//This is what hide the infesting unit
 const u32 Func_unitDeathSomething_0 = 0x004E6340;
 void hideAndDisableUnit(CUnit *unit) {
 
@@ -533,7 +533,7 @@ void hideAndDisableUnit(CUnit *unit) {
 
 }
 
-//Probably what make the target reappear
+//What make the target reappear
 const u32 Func_InitUnitTrapDoodad = 0x004E6490;
 void showAndEnableUnit(CUnit *unit) {
 
