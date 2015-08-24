@@ -2,7 +2,11 @@
 #include "tech_target_check.h"
 #include <SCBW/scbwdata.h>
 #include <SCBW/enumerations.h>
-#include "infestation.h"
+
+//-------- Helper function declarations. Do NOT modify! --------//
+namespace {
+bool isInfestableUnit(const CUnit *unit);
+} //Unnamed namespace
 
 namespace hooks {
 
@@ -54,7 +58,7 @@ u16 getTechUseErrorMessageHook(const CUnit *target, u8 castingPlayer, u16 techId
       break;
 
     case TechId::Infestation:
-      if (!isInfestableCC(target))
+      if (!isInfestableUnit(target))
         return 870;     //Must target severely damaged Terran Command Center.<0>
       break;
 
@@ -71,3 +75,24 @@ u16 getTechUseErrorMessageHook(const CUnit *target, u8 castingPlayer, u16 techId
 }
 
 } //hooks
+
+//-------- Helper function definitions. Do NOT modify! --------//
+namespace {
+
+const u32 Func_IsInfestable = 0x00402210;
+bool isInfestableUnit(const CUnit *unit) {
+
+  static Bool32 result;
+  
+  __asm {
+    PUSHAD
+    MOV EDX, unit
+    CALL Func_IsInfestable
+    MOV result, EAX
+    POPAD
+  }
+
+  return result != 0;
+
+}
+}
