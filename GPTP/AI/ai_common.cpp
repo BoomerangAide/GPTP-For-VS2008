@@ -4,8 +4,6 @@
 #include <SCBW/UnitFinder.h>
 #include <cassert>
 
-//V241 for VS2008
-
 namespace AI {
 
 bool isTargetWorthHitting(const CUnit *target, const CUnit *attacker) {
