@@ -82,8 +82,8 @@ SCBW_DATA(s32*,         screenY,                0x00628470);
 SCBW_DATA(const Point32*, mouse,                0x006CDDC4);
 
 /// Maybe used by Map triggers to init a progressive movement toward the corresponding location, see GameImpl::setScreenPosition of BWAPI
-SCBW_DATA(u32*,		MoveToX,		0x0062848C);
-SCBW_DATA(u32*,		MoveToY,		0x006284A8);
+SCBW_DATA(u32*,			MoveToX,				0x0062848C);
+SCBW_DATA(u32*,			MoveToY,				0x006284A8);
 
 /// Contains various information (names, player types, race types, and associated forces) of each player in the current game
 SCBW_DATA(const PLAYER*,  playerTable,          0x0057EEE0);
@@ -96,7 +96,7 @@ struct SupplyData {
 SCBW_DATA(SupplyData*,    raceSupply,           0x00582144);  //Array; Use CUnit::getRace() to get the index.
 
 SCBW_DATA(const u32*,     elapsedTimeFrames,    0x0057F23C);  //Elapsed game time in frames
-SCBW_DATA(const u32*,     CountdownTimer,	0x0058D6F4);  //Countdown Timer (in seconds) (From BWAPI Offsets.h)
+SCBW_DATA(const u32*,     CountdownTimer,		0x0058D6F4);  //Countdown Timer (in seconds) (From BWAPI Offsets.h)
 SCBW_DATA(const u32*,     elapsedTimeSeconds,   0x0058D6F8);  //Elapsed game time in seconds
 SCBW_DATA(const u8*,      GAME_TYPE,            0x00596820);  //Part of a larger structure; Compare with GameType::Enum.
 SCBW_DATA(const s32*,     ACTIVE_NATION_ID,     0x00512678);  //AKA g_ActiveNationID
@@ -107,8 +107,8 @@ SCBW_DATA(const u8*,      CURRENT_TILESET,      0x00596828);  //Tileset of curre
 
 // Added from BWAPI Offsets.h, but made const since it would not be safe to modify those
 SCBW_DATA(const char*,	  CurrentMapFileName,	0x0057FD3C);
-SCBW_DATA(const char*,	  CurrentMapName,	0x0057FE40);
-SCBW_DATA(const _uavail*, UnitAvailability,	0x0057F27C);
+SCBW_DATA(const char*,	  CurrentMapName,		0x0057FE40);
+SCBW_DATA(const _uavail*, UnitAvailability,		0x0057F27C);
 
 //////////////////////////////////////////////////////////////// @}
 
@@ -134,7 +134,7 @@ SCBW_DATA(u16*, SubUnit,				unitsDat[1].address);	//006607C0
 //SCBW_DATA(u16*, ???,					unitsDat[2].address);	//00660C38
 SCBW_DATA(u16*, InfestedUnitPartial,	unitsDat[3].address);	//00664980, (Id - UnitId::TerranCommandCenter) for it to work, last valid id is UnitId::Special_OvermindCocoon
 SCBW_DATA(u32*, ConstructionGraphic,	unitsDat[4].address);	//006610B0
-SCBW_DATA(u8*,  SpecialAngle,			unitsDat[5].address);	//006605F0   (used by Siege Mode ON/OFF and maybe doodad traps)
+SCBW_DATA(u8*,  SpecialAngle,			unitsDat[5].address);	//006605F0  (used by Siege Mode ON/OFF and maybe doodad traps)
 SCBW_DATA(u8*,  ShieldsEnabled,			unitsDat[6].address);	//006647B0
 SCBW_DATA(u16*, MaxShieldPoints,		unitsDat[7].address);	//00660E00
 SCBW_DATA(s32*, MaxHitPoints,			unitsDat[8].address);	//00662350
@@ -278,7 +278,7 @@ SCBW_DATA(u8*,  UseWeaponTargeting, ordersDat[1].address);	//00664B00
 //SCBW_DATA(u8*,  ???,				ordersDat[13].address);	//00665880
 SCBW_DATA(u8*,  TechUsed,           ordersDat[14].address);	//00664E00
 //SCBW_DATA(u8*,  ???,				ordersDat[15].address);	//00664D40
-//SCBW_DATA(u16*,  ???,				ordersDat[16].address);	//00664EC0
+SCBW_DATA(u16*,	ButtonIcon,			ordersDat[16].address);	//00664EC0
 //SCBW_DATA(u16*,  ???,				ordersDat[17].address);	//00665580
 //SCBW_DATA(u8*,  ???,				ordersDat[18].address);	//00665400
 } //orders_dat (last entry at 0x00513FA0)
@@ -358,7 +358,7 @@ SCBW_DATA(int*,         factionsColorsOrdering,	0x0057F21C);
 ///standard versions from graphics.h
 ///This is the PlayerColors from BWAPI
 ///Max index is PLAYER_COUNT-1
-SCBW_DATA(u8*,         	playersColors,		0x00581DD6);
+SCBW_DATA(u8*,         playersColors,	0x00581DD6);
 
 const CListExtern<CImage, &CImage::link> unusedImages(0x0057EB68, 0x0057EB70);
 SCBW_DATA(CList<CSprite>*, unusedSprites,       0x0063FE30);
