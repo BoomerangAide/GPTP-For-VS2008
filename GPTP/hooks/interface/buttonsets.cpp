@@ -289,7 +289,7 @@ namespace hooks {
 			//58C88
 			unitIndexFromSelection++;
 
-		}while(unitIndexFromSelection < *clientSelectionCount);
+		}while(unitIndexFromSelection < 12);
 
 		if(*BUTTONSET_CURRENT_BUTTONSETID != UnitId::Buttons_Blank) {
 
