@@ -91,7 +91,7 @@ u16 CUnit::getMaxEnergy() const {
   return result;
 }
 
-//Identical to function @ 0x00401400
+//Similar to function @ 0x00401400
 u32 CUnit::getMaxHpInGame() const {
   assert(this);
   
@@ -102,7 +102,7 @@ u32 CUnit::getMaxHpInGame() const {
       maxHp = 1;
   }
   else
-    maxHp = maxHp >> 8;
+  	maxHp = maxHp >> 8;
 
   return maxHp;
 }
@@ -616,7 +616,7 @@ graphics::ColorId CUnit::getColor(CUnit* unit) {
 //-------- Distances and terrain --------//
 
 u32 CUnit::getDistanceToTarget(const CUnit *target) const {
-  using units_dat::BaseProperty;
+
   assert(this);
   assert(target);
 
