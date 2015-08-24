@@ -212,7 +212,7 @@ namespace hooks {
 
 			//code made based on similar code in api.cpp, seems to work, but this really came out
 			//different from the assembly code
-			if(scbw::checkUnitCollisionPos(unitInfesting, &unitInfesting->sprite->position, &actualpos)) {
+			if(scbw::checkUnitCollisionPos(unitInfesting, &unitInfested->sprite->position, &actualpos)) {
 
 				scbw::setUnitPosition(unitInfesting, actualpos.x, actualpos.y);
 				makeToHoldPosition(unitInfesting);
