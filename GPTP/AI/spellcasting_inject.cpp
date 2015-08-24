@@ -1,8 +1,6 @@
 #include "spellcasting.h"
 #include <hook_tools.h>
 
-//V241 for VS2008
-
 namespace {
 
 void __declspec(naked) AI_spellcasterWrapper() {
