@@ -2,8 +2,6 @@
 #include "infestation.h"
 #include <hook_tools.h>
 
-//const u32 Func_IsInfestable = ;
-
 namespace {
 
 //Inject with jmpPatch()
