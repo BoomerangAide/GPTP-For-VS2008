@@ -50,7 +50,6 @@ void CImage::initializeData(CSprite *parent, u16 imageId, s8 x, s8 y) {
   this->frameSet = 0;
   this->direction = 0;
   this->frameIndex = 0;
-  this->animation = 0;
   this->parentSprite = parent;
   this->horizontalOffset = x;
   this->verticalOffset = y;
