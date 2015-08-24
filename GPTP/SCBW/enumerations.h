@@ -60,8 +60,8 @@ enum Enum {
   Cloakable           = 0x00000200,
   TwoUnitsIn1Egg      = 0x00000400,
   NeutralAccessories  = 0x00000800, //AKA "Single entity" (prevents multi-select, set on all pickup items)
-  ResourceDepot       = 0x00001000,
-  ResourceContainer   = 0x00002000,
+  ResourceDepot       = 0x00001000,	//Place where resources are brought back
+  ResourceContainer   = 0x00002000,	//Resource Source
   RoboticUnit         = 0x00004000,
   Detector            = 0x00008000,
   Organic             = 0x00010000,
@@ -220,23 +220,23 @@ Enable        = 0x1B
 namespace CheatFlags {
 enum Enum {
   None                   = 0,
-  BlackSheepWall         = 1 <<  0,
-  OperationCwal          = 1 <<  1,
-  PowerOverwhelming       = 1 <<  2,
-  SomethingForNothing    = 1 <<  3,
-  ShowMeTheMoney         = 1 <<  4,
-  GameOverMan            = 1 <<  6,
-  ThereIsNoCowLevel      = 1 <<  7,
-  StayingAlive           = 1 <<  8,
-  Ophelia                = 1 <<  9,
-  TheGathering           = 1 << 11,
-  MedievalMan            = 1 << 12,
-  ModifyThePhaseVariance = 1 << 13,
-  WarAintWhatItUsedToBe  = 1 << 14,
-  FoodForThought         = 1 << 17,
-  WhatsMineIsMine        = 1 << 18,
-  BreatheDeep            = 1 << 19,
-  NoGlues                = 1 << 29
+  BlackSheepWall         = 1 <<  0,		/*0x00000001*/
+  OperationCwal          = 1 <<  1,		/*0x00000002*/
+  PowerOverwhelming       = 1 <<  2,	/*0x00000004*/
+  SomethingForNothing    = 1 <<  3,		/*0x00000008*/
+  ShowMeTheMoney         = 1 <<  4,		/*0x00000010*/
+  GameOverMan            = 1 <<  6,		/*0x00000040*/
+  ThereIsNoCowLevel      = 1 <<  7,		/*0x00000080*/
+  StayingAlive           = 1 <<  8,		/*0x00000100*/
+  Ophelia                = 1 <<  9,		/*0x00000200*/
+  TheGathering           = 1 << 11,		/*0x00000800*/
+  MedievalMan            = 1 << 12,		/*0x00001000*/
+  ModifyThePhaseVariance = 1 << 13,		/*0x00002000*/
+  WarAintWhatItUsedToBe  = 1 << 14,		/*0x00004000*/
+  FoodForThought         = 1 << 17,		/*0x00020000*/
+  WhatsMineIsMine        = 1 << 18,		/*0x00040000*/
+  BreatheDeep            = 1 << 19,		/*0x00080000*/
+  NoGlues                = 1 << 29		/*0x20000000*/
 };
 }
 
@@ -341,5 +341,83 @@ enum Enum {
 	Desert = 5,
 	Ice = 6,
 	Twilight = 7
+};
+}
+
+namespace BinDlgFlags {
+enum Enum {
+	Unknown0 =					0x00000001,	//0x00000001
+	Disabled =					0x00000002,	//0x00000002
+	Active =					0x00000004,	//0x00000004
+	Visible =					0x00000008,	//0x00000008
+	RespondsToEvents =			0x00000010,	//0x00000010
+	Unknown5 =					0x00000020,	//0x00000020
+	CancelButton =				0x00000040,	//0x00000040
+	NoHoverSound =				0x00000080,	//0x00000080
+	SpecialHotkeyVirtualKey =	0x00000100,	//0x00000100
+	HasHotkey =					0x00000200,	//0x00000200
+	SmallestFontSize10 =		0x00000400,	//0x00000400
+	LargerFontSize16 =			0x00000800,	//0x00000800
+	Unknown12 =					0x00001000,	//0x00001000
+	TransparentHideColor0 =		0x00002000,	//0x00002000
+	LargestFontSize16x =		0x00004000,	//0x00004000
+	AlternateStyleWC2 =			0x00008000,	//0x00008000
+	SmallerFontSize14 =			0x00010000,	//0x00010000
+	RemoveStyles =				0x00020000,	//0x00020000
+	ApplyTranslucency =			0x00040000,	//0x00040000
+	DefaultButton =				0x00080000,	//0x00080000
+	BringToFront =				0x00100000,	//0x00100000
+	HorizontalAlignmentLeft =	0x00200000,	//0x00200000
+	HorizontalAlignmentRight =	0x00400000,	//0x00400000
+	HorizontalAlignmentCenter =	0x00800000,	//0x00800000
+	VerticalAlignmentTop =		0x01000000,	//0x01000000
+	VerticalAlignmentMiddle =	0x02000000,	//0x02000000
+	VerticalAlignmentBottom =	0x04000000,	//0x04000000
+	Unknown27 =					0x08000000,	//0x08000000
+	ReverseDialogDirection =	0x10000000,	//0x10000000
+	UseAlternateStyle =			0x20000000,	//0x20000000
+	NoClickSound =				0x40000000,	//0x40000000
+	HighlightText =				0x80000000	//0x80000000
+};
+}
+
+namespace SmkFlags {
+enum Enum {
+	FadeIn			= 0x0001,	//0x0001
+	Dark			= 0x0002,	//0x0002
+	RepeatForever	= 0x0004,	//0x0004
+	ShowIfOver		= 0x0008,	//0x0008
+	Unknown4		= 0x0010,	//0x0010
+	Flag_0020		= 0x0020,
+	Flag_0040		= 0x0040,
+	Flag_0080		= 0x0080,
+	Flag_0100		= 0x0100,
+	Flag_0200		= 0x0200,
+	Flag_0400		= 0x0400,
+	Flag_0800		= 0x0800,
+	Flag_1000		= 0x1000,
+	Flag_2000		= 0x2000,
+	Flag_4000		= 0x4000,
+	Flag_8000		= 0x8000
+};
+}
+
+namespace DialogControlTypes {
+enum Enum {
+	DialogBox			= 0x00000000,
+	DefaultButton		= 0x00000001,
+	Button				= 0x00000002,
+	OptionButton		= 0x00000003,
+	CheckBox			= 0x00000004,
+	Image				= 0x00000005,
+	HorizontalScrollBar	= 0x00000006,
+	VerticalScrollBar	= 0x00000007,
+	TextBox				= 0x00000008,
+	LabelLeftAlign		= 0x00000009,
+	LabelRightAlign		= 0x0000000A,
+	LabelCenterAlign	= 0x0000000B,
+	ListBox				= 0x0000000C,
+	ComboBox			= 0x0000000D,
+	LightUpButton		= 0x0000000E
 };
 }
