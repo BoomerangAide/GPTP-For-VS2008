@@ -156,10 +156,13 @@ void updatePsiFieldProviders() {
   }
 
   if (!(*IS_PLACING_BUILDING)) {
-    for (int i = 0; i < 12 && i < *clientSelectionCount; ++i) {
+    for (int i = 0; i < 12; ++i) {
+        
       CUnit *selUnit = clientSelectionGroup->unit[i];
-      if (hooks::isReadyToMakePsiField(selUnit))
+      
+      if (selUnit != NULL && hooks::isReadyToMakePsiField(selUnit))
         return;
+        
     }
 
     hideAllPsiFields();
