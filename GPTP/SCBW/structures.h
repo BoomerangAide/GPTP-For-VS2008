@@ -6,7 +6,7 @@
 #pragma once
 
 const int PLAYER_COUNT			= 12;
-const int PLAYABLE_PLAYER_COUN	= 8;
+const int PLAYABLE_PLAYER_COUNT	= 8;
 const int UNIT_ARRAY_LENGTH		= 1700;
 const int BULLET_ARRAY_LENGTH	= 100;
 const int SPRITE_ARRAY_LENGTH	= 2500;
@@ -427,7 +427,7 @@ struct AiCaptain {
 C_ASSERT(sizeof(AiCaptain) == 52); 
 //static_assert(sizeof(AiCaptain) == 52, "The size of the AiCaptain structure is invalid");
 
-/// From BWAPI Offsets.h, used in scbwdata.h by UnitAvailability
+// From BWAPI Offsets.h, used in scbwdata.h by UnitAvailability
 struct _uavail {
 	u8 available[PLAYER_COUNT][UNIT_TYPE_COUNT];
 };
