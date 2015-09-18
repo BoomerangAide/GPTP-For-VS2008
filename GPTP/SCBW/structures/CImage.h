@@ -86,35 +86,36 @@ struct CImage {
 
 ////////////////////////////////////////////////////////////////
 //Actual data structure
-  CLink<CImage> link;
-  u16         id;
+
+/*0x00*/  CLink<CImage>				link;
+/*0x08*/  u16						id;
 
 
 /// ++Drawing function (values are the same as DataEdit)
 /// officially "ubRLE"
-  u8						paletteType; //Use PaletteType::Enum
-  u8						direction;		  
-  u16						flags;		// Use CImage_Flags::enum
-  u8						horizontalOffset;
-  u8						verticalOffset;
-  u16						iscriptHeaderOffset;
-  u16						iscriptOffset;
-  UNK						unknown2[2];
-  u8						animation; //Use IscriptAnimation::Enum
-  u8						wait;		// iscript sleep time
-  u16						frameSet;
-  u16						frameIndex;
-  Point16					mapPosition;
-  Point16					screenPosition;
-  Box16						grpSize;	// Bounds for GRP frame, only different from normal when part of graphic is out of bounds.
-  GrpHead					*grpOffset;
-  void*						coloringData;        //?
-  void*						renderFunction;		// renderFunction(this->screenPosition.x, this->screenPosition.y, this->getCurrentFrame(), &rctDraw, (int)this->coloringData)
-  void*						updateFunction;
-  CSprite					*parentSprite;
+/*0x0A*/  u8						paletteType; //Use PaletteType::Enum
+/*0x0B*/  u8						direction;		  
+/*0x0C*/  u16						flags;		// Use CImage_Flags enum
+/*0x0E*/  u8						horizontalOffset;
+/*0x0F*/  u8						verticalOffset;
+/*0x10*/  u16						iscriptHeaderOffset;
+/*0x12*/  u16						iscriptOffset;
+/*0x14*/  UNK						unknown2[2];
+/*0x16*/  u8						animation; //Use IscriptAnimation::Enum
+/*0x17*/  u8						wait;		// iscript sleep time
+/*0x18*/  u16						frameSet;
+/*0x1A*/  u16						frameIndex;
+/*0x1C*/  Point16					mapPosition;
+/*0x20*/  Point16					screenPosition;
+/*0x24*/  Box16						grpSize;	// Bounds for GRP frame, only different from normal when part of graphic is out of bounds.
+/*0x2C*/  GrpHead					*grpOffset;
+/*0x30*/  void*						coloringData;        //?
+/*0x34*/  void*						renderFunction;		// renderFunction(this->screenPosition.x, this->screenPosition.y, this->getCurrentFrame(), &rctDraw, (int)this->coloringData)
+/*0x38*/  void*						updateFunction;
+/*0x3C*/  CSprite					*parentSprite;
 };
 
-C_ASSERT(sizeof(CImage) == 64);
+C_ASSERT(sizeof(CImage) == 64); /*0x40*/
 //static_assert(sizeof(CImage) == 64, "The size of the CImage structure is invalid");
 
 #pragma pack()
