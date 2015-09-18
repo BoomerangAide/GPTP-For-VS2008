@@ -45,8 +45,8 @@ void __declspec(naked) unitTransformIntoSiegeModeOrder() {
 namespace hooks {
 
 	void injectSiegeTransformHooks() {
-		jmpPatch(unitTransformIntoTankModeOrder,	0x00464AE0);
-		jmpPatch(unitTransformIntoSiegeModeOrder,	0x00464BD0);
+		jmpPatch(unitTransformIntoTankModeOrder,	0x00464AE0, 1);
+		jmpPatch(unitTransformIntoSiegeModeOrder,	0x00464BD0, 1);
 	}
 
 }
