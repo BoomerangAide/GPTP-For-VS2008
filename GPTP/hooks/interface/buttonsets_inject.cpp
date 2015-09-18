@@ -96,7 +96,7 @@ void injectButtonSetHooks() {
   jmpPatch(updateButtonSetExWrapper,			Func_UpdateButtonSetEx, 1);
   jmpPatch(updateButtonSet_Sub458D50Wrapper,	Func_Sub_458D50, 2);
   jmpPatch(updateButtonSetWrapper,				Func_UpdateButtonSet);
-  jmpPatch(getButtonSetPatch_For_Sub4591D0,		Func_Sub_4591D0, 2);
+  jmpPatch(getButtonSetPatch_For_Sub4591D0,		Func_Sub_4591D0, 1);
 }
 
 } //hooks
