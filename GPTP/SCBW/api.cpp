@@ -436,7 +436,7 @@ void refreshConsole() {
   *bCanUpdateSelectedUnitPortrait = 1;
   *bCanUpdateStatDataDialog = 1;
   *someDialogUnknown = 0;
-  *unknown2 = 0;
+  *someDialogUnknownUser = 0;
 }
 
 } //scbw
