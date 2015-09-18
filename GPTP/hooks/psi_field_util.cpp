@@ -140,33 +140,45 @@ void hideAllPsiFields();
 namespace hooks {
 
 void updatePsiFieldProviders() {
-  for (CUnit *unit = *firstVisibleUnit; unit; unit = unit->link.next) {
-    if (hooks::canMakePsiField(unit->id)) {
-      assert(isValidPsiProviderType(unit->id));
 
-      if (unit->status & UnitStatus::Completed) {
-        if (hooks::isReadyToMakePsiField(unit)) {
-          addPsiField(unit);
-          updatePsiFieldPosition(unit);
-        }
-        else
-          removePsiField(unit);
-      }
-    }
-  }
+	for (CUnit *unit = *firstVisibleUnit; unit; unit = unit->link.next) {
 
-  if (!(*IS_PLACING_BUILDING)) {
-    for (int i = 0; i < 12; ++i) {
-        
-      CUnit *selUnit = clientSelectionGroup->unit[i];
-      
-      if (selUnit != NULL && hooks::isReadyToMakePsiField(selUnit))
-        return;
-        
-    }
+		if (hooks::canMakePsiField(unit->id)) {
 
-    hideAllPsiFields();
-  }
-}
+			assert(isValidPsiProviderType(unit->id));
+
+			if (unit->status & UnitStatus::Completed) {
+
+				if (hooks::isReadyToMakePsiField(unit)) {
+					addPsiField(unit);
+					updatePsiFieldPosition(unit);
+				}
+
+				else
+				  removePsiField(unit);
+			}
+
+		}
+
+	}
+
+	if (!(*IS_PLACING_BUILDING)) {
+
+		CUnit *selUnit;
+
+		for (int i = 0; i < SELECTION_ARRAY_LENGTH; i++) {
+
+			selUnit = clientSelectionGroup->unit[i];
+
+			if (selUnit != NULL && hooks::isReadyToMakePsiField(selUnit))
+				return;
+
+		}
+
+		hideAllPsiFields();
+
+	}
+
+} //void updatePsiFieldProviders()
 
 } //hooks
