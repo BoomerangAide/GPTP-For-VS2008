@@ -30,7 +30,7 @@ namespace {
 //-------- Button conditions --------//
 
 Bool32 __fastcall cloakingTechWrapper_IsCloaked(u32 _unused, s32 playerId) {
-  for (int i = 0; i < 12; ++i) {
+  for (int i = 0; i < SELECTION_ARRAY_LENGTH; i++) {
     CUnit *unit = clientSelectionGroup->unit[i];
     if (unit != NULL) {
       if (unit->canUseTech(hooks::getCloakingTech(unit), playerId) != 1)
@@ -49,7 +49,7 @@ Bool32 __fastcall cloakingTechWrapper_IsCloaked(u32 _unused, s32 playerId) {
 }
 
 Bool32 __fastcall cloakingTechWrapper_CanCloak(u32 _unused, s32 playerId) {
-  for (int i = 0; i < 12; ++i) {
+  for (int i = 0; i < SELECTION_ARRAY_LENGTH; i++) {
     CUnit *unit = clientSelectionGroup->unit[i];
     if (unit != NULL) {
       if (unit->canUseTech(hooks::getCloakingTech(unit), playerId) != 1)
@@ -140,7 +140,7 @@ void __declspec(naked) getCloakingTechWrapper() {
 }
 
 Bool32 __cdecl currentUnitSelectionCanCloakWrapper() {
-  for (int i = 0; i < 12; ++i) {
+  for (int i = 0; i < SELECTION_ARRAY_LENGTH; i++) {
     CUnit *unit = clientSelectionGroup->unit[i];
     if (unit != NULL) {
       if (scbw::isCheatEnabled(CheatFlags::TheGathering)
