@@ -2,6 +2,7 @@ Update 2:
 
 Improving DatLoad for researchers (though some features will be useful for ordinary modders)
 Adding more infos on BinDlg in structures.h (since I met this in assembly)
+Add a constant for the size of selection arrays
 Fixing an error in SoundId.h
 Fix a bug in psi_field_util.cpp
 Re-adding helpers in tech_target_check.cpp (it's better to not have hooks rely too much on others, and it will remains compatible anyways.
