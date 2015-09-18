@@ -426,11 +426,11 @@ u16 random() {
 
 //Logically equivalent to function @ 0x004C36C0
 void refreshConsole() {
-  u32*  const bCanUpdateCurrentButtonSet      = (u32*)  0x0068C1B0;
-  u8*   const bCanUpdateSelectedUnitPortrait  = (u8*)   0x0068AC74;
-  u8*   const bCanUpdateStatDataDialog        = (u8*)   0x0068C1F8;
-  u32*  const someDialogUnknown               = (u32*)  0x0068C1E8;
-  u32*  const unknown2                        = (u32*)  0x0068C1EC;
+  u32*  const bCanUpdateCurrentButtonSet      = (u32*		0x0068C1B0;
+  u8*   const bCanUpdateSelectedUnitPortrait  = (u8*		0x0068AC74;
+  u8*   const bCanUpdateStatDataDialog        = (u8*		0x0068C1F8;
+  BinDlg**  const someDialogUnknown           = (BinDlg**)  0x0068C1E8;
+  BinDlg**  const someDialogUnknownUser       = (BinDlg**)  0x0068C1EC;
 
   *bCanUpdateCurrentButtonSet = 1;
   *bCanUpdateSelectedUnitPortrait = 1;
