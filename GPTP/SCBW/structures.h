@@ -10,6 +10,7 @@ const int PLAYABLE_PLAYER_COUNT	= 8;
 const int UNIT_ARRAY_LENGTH		= 1700;
 const int BULLET_ARRAY_LENGTH	= 100;
 const int SPRITE_ARRAY_LENGTH	= 2500;
+const int SELECTION_ARRAY_LENGTH = 12;
 const int UNIT_TYPE_COUNT		= 228;
 const int TECH_TYPE_COUNT		= 44;
 const int UPGRADE_TYPE_COUNT	= 61;
