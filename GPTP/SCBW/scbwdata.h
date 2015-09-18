@@ -71,7 +71,8 @@ SCBW_DATA(const StringTbl*, statTxtTbl,         0x006D1238);
 SCBW_DATA(const StringTbl*, mapStringTbl,       0x005993D4);
 
 /// Units that are selected by the current player (or the player viewing the replay).
-SCBW_DATA(const Units12*, clientSelectionGroup, 0x00597208);
+struct UnitsSel { CUnit* unit[SELECTION_ARRAY_LENGTH]; };
+SCBW_DATA(const UnitsSel*, clientSelectionGroup, 0x00597208);
 SCBW_DATA(const u8*,    clientSelectionCount,   0x0059723D);
 
 /// Screen position relative to the map
@@ -80,6 +81,11 @@ SCBW_DATA(s32*,         screenY,                0x00628470);
 
 /// Mouse position relative to the screen
 SCBW_DATA(const Point32*, mouse,                0x006CDDC4);
+
+/// Booleans indicating which keyboard buttons are held
+SCBW_DATA(const Bool8*,  IS_HOLDING_SHIFT,      0x00596A28);
+SCBW_DATA(const Bool8*,  IS_HOLDING_CTRL,       0x00596A29);
+SCBW_DATA(const Bool8*,  IS_HOLDING_ALT,		0x00596A2A);
 
 /// Maybe used by Map triggers to init a progressive movement toward the corresponding location, see GameImpl::setScreenPosition of BWAPI
 SCBW_DATA(u32*,			MoveToX,				0x0062848C);
@@ -100,6 +106,7 @@ SCBW_DATA(const u32*,     CountdownTimer,		0x0058D6F4);  //Countdown Timer (in s
 SCBW_DATA(const u32*,     elapsedTimeSeconds,   0x0058D6F8);  //Elapsed game time in seconds
 SCBW_DATA(const u8*,      GAME_TYPE,            0x00596820);  //Part of a larger structure; Compare with GameType::Enum.
 SCBW_DATA(const s32*,     ACTIVE_NATION_ID,     0x00512678);  //AKA g_ActiveNationID
+SCBW_DATA(const s32*,     ACTIVE_PLAYER_ID,     0x0051267C);  //Used by GetActivePlayerNextSelectionFunc
 SCBW_DATA(const s32*,     LOCAL_NATION_ID,      0x00512684);  //AKA g_LocalNationID; Actually stores the player ID.
 SCBW_DATA(const s32*,     LOCAL_HUMAN_ID,       0x00512688);  //AKA g_LocalHumanID; Invalid in replay games.
 SCBW_DATA(const u8*,      CURRENT_TILESET,      0x00596828);  //Tileset of current map. Compare with TilesetType::Enum
@@ -323,6 +330,7 @@ SCBW_DATA(const u8*,  Remapping,    imagesDat[6].address);	//00669A40
 
 //Helper functions for several hooks
 SCBW_DATA(u8*,          selectionIndexStart,    0x006284B6);
+SCBW_DATA(const UnitsSel*, activePlayerSelection, 0x006284B8);
 typedef CUnit* (__cdecl *GetActivePlayerNextSelectionFunc)();
 SCBW_DATA(GetActivePlayerNextSelectionFunc, getActivePlayerNextSelection, 0x0049A850);
 
@@ -398,16 +406,16 @@ SCBW_DATA(u32*,           aiSupplyReserved,     0x006CA4BC);
 
 //-------- Internal constants --------//
 
-SCBW_DATA(const Bool32*,  IS_GAME_PAUSED,       0x006509C4);  //See scbw::isGamePaused()
-SCBW_DATA(const Bool8*,   IS_BROOD_WAR,         0x0058F440);  //See scbw::isBroodWarMode()
-SCBW_DATA(const u32*,     CHEAT_STATE,          0x006D5A6C);  //See scbw::isCheatEnabled()
-SCBW_DATA(const s32*,     MAX_UNIT_WIDTH,       0x006BEE68);
-SCBW_DATA(const s32*,     MAX_UNIT_HEIGHT,      0x006BB930);
-SCBW_DATA(const Bool32*,  IS_IN_REPLAY,         0x006D0F14);  //See scbw::isInReplay()
-SCBW_DATA(Bool32*,        IS_IN_GAME_LOOP,      0x006D11C8);
-SCBW_DATA(u32*,           lastRandomNumber,     0x0051CA14);  //See scbw::random(), scbw::randBetween()
-SCBW_DATA(Bool32*,        canUpdatePoweredStatus, 0x0063FF44);
-SCBW_DATA(const Bool32*,  IS_PLACING_BUILDING,  0x00640880);
+SCBW_DATA(const Bool32*,  IS_GAME_PAUSED,       	0x006509C4);  //See scbw::isGamePaused()
+SCBW_DATA(const Bool8*,   IS_BROOD_WAR,         	0x0058F440);  //See scbw::isBroodWarMode()
+SCBW_DATA(const u32*,     CHEAT_STATE,          	0x006D5A6C);  //See scbw::isCheatEnabled()
+SCBW_DATA(const s32*,     MAX_UNIT_WIDTH,       	0x006BEE68);
+SCBW_DATA(const s32*,     MAX_UNIT_HEIGHT,      	0x006BB930);
+SCBW_DATA(const Bool32*,  IS_IN_REPLAY,         	0x006D0F14);  //See scbw::isInReplay()
+SCBW_DATA(Bool32*,        IS_IN_GAME_LOOP,      	0x006D11C8);
+SCBW_DATA(u32*,           lastRandomNumber,     	0x0051CA14);  //See scbw::random(), scbw::randBetween()
+SCBW_DATA(Bool32*,        canUpdatePoweredStatus	0x0063FF44);
+SCBW_DATA(const Bool32*,  IS_PLACING_BUILDING,  	0x00640880);
 
 //-------- Tech levels --------//
 
