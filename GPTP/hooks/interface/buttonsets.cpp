@@ -8,8 +8,8 @@ namespace {
 	//scbw::refreshConsole()
 	u8*   const bCanUpdateSelectedUnitPortrait  = (u8*)			0x0068AC74;
 	u32*  const bCanUpdateCurrentButtonSet      = (u32*)		0x0068C1B0;
-	u32*  const someDialogUnknown               = (u32*)		0x0068C1E8;
-	u32*  const unknown2                        = (u32*)		0x0068C1EC;
+	BinDlg*  const someDialogUnknown            = (BinDlg*)		0x0068C1E8;
+	BinDlg*  const someDialogUnknownUser        = (BinDlg*)		0x0068C1EC;
 	u8*   const bCanUpdateStatDataDialog        = (u8*)			0x0068C1F8;
 
 	//for buttonsets
@@ -289,7 +289,7 @@ namespace hooks {
 			//58C88
 			unitIndexFromSelection++;
 
-		}while(unitIndexFromSelection < 12);
+		}while(unitIndexFromSelection < SELECTION_ARRAY_LENGTH);
 
 		if(*BUTTONSET_CURRENT_BUTTONSETID != UnitId::Buttons_Blank) {
 
