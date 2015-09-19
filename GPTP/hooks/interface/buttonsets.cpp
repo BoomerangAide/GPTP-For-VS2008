@@ -1,34 +1,14 @@
 #include "buttonsets.h"
 
 namespace {
+
 	//Helper function
 	void updateDialog(BinDlg* dialog);
+	void replayStatBtns(BinDlg* dialog);
+	void function_4591D0();
+	void function_459770();
+
 } //unnamed namespace
-
-	//scbw::refreshConsole()
-	u8*   const bCanUpdateSelectedUnitPortrait  = (u8*)			0x0068AC74;
-	u32*  const bCanUpdateCurrentButtonSet      = (u32*)		0x0068C1B0;
-	BinDlg**  const someDialogUnknown           = (BinDlg**)	0x0068C1E8;
-	BinDlg**  const someDialogUnknownUser       = (BinDlg**)	0x0068C1EC;
-	u8*   const bCanUpdateStatDataDialog        = (u8*)			0x0068C1F8;
-
-	//for buttonsets
-	BUTTON_SET* const buttonSetTable			= (BUTTON_SET*)	0x005187E8;
-
-	//0x00641691 -> order 3
-	//0x00641692 -> order 1
-	//0x00641693 -> order 2	
-	Bool8* const bDoingCancellableTargetOrder	= (Bool8*)		0x00641694;
-
-	BinDlg** const BUTTONSET_DIALOG				= (BinDlg**)	0x0068C148;
-	u16* const BUTTONSET_PORTRAIT_BUTTONSETID	= (u16*)		0x0068C14C;
-	u8*   const BUTTONSET_SUBUNIT_MAINORDERID	= (u8*)			0x0068C1B8;
-	u16* const BUTTONSET_MAINBUTTONGRAPHIC		= (u16*)		0x0068C1BC;
-	u16*  const BUTTONSET_CURRENT_BUTTONSETID	= (u16*)		0x0068C1C4;
-	u16*  const BUTTONSET_SPECIAL_BUTTONSETID	= (u16*)		0x0068C1C8; //replay, cancel building...
-	u8*   const BUTTONSET_UNIT_MAINORDERID		= (u8*)			0x0068C1E4;
-
-	Bool32* const IS_REPLAY_PAUSED				= (Bool32*)		0x006D11B0;
 
 //Main names from Firegraft, comments names from vgce
 namespace ButtonRequirements {
@@ -217,6 +197,8 @@ namespace hooks {
 	//units are selected
 	void updateButtonSetEx() {
 
+		u16* const BUTTONSET_CURRENT_BUTTONSETID = (u16*)0x0068C1C4;
+
 		u8 countWorkers = 0;
 		u8 countCloakables = 0;
 		u8 countNotInAirAndZergs = 0;
@@ -314,6 +296,11 @@ namespace hooks {
 	//Last function called within updateCurrentButtonSet
 	void updateButtonSet_Sub458D50() {
 
+		BinDlg** const BUTTONSET_DIALOG	= (BinDlg**)0x0068C148;
+		u8* const BUTTONSET_SUBUNIT_MAINORDERID = (u8*)0x0068C1B8;
+		u16* const BUTTONSET_MAINBUTTONGRAPHIC = (u16*)0x0068C1BC;
+		u8* const BUTTONSET_UNIT_MAINORDERID = (u8*)0x0068C1E4;
+
 		u8 currentUnitMainOrderId;
 		u8 currentSubUnitMainOrderId;
 
@@ -397,9 +384,13 @@ namespace hooks {
 	//units and groups
 	//Called by updateCurrentButtonset and
 	//updateSelectedUnitData (004C38B0)
-	bool updateButtonSet() {
+	void updateButtonSet() {
 
-		bool JumpAtEnd = false;
+		u16* const BUTTONSET_PORTRAIT_BUTTONSETID	= (u16*)		0x0068C14C;
+		u16*  const BUTTONSET_CURRENT_BUTTONSETID	= (u16*)		0x0068C1C4;
+		u16*  const BUTTONSET_SPECIAL_BUTTONSETID	= (u16*)		0x0068C1C8; //replay, cancel building...
+
+		Bool8* const bDoingCancellableTargetOrder	= (Bool8*)		0x00641694;
 
 		*BUTTONSET_SPECIAL_BUTTONSETID = UnitId::Buttons_Blank;
 		*BUTTONSET_PORTRAIT_BUTTONSETID = UnitId::Buttons_Blank;
@@ -430,9 +421,7 @@ namespace hooks {
 		*BUTTONSET_CURRENT_BUTTONSETID = UnitId::Buttons_Blank;
 
 		if( (*clientSelectionCount > 1) && (!scbw::isInReplay()) )
-			JumpAtEnd = true;
-
-		return JumpAtEnd;
+			updateButtonSetEx();
 
 	} //updateButtonSet
 
@@ -448,6 +437,224 @@ namespace hooks {
 		return &(buttonSetTable[index]);
 	}
 
+	; //4599A0  
+
+	//Main updateButtonSet function because it
+	//call updateButtonSet() and others
+	void updateCurrentButtonset() {
+
+		BinDlg** const BUTTONSET_DIALOG	= (BinDlg**)0x0068C148;
+		u16* const BUTTONSET_PORTRAIT_BUTTONSETID = (u16*)0x0068C14C;
+		u8* const BUTTONSET_SUBUNIT_MAINORDERID = (u8*)0x0068C1B8;
+		u16* const BUTTONSET_CURRENT_BUTTONSETID = (u16*)0x0068C1C4;
+		u16* const BUTTONSET_SPECIAL_BUTTONSETID = (u16*)0x0068C1C8; //replay, cancel building...
+		u8* const BUTTONSET_UNIT_MAINORDERID = (u8*)0x0068C1E4;
+
+		//scbw::refreshConsole()
+		u8* const bCanUpdateSelectedUnitPortrait = (u8*)0x0068AC74;
+		u32* const bCanUpdateCurrentButtonSet = (u32*)0x0068C1B0;
+		BinDlg* const someDialogUnknown = (BinDlg*)0x0068C1E8;
+		BinDlg* const someDialogUnknownUser = (BinDlg*)0x0068C1EC;
+		u8* const bCanUpdateStatDataDialog = (u8*)0x0068C1F8;
+
+		bool jumpTo59A38 = false;
+		bool jumpTo59A9F = false;
+		bool jumpTo59A83 = false;
+		bool jumpTo59A86 = false;
+
+		u8 mainOrderIdHolderUnit_EBP;
+		u8 mainOrderIdHolderSubUnit_BL;
+		u16 CX_Holder;
+
+		if(*bCanUpdateCurrentButtonSet != 0) {
+
+			//599B7
+			bool bNeedUpdateButtonSet = false;
+
+			if(*BUTTONSET_SPECIAL_BUTTONSETID != UnitId::Buttons_Blank) {
+				if(!*IS_IN_REPLAY)
+					bNeedUpdateButtonSet = true;
+				else
+					bNeedUpdateButtonSet = false;
+			}
+			else
+				bNeedUpdateButtonSet = true;
+
+			if(bNeedUpdateButtonSet)
+				updateButtonSet();
+
+		}
+
+		CX_Holder = *BUTTONSET_SPECIAL_BUTTONSETID;
+
+		//599D3
+
+		if( *BUTTONSET_SPECIAL_BUTTONSETID == UnitId::Buttons_Blank ) {
+
+			//599DF
+
+			CX_Holder = *BUTTONSET_CURRENT_BUTTONSETID;
+
+			if(*BUTTONSET_CURRENT_BUTTONSETID == UnitId::Buttons_Blank) {
+				if ( *activePortraitUnit == NULL )
+					jumpTo59A38 = true;
+				else
+					CX_Holder = (*activePortraitUnit)->currentButtonSet;
+			}
+
+		}
+
+		if(!jumpTo59A38) {
+
+			//599F8
+
+			if(*BUTTONSET_PORTRAIT_BUTTONSETID == CX_Holder)
+				jumpTo59A38 = true;
+			else {
+				*BUTTONSET_PORTRAIT_BUTTONSETID = CX_Holder;
+				*bCanUpdateCurrentButtonSet = 1;
+			}
+
+			if(!jumpTo59A38) {
+
+				//59A12:
+
+				//draw buttons
+				function_4591D0();
+
+				//refresh popup text over button
+				function_459770();
+
+				jumpTo59A9F = (*activePortraitUnit == NULL);
+
+				if(!jumpTo59A9F) {
+
+					mainOrderIdHolderUnit_EBP = (*activePortraitUnit)->mainOrderId;
+					CX_Holder = mainOrderIdHolderUnit_EBP;
+
+					if( (*activePortraitUnit)->subunit == NULL)
+						jumpTo59A83 = true;
+					else {
+						mainOrderIdHolderSubUnit_BL = (*activePortraitUnit)->subunit->mainOrderId;
+						jumpTo59A86 = true;
+					}
+
+				} //if(!jumpTo59A9F)
+
+			}
+
+		} //if(!jumpTo59A38)
+
+		if(jumpTo59A38) {
+
+			if(*bCanUpdateCurrentButtonSet) {
+
+				//59A12:
+
+				//draw buttons
+				function_4591D0();
+
+				//refresh popup text over button
+				function_459770();
+
+				jumpTo59A9F = (*activePortraitUnit == NULL);
+
+				if(!jumpTo59A9F) {
+					
+					mainOrderIdHolderUnit_EBP = (*activePortraitUnit)->mainOrderId;
+					CX_Holder = mainOrderIdHolderUnit_EBP;
+
+					if( (*activePortraitUnit)->subunit == NULL)
+						jumpTo59A83 = true;
+					else {
+						mainOrderIdHolderSubUnit_BL = (*activePortraitUnit)->subunit->mainOrderId;
+						jumpTo59A86 = true;
+					}
+
+				} //if(!jumpTo59A9F)
+
+			} //if(*bCanUpdateCurrentButtonSet != 0)
+
+		} //if(jumpTo59A38)
+
+		if(!jumpTo59A83 && !jumpTo59A86 && !jumpTo59A9F) {
+
+			//59A3C
+
+			if(*activePortraitUnit != NULL) {
+
+				bool jumpTo59ABD = false;
+
+				mainOrderIdHolderUnit_EBP = (*activePortraitUnit)->mainOrderId;
+
+				if( (*activePortraitUnit)->subunit != NULL )
+					mainOrderIdHolderSubUnit_BL = (*activePortraitUnit)->subunit->mainOrderId;
+				else
+					mainOrderIdHolderSubUnit_BL = 0xFF;
+
+				//59A55
+
+				if( *BUTTONSET_UNIT_MAINORDERID == mainOrderIdHolderUnit_EBP) {
+
+					//59A5D
+
+					if( *BUTTONSET_SUBUNIT_MAINORDERID == mainOrderIdHolderSubUnit_BL)
+						jumpTo59ABD = true;
+
+				}
+
+				if(!jumpTo59ABD) {
+
+					//59A65
+
+					//light up the button of the current order
+					updateButtonSet_Sub458D50();
+
+					*BUTTONSET_UNIT_MAINORDERID = mainOrderIdHolderUnit_EBP;
+					*BUTTONSET_SUBUNIT_MAINORDERID = mainOrderIdHolderSubUnit_BL;
+
+					//light up the button of the current order
+					updateButtonSet_Sub458D50();
+
+				}
+
+			}
+
+		}
+
+		if(jumpTo59A83)	{ //cannot be set if a jump beyond is set
+			mainOrderIdHolderSubUnit_BL = 0xFF;
+			jumpTo59A86 = true;
+		}
+
+		if(jumpTo59A86) {
+
+			//light up the button of the current order
+			updateButtonSet_Sub458D50();
+
+			*BUTTONSET_UNIT_MAINORDERID = mainOrderIdHolderUnit_EBP;
+			*BUTTONSET_SUBUNIT_MAINORDERID = mainOrderIdHolderSubUnit_BL;
+
+			//light up the button of the current order
+			updateButtonSet_Sub458D50();
+
+			jumpTo59A9F = true;
+
+		}
+
+		if(jumpTo59A9F) {
+
+			if(*IS_IN_REPLAY)
+				replayStatBtns(*BUTTONSET_DIALOG);
+
+			//59AB3
+
+			*bCanUpdateCurrentButtonSet = 0;
+
+		}
+		
+	} //void updateCurrentButtonset()
+
 } //hooks
 
 namespace {
@@ -455,7 +662,6 @@ namespace {
 	/**** Definitions of helper functions. Do NOT modify anything below! ****/
 
 	const u32 Func_UpdateDialog	= 0x0041C400;
-
 	void updateDialog(BinDlg* dialog) {
 		__asm {
 			PUSHAD
@@ -465,207 +671,32 @@ namespace {
 		}
 	}
 
+	const u32 Func_ReplayStatBtns = 0x00427A80;
+	void replayStatBtns(BinDlg* dialog) {
+		__asm {
+			PUSHAD
+			MOV EBX, dialog
+			CALL Func_ReplayStatBtns
+			POPAD
+		}
+	}
+
+	const u32 Func_Sub_4591D0 = 0x004591D0;
+	void function_4591D0() {
+		__asm {
+			PUSHAD
+			CALL Func_Sub_4591D0
+			POPAD
+		}
+	}
+
+	const u32 Func_Sub_459770 = 0x00459770;
+	void function_459770() {
+		__asm {
+			PUSHAD
+			CALL Func_Sub_459770
+			POPAD
+		}
+	}
+
 } //unnamed namespace
-
-//Only for information
-//Too many CALL to be made reliable
-//Others functions around updateButtonSet
-//were doing tasks relying on available
-//functions, and drawing was hard to handle,
-//so that's it
-
-	; //4599A0  
-	////Main updateButtonSet function because it
-	////call updateButtonSet() and others
-	//void updateCurrentButtonset() {
-
-	//	bool jumpTo59A38 = false;
-	//	bool jumpTo59A9F = false;
-	//	bool jumpTo59A83 = false;
-	//	bool jumpTo59A86 = false;
-
-	//	u8 mainOrderIdHolderUnit_EBP;
-	//	u8 mainOrderIdHolderSubUnit_BL;
-	//	u16 CX_Holder;
-
-	//	if(*bCanUpdateCurrentButtonSet != 0) {
-
-	//		//599B7
-	//		bool JumpTo599C7 = false;
-
-	//		if(*(u16*)(0x0068C1C8) != UnitId::Buttons_Blank) {
-	//			if(*IS_IN_REPLAY != 0)
-	//				JumpTo599C7 = true;
-	//			else
-	//				JumpTo599C7 = false;
-	//		}
-	//		else
-	//			JumpTo599C7 = true;
-
-	//		if(JumpTo599C7)
-	//			updateButtonSet();
-
-	//	}
-
-	//	CX_Holder = *(u16*)(0x0068C1C8);
-
-	//	//599D3
-
-	//	if( *(u16*)(0x0068C1C8) == UnitId::Buttons_Blank ) {	//*(u16*)(0x0068C1C8)
-
-	//		CX_Holder = *BUTTONSET_CURRENT_BUTTONSET;
-
-	//		if(*BUTTONSET_CURRENT_BUTTONSET == UnitId::Buttons_Blank) {
-	//			if ( *activePortraitUnit == NULL )
-	//				jumpTo59A38 = true;
-	//			else
-	//				CX_Holder = (*activePortraitUnit)->currentButtonSet;
-	//		}
-
-	//	}
-
-	//	if(!jumpTo59A38) {
-
-	//		//599F8
-
-	//		if(*(u16*)(0x0068C14C) == CX_Holder)
-	//			jumpTo59A38 = true;
-	//		else {
-	//			*(u16*)(0x0068C14C) = CX_Holder;
-	//			*bCanUpdateCurrentButtonSet = 1;
-	//		}
-
-	//		if(!jumpTo59A38) {
-
-	//			//59A12:
-
-	//			updateButtonSet_Sub4591D0();
-	//			updateButtonSet_Sub459770Wrapper();
-
-	//			jumpTo59A9F = (*activePortraitUnit == NULL);
-
-	//			if(!jumpTo59A9F) {
-
-	//				CX_Holder = (*activePortraitUnit)->mainOrderId;
-	//				mainOrderIdHolderUnit_EBP = (*activePortraitUnit)->mainOrderId;
-
-	//				if( (*activePortraitUnit)->subunit == NULL)
-	//					jumpTo59A83 = true;
-	//				else {
-	//					mainOrderIdHolderSubUnit_BL = (*activePortraitUnit)->subunit->mainOrderId;
-	//					jumpTo59A86 = true;
-	//				}
-
-	//			} //if(!jumpTo59A9F)
-
-	//		}
-
-	//	} //if(!jumpTo59A38)
-
-	//	if(jumpTo59A38) {
-
-	//		if(*bCanUpdateCurrentButtonSet != 0) {
-
-	//			//59A12:
-
-	//			updateButtonSet_Sub4591D0();
-	//			updateButtonSet_Sub459770Wrapper();
-
-	//			jumpTo59A9F = (*activePortraitUnit == NULL);
-
-	//			if(!jumpTo59A9F) {
-
-	//				CX_Holder = (*activePortraitUnit)->mainOrderId;
-	//				mainOrderIdHolderUnit_EBP = (*activePortraitUnit)->mainOrderId;
-
-	//				if( (*activePortraitUnit)->subunit == NULL)
-	//					jumpTo59A83 = true;
-	//				else {
-	//					mainOrderIdHolderSubUnit_BL = (*activePortraitUnit)->subunit->mainOrderId;
-	//					jumpTo59A86 = true;
-	//				}
-
-	//			} //if(!jumpTo59A9F)
-
-	//		} //if(*bCanUpdateCurrentButtonSetPointer != 0)
-
-	//	} //if(jumpTo59A38)
-
-	//	if(!jumpTo59A83 && !jumpTo59A86 && !jumpTo59A9F) {
-
-	//		//59A3C
-
-	//		if(*activePortraitUnit != NULL) {
-
-	//			bool jumpTo59ABD = false;
-
-	//			mainOrderIdHolderUnit_EBP = (*activePortraitUnit)->mainOrderId;
-
-	//			if( (*activePortraitUnit)->subunit != NULL )
-	//				mainOrderIdHolderSubUnit_BL = (*activePortraitUnit)->subunit->mainOrderId;
-	//			else
-	//				mainOrderIdHolderSubUnit_BL = 0xFF;
-
-	//			if( *BUTTONSET_UNIT_MAINORDERID == mainOrderIdHolderUnit_EBP) {
-
-	//				//59A5D
-
-	//				if( *BUTTONSET_SUBUNIT_MAINORDERID == mainOrderIdHolderSubUnit_BL)
-	//					jumpTo59ABD = true;
-
-	//			}
-
-	//			if(!jumpTo59ABD) {
-
-	//				//59A65
-
-	//				updateButtonSet_Sub458D50();
-
-	//				*BUTTONSET_UNIT_MAINORDERID = mainOrderIdHolderUnit_EBP;
-	//				*BUTTONSET_SUBUNIT_MAINORDERID = mainOrderIdHolderSubUnit_BL;
-
-	//				updateButtonSet_Sub458D50();
-
-	//			}
-
-	//		}
-
-	//	}
-
-	//	if(jumpTo59A83)	{ //cannot be set if a jump beyond is set
-	//		mainOrderIdHolderSubUnit_BL = 0xFF;
-	//		jumpTo59A86 = true;
-	//	}
-
-	//	if(jumpTo59A86) {
-
-	//		updateButtonSet_Sub458D50();
-
-	//		*BUTTONSET_UNIT_MAINORDERID = mainOrderIdHolderUnit_EBP;
-	//		*BUTTONSET_SUBUNIT_MAINORDERID = mainOrderIdHolderSubUnit_BL;
-
-	//		updateButtonSet_Sub458D50();
-
-	//		jumpTo59A9F = true;
-
-	//	}
-
-	//	if(jumpTo59A9F) {
-
-	//		if(*IS_IN_REPLAY != 0) {
-
-	//			__asm {
-	//				PUSHAD
-	//				MOV EBX, 0x006D0F14
-	//				MOV EBX, [EBX]
-	//				CALL Func_ReplayStatBtns
-	//				POPAD
-	//			}
-
-	//		}
-
-	//		*bCanUpdateCurrentButtonSet = 0;
-
-	//	}
-	//	
-	//}
