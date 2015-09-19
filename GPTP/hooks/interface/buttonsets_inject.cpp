@@ -42,17 +42,33 @@ void __declspec(naked) updateButtonSetWrapper() {
 
 	__asm PUSHAD
 
-	if(hooks::updateButtonSet()) {
-		__asm {
-			POPAD
-			JMP Func_UpdateButtonSetEx
-		}
+	hooks::updateButtonSet();
+
+	__asm {
+		POPAD
+		RET
 	}
-	else
-		__asm {
-			POPAD
-			RET
-		}
+
+}
+
+//Originally 004599A0  updateCurrentButtonset
+const u32 Func_UpdateCurrentButtonset = 0x004599A0;
+void __declspec(naked) updateCurrentButtonsetWrapper() {
+
+	__asm {
+		PUSH EBP
+		MOV EBP, ESP
+		PUSHAD
+	}
+
+	hooks::updateCurrentButtonset();
+
+	__asm {
+		POPAD
+		MOV ESP, EBP
+		POP EBP
+		RET
+	}
 
 }
 
@@ -97,6 +113,7 @@ void injectButtonSetHooks() {
   jmpPatch(updateButtonSet_Sub458D50Wrapper,	Func_Sub_458D50, 2);
   jmpPatch(updateButtonSetWrapper,				Func_UpdateButtonSet);
   jmpPatch(getButtonSetPatch_For_Sub4591D0,		Func_Sub_4591D0, 1);
+  jmpPatch(updateCurrentButtonsetWrapper,		Func_UpdateCurrentButtonset, 6);
 }
 
 } //hooks
