@@ -42,6 +42,7 @@
 #include "hooks/infestation.h"
 #include "hooks/siege_transform.h"
 #include "hooks/interface/buttonsets.h"
+#include "hooks/interface/selection.h"
 
 #include "AI/spellcasting.h"
 
@@ -67,6 +68,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
   hooks::injectInfestationHooks();
   hooks::injectSiegeTransformHooks();
   hooks::injectButtonSetHooks();
+  hooks::injectSelectMod();
 
   hooks::injectApplyUpgradeFlags();
   hooks::injectAttackPriorityHooks();
