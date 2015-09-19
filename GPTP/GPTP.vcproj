@@ -230,6 +230,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\interface\selection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\interface\selection_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hooks\siege_transform.cpp"
 				>
 			</File>
@@ -703,6 +711,10 @@
 				RelativePath=".\Plugin.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\interface\selection.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\siege_transform.h"
 				>
