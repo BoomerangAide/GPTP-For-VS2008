@@ -1,3 +1,14 @@
+Update 3:
+
+*Planned:
+    -more hooks for orders
+    -(if possible) identification on missing DatLoad entries
+    -(in this update or later) attempts on CMDACT functions (to improve orders useability)
+    -(if possible) research on cheat codes (are there unknown/incomplete ones?Is it possible to add some?)
+
+-------------------------
+
+
 Update 2:
 
 Improving DatLoad for researchers (though some features will be useful for ordinary modders)
@@ -6,9 +17,7 @@ Add a constant for the size of selection arrays
 Fixing an error in SoundId.h
 Fix a bug in psi_field_util.cpp
 Re-adding helpers in tech_target_check.cpp (it's better to not have hooks rely too much on others, and it will remains compatible anyways.
-Infestation hook: Identified DatLoad arrays and others things
 Infestation hook: infesting unit side
-Siege Transform hook: siege mode and tank mode orders
 Adding something in SoundId.h: namespace DeathSoundId { const u16 deathSoundIdList[UnitId::None+1][2]; }
 	This is meant to be used by something like 
 	scbw::playSound(
@@ -19,19 +28,10 @@ Adding something in SoundId.h: namespace DeathSoundId { const u16 deathSoundIdLi
 	);
 	to play a random death sound, according to the ones used in Iscript.bin.
 Adding IconId enum (because it's used in buttonset hook)
+**Infestation hook: Completed**
 **Adding buttonsets hook and features related to it.**
-
-**Creations of files helpfunc.h and helpfunc.cpp**
-	Those are not supposed to be used directly.
-	It's an attempt to extract some assembly functions I needed a better understanding of,
-	converting them into C/C++ so they are more readable.
-	I may have lost or missed some things on the way (especially things stored in the stack -_-')
-	and one of my common cause of crash is bad management of wrappers code, so you probably would
-	have to make some research and fixes to have theses functions useable (unless I'm being really
-	pessimistic)
-
-[Planned] 
- * Research on various known or unknown functions to have better knowledge on how StarCraft do things.
+**Siege Transform hook: siege mode and tank mode orders**
+**Selection hook added**
 
 -------------------------
 
