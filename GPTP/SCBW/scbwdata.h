@@ -411,10 +411,10 @@ SCBW_DATA(const u32*,     CHEAT_STATE,          	0x006D5A6C);  //See scbw::isChe
 SCBW_DATA(const s32*,     MAX_UNIT_WIDTH,       	0x006BEE68);
 SCBW_DATA(const s32*,     MAX_UNIT_HEIGHT,      	0x006BB930);
 SCBW_DATA(const Bool32*,  IS_IN_REPLAY,         	0x006D0F14);  //See scbw::isInReplay()
-SCBW_DATA(const Bool32*,  IS_REPLAY_PAUSED			0x006D11B0);
+SCBW_DATA(const Bool32*,  IS_REPLAY_PAUSED,			0x006D11B0);
 SCBW_DATA(Bool32*,        IS_IN_GAME_LOOP,			0x006D11C8);
 SCBW_DATA(u32*,           lastRandomNumber,     	0x0051CA14);  //See scbw::random(), scbw::randBetween()
-SCBW_DATA(Bool32*,        canUpdatePoweredStatus	0x0063FF44);
+SCBW_DATA(Bool32*,        canUpdatePoweredStatus,	0x0063FF44);
 SCBW_DATA(const Bool32*,  IS_PLACING_BUILDING,  	0x00640880);
 
 //-------- Tech levels --------//
