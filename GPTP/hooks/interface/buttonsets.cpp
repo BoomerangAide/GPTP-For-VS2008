@@ -450,12 +450,7 @@ namespace hooks {
 		u16* const BUTTONSET_SPECIAL_BUTTONSETID = (u16*)0x0068C1C8; //replay, cancel building...
 		u8* const BUTTONSET_UNIT_MAINORDERID = (u8*)0x0068C1E4;
 
-		//scbw::refreshConsole()
-		u8* const bCanUpdateSelectedUnitPortrait = (u8*)0x0068AC74;
 		u32* const bCanUpdateCurrentButtonSet = (u32*)0x0068C1B0;
-		BinDlg* const someDialogUnknown = (BinDlg*)0x0068C1E8;
-		BinDlg* const someDialogUnknownUser = (BinDlg*)0x0068C1EC;
-		u8* const bCanUpdateStatDataDialog = (u8*)0x0068C1F8;
 
 		bool jumpTo59A38 = false;
 		bool jumpTo59A9F = false;
@@ -466,16 +461,14 @@ namespace hooks {
 		u8 mainOrderIdHolderSubUnit_BL;
 		u16 CX_Holder;
 
-		if(*bCanUpdateCurrentButtonSet != 0) {
+		if(!*bCanUpdateCurrentButtonSet) {
 
 			//599B7
 			bool bNeedUpdateButtonSet = false;
 
 			if(*BUTTONSET_SPECIAL_BUTTONSETID != UnitId::Buttons_Blank) {
-				if(!*IS_IN_REPLAY)
+				if(*IS_IN_REPLAY)
 					bNeedUpdateButtonSet = true;
-				else
-					bNeedUpdateButtonSet = false;
 			}
 			else
 				bNeedUpdateButtonSet = true;
