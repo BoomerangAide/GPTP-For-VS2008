@@ -59,7 +59,7 @@ namespace hooks {
 				}
 
 				playSubunitIscript(unit,IscriptAnimation::SpecialState2);
-				unit->orderSignal &= 0xFE; //if bit 1 is set, unset it
+				unit->orderSignal &= ~0x01; //if bit 1 is set, unset it
 				unit->mainOrderState = 3;
 
 			}
