@@ -248,6 +248,11 @@ bool CUnit::isSubunit() const {
   return (this && units_dat::BaseProperty[this->id] & UnitProperty::Subunit);
 }
 
+// Equivalent to function @ 0x0047B2E0 until you change .dat files.
+bool CUnit::isFactory() const {
+  return (this && units_dat::GroupFlags[this->id].isFactory);
+}
+
 //Identical to function @ 0x00401210
 bool CUnit::isValidCaster() const {
   assert(this);
