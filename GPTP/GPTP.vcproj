@@ -218,6 +218,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\merge_units.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\merge_units_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\SCBW\structures\Player.cpp"
 				>
 			</File>
@@ -699,6 +707,10 @@
 				RelativePath=".\logger.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\merge_units.h"
+			>
+			</File>			
 			<File
 				RelativePath=".\MPQDraftPlugin.h"
 				>
