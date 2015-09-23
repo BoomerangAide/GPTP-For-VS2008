@@ -1,7 +1,6 @@
 #include "infestation.h"
 #include <SCBW/api.h>
 #include <SCBW/scbwdata.h>
-#include <cassert>
 
 //Helper functions definitions
 
@@ -104,7 +103,7 @@ namespace hooks {
 						disconnectFromAddOn(unitInfested);
 
 					//this is the same as calling 0047B2E0 unitIsFactoryUnit like original code but faster
-					if(units_dat::GroupFlags[unitInfested->id].isFactory)
+					if(unitInfested->isFactory())
 						unitInfested->rally.unit = unitInfested;
 
 					//original code was *(u16*)(0x006648AC + 2*unitInfested->id);
@@ -311,8 +310,6 @@ namespace {
 const u32 Func_OrderReturnToIdle = 0x00463770;
 void orderReturnToIdle(CUnit *unit) {
 
-  assert(unit);
-
   __asm {
     PUSHAD
 	MOV ESI, unit
@@ -325,8 +322,6 @@ void orderReturnToIdle(CUnit *unit) {
 //the name is a guess from the context
 const u32 Func_Sub_464930 = 0x00464930;
 void disconnectFromAddOn(CUnit *unit) {
-
-  assert(unit);
 
   __asm {
     PUSHAD
@@ -371,8 +366,6 @@ void removeOrderFromUnitQueue(const CUnit *unit) {
 
 }
 
-//this function is IMPOSSIBLE to extract, just have
-//to use it as is
 const u32 Func_ActUnitReturnToIdle = 0x00475420;
 void actUnitReturnToIdle(CUnit *unit) {
 
@@ -382,6 +375,7 @@ void actUnitReturnToIdle(CUnit *unit) {
     CALL Func_ActUnitReturnToIdle
     POPAD
   }
+  
 }
 
 //Related to path/movement decision
