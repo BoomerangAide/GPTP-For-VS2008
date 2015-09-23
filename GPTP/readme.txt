@@ -13,6 +13,7 @@ and added importing of version.lib in link editor.
 getting (also proposed as issues at original project, but it was so buggy there I decided to try and create
 this).
 -Will add any others changes into the "changelog" file
+-If there are several Update-X branches, the most stable is the one with the lowest value, the less tested (but probably with more experimental features) is the one with the highest value.
 
 Here is the original readme that was available with v2.41.
 Besides the part about being adapted to Visual Studio 2010, it can be used.
