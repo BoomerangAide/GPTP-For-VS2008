@@ -343,7 +343,7 @@ namespace hooks {
 						if(
 							sorted_list_length == 1 &&
 							clicked_unit->playerId == *ACTIVE_NATION_ID &&
-							units_dat::GroupFlags[clicked_unit->id].isFactory
+							clicked_unit->isFactory()
 							) 
 							function_00468670(clicked_unit);
 
@@ -559,7 +559,7 @@ namespace hooks {
 			//selecting a building with one.
 			//maybe can do others things?
 			if( clicked_unit->playerId == *ACTIVE_NATION_ID &&
-				units_dat::GroupFlags[clicked_unit->id].isFactory
+				clicked_unit->isFactory()
 				)
 				function_00468670(clicked_unit);
 
