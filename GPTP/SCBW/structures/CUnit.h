@@ -96,6 +96,10 @@ struct CUnit: public CUnitLayout {
   /// UnitProperty::Subunit flag set).
   bool isSubunit() const;
   
+  /// Checks if the current unit is a factory (i.e. not NULL and has the
+  /// flag isFactory from GroupFlags set).
+  bool isFactory() const;
+  
   /// Checks if the unit is a spellcaster (has energy) and not a hallucination.
   bool isValidCaster() const;
   
