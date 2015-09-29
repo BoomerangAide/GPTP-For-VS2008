@@ -163,7 +163,7 @@ SCBW_DATA(u8*,  SightRange,				unitsDat[24].address);	//00663238
 SCBW_DATA(u8*,  ArmorUpgrade,			unitsDat[25].address);	//006635D0
 SCBW_DATA(u8*,  SizeType,				unitsDat[26].address);	//00662180
 SCBW_DATA(u8*,  ArmorAmount,			unitsDat[27].address);	//0065FEC8
-//SCBW_DATA(u8*, ???,					unitsDat[28].address);	//00662098
+SCBW_DATA(u8*,  RightClickAction,		unitsDat[28].address);	//00662098
 SCBW_DATA(u16*, SoundReady,				unitsDat[29].address);	//00661FC0
 SCBW_DATA(u16*, SoundWhatFirst,			unitsDat[30].address);	//0065FFB0
 SCBW_DATA(u16*, SoundWhatLast,			unitsDat[31].address);	//00662BF0
