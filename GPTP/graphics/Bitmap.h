@@ -21,6 +21,7 @@ class Bitmap {
     void drawFilledCircle(int x, int y, int radius, ColorId color);
     void drawEllipse(int left, int top, int right, int bottom, ColorId color);
     void drawDottedLine(int x1, int y1, int x2, int y2, ColorId color);
+    void drawDottedEllipse(int left, int top, int right, int bottom, ColorId color);
 
   private:
     u16 width, height;
