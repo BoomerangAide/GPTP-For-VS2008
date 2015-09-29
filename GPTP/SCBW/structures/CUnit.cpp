@@ -592,8 +592,10 @@ graphics::ColorId CUnit::getColor() {
 }
 
 graphics::ColorId CUnit::getColor(CUnit* unit) {
+	
+	//getColourID internal function
+	const u32 Func_getColourID = 0x0049B0E0;	
 
-	//store a playerId until the end where it will properly store a ColorId
 	graphics::ColorId return_value;
 
 	if(unit != NULL) {
@@ -605,14 +607,25 @@ graphics::ColorId CUnit::getColor(CUnit* unit) {
 			// note: using player color for spriteless units (if that exist)
 			return_value = unit->playerId;
 
-		if(return_value < PLAYER_COUNT)
+		if(return_value < PLAYABLE_PLAYER_COUNT) {
+
+			__asm {
+				PUSHAD
+				MOV AL, return_value
+				CALL Func_getColourID
+				MOV return_value, AL
+				POPAD
+			}
+
 			return_value = playersColors[return_value];
+
+		}
 		else
-			return_value = graphics::BLACK; // will return 0/black if abnormal playerId
+			return_value = graphics::BLACK; // will return 0/black if abnormal playerId		
 
 	}
 	else
-		return_value = graphics::BLACK; // will return 0/black if null pointer is the argument
+		return_value = graphics::BLACK; // will return 0/black if unit is NULL
 
 	return return_value;
 
