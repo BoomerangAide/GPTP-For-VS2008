@@ -1,7 +1,11 @@
 Update 3:
 
 -Minor fixes and optimizations
+-Moving my orders based hooks in a separate subfolder
+-Fix for drawEllipse graphics function and adding drawDottedEllipse function
+-Fix for CUnit::getColor (so it return the correct value...probably all the time)
 ** Unit Merge (from archons merge) hook **
+** Larva and Creep Spawn (concentrating more on larvas) hook **
 
 *Planned:
     -more hooks for orders
