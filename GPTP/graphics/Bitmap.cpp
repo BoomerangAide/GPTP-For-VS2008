@@ -407,10 +407,10 @@ void Bitmap::drawFilledCircle(int x, int y, int radius, ColorId color) {
 void Bitmap::drawEllipse(int left, int top, int right, int bottom, ColorId color) {
 
     if (left > right) std::swap(left, right);
-    if (right < 0 || left >= this->getWidth()) return;
+    if (right <= 0 || left >= this->getWidth()) return;
 
     if (top > bottom) std::swap(top, bottom);
-    if (bottom < 0 || top >= this->getHeight()) return;
+    if (bottom <= 0 || top >= this->getHeight()) return;
 
 	int x0 = left;
 	int y0 = bottom;
@@ -421,13 +421,13 @@ void Bitmap::drawEllipse(int left, int top, int right, int bottom, ColorId color
 	//Code taken from http://members.chello.at/easyfilter/bresenham.html  
 
 	int a = abs(x1-x0), b = abs(y1-y0), b1 = b&1; /* values of diameter */
-	long dx = 4*(1-a)*b*b, dy = 4*(b1+1)*a*a; /* error increment */
-	long err = dx+dy+b1*a*a, e2; /* error of 1.step */
+	double dx = 4*(1.0-a)*b*b, dy = 4*(b1+1)*a*a; /* error increment */
+	double err = dx+dy+b1*a*a, e2; /* error of 1.step */
 
 	if (x0 > x1) { x0 = x1; x1 += a; } /* if called with swapped points */
 	if (y0 > y1) y0 = y1; /* .. exchange them */
 	y0 += (b+1)/2; y1 = y0-b1;   /* starting pixel */
-	a *= 8*a; b1 = 8*b*b;
+	a = 8*a*a; b1 = 8*b*b;
 
 	do {
 	   this->drawDot(x1, y0, color); /*   I. Quadrant */
@@ -472,6 +472,70 @@ void Bitmap::drawDottedLine(int x1, int y1, int x2, int y2, ColorId color) {
 	}
 }
 
+//-------- Dotted Ellipse drawing --------//
+
+void Bitmap::drawDottedEllipse(int left, int top, int right, int bottom, ColorId color) {
+
+	int nIgnoreHalf = 0;
+
+    if (left > right) std::swap(left, right);
+    if (right <= 0 || left >= this->getWidth()) return;
+
+    if (top > bottom) std::swap(top, bottom);
+    if (bottom <= 0 || top >= this->getHeight()) return;
+
+	int x0 = left;
+	int y0 = bottom;
+	int x1 = right; 
+	int y1 = top;
+
+	//Bresenham's circle algorithm
+	//Code taken from http://members.chello.at/easyfilter/bresenham.html  
+
+	int a = abs(x1-x0), b = abs(y1-y0), b1 = b&1; /* values of diameter */
+	double dx = 4*(1.0-a)*b*b, dy = 4*(b1+1)*a*a; /* error increment */
+	double err = dx+dy+b1*a*a, e2; /* error of 1.step */
+
+	if (x0 > x1) { x0 = x1; x1 += a; } /* if called with swapped points */
+	if (y0 > y1) y0 = y1; /* .. exchange them */
+	y0 += (b+1)/2; y1 = y0-b1;   /* starting pixel */
+	a = 8*a*a; b1 = 8*b*b;
+
+	do {
+
+		if(nIgnoreHalf%20 < 5) {
+			this->drawDot(x1, y0, color); /*   I. Quadrant */
+			this->drawDot(x0, y0, color); /*  II. Quadrant */
+			this->drawDot(x0, y1, color); /* III. Quadrant */
+			this->drawDot(x1, y1, color); /*  IV. Quadrant */
+		}
+
+		nIgnoreHalf++;
+
+	   e2 = 2*err;
+
+	   if (e2 <= dy) { y0++; y1--; err += dy += a; }  /* y step */ 
+	   if (e2 >= dx || 2*err > dy) { x0++; x1--; err += dx += b1; } /* x step */
+
+	} while (x0 <= x1);
+
+	while (y0-y1 < b) {  /* too early stop of flat ellipses a=1 */
+
+		if(nIgnoreHalf%20 < 5) {
+			this->drawDot(x0-1, y0, color); /* -> finish tip of ellipse */
+			this->drawDot(x1+1, y0++, color); //this->drawDot(x1+1, y0++, color); 
+			this->drawDot(x0-1, y1, color);
+			this->drawDot(x1+1, y1--, color);//this->drawDot(x1+1, y1--, color); 
+		}
+		else {
+			y0++;y1--;
+		}
+
+		nIgnoreHalf++;
+
+	}
+
+}
 
 //-------- Unsafe functions for fast drawing --------//
 
