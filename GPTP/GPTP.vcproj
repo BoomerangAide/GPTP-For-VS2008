@@ -187,11 +187,11 @@
 			>
 			<File
 				RelativePath=".\hooks\interface\buttonsets.cpp"
-			>
+				>
 			</File>
 			<File
 				RelativePath=".\hooks\interface\buttonsets_inject.cpp"
-			>
+				>
 			</File>			
 			<File
 				RelativePath=".\configure.cpp"
@@ -202,27 +202,35 @@
 				>
 			</File>
 			<File
-				RelativePath=".\hooks\infestation.cpp"
+				RelativePath=".\hooks\orders\infestation.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\hooks\infestation_inject.cpp"
+				RelativePath=".\hooks\orders\infestation_inject.cpp"
 				>
 			</File>
-			<File			
+			<File
 				RelativePath=".\initialize.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\orders\larva_creep_spawn.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\larva_creep_spawn_inject.cpp"
+				>
+			</File>			
 			<File
 				RelativePath=".\logger.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\hooks\merge_units.cpp"
+				RelativePath=".\hooks\orders\merge_units.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\hooks\merge_units_inject.cpp"
+				RelativePath=".\hooks\orders\merge_units_inject.cpp"
 				>
 			</File>			
 			<File
@@ -246,11 +254,11 @@
 				>
 			</File>			
 			<File
-				RelativePath=".\hooks\siege_transform.cpp"
+				RelativePath=".\hooks\orders\siege_transform.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\hooks\siege_transform_inject.cpp"
+				RelativePath=".\hooks\orders\siege_transform_inject.cpp"
 				>
 			</File>			
 			<Filter
@@ -700,7 +708,11 @@
 				>
 			</File>			
 			<File
-				RelativePath=".\hooks\infestation.h"
+				RelativePath=".\hooks\orders\infestation.h"
+				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\larva_creep_spawn.h"
 				>
 			</File>			
 			<File
@@ -708,7 +720,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\hooks\merge_units.h"
+				RelativePath=".\hooks\orders\merge_units.h"
 			>
 			</File>			
 			<File
@@ -728,7 +740,7 @@
 				>
 			</File>			
 			<File
-				RelativePath=".\hooks\siege_transform.h"
+				RelativePath=".\hooks\orders\siege_transform.h"
 				>
 			</File>			
 			<File
