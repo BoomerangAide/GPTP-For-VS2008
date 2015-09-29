@@ -65,4 +65,6 @@ void drawEllipse(int left, int top, int right, int bottom, ColorId color, CoordT
 
 void drawDottedLine(int x1, int y1, int x2, int y2, ColorId color, CoordType ct = ON_SCREEN);
 
+void drawDottedEllipse(int left, int top, int right, int bottom, ColorId color, CoordType ct = ON_SCREEN);
+
 } //graphics
