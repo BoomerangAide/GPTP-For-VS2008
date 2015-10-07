@@ -135,60 +135,60 @@ struct DatLoad {
 namespace units_dat {
 SCBW_DATA(const DatLoad*, unitsDat, 0x00513C30);
 
-SCBW_DATA(u8*,  Graphic,				unitsDat[0].address);	//006644F8
-SCBW_DATA(u16*, SubUnit,				unitsDat[1].address);	//006607C0
-//SCBW_DATA(u16*, ???,					unitsDat[2].address);	//00660C38
-SCBW_DATA(u16*, InfestedUnitPartial,	unitsDat[3].address);	//00664980, (Id - UnitId::TerranCommandCenter) for it to work, last valid id is UnitId::Special_OvermindCocoon
-SCBW_DATA(u32*, ConstructionGraphic,	unitsDat[4].address);	//006610B0
-SCBW_DATA(u8*,  SpecialAngle,			unitsDat[5].address);	//006605F0  (used by Siege Mode ON/OFF and maybe doodad traps)
-SCBW_DATA(u8*,  ShieldsEnabled,			unitsDat[6].address);	//006647B0
-SCBW_DATA(u16*, MaxShieldPoints,		unitsDat[7].address);	//00660E00
-SCBW_DATA(s32*, MaxHitPoints,			unitsDat[8].address);	//00662350
-SCBW_DATA(u8*,  Elevation,				unitsDat[9].address);	//00663150
-SCBW_DATA(u8*,  MovementFlags,			unitsDat[10].address);	//00660FC8
-SCBW_DATA(u8*,  Rank,					unitsDat[11].address);	//00663DD0
-SCBW_DATA(u8*,  ComputerIdleOrder,		unitsDat[12].address);	//00662EA0
-SCBW_DATA(u8*,  HumanIdleOrder,			unitsDat[13].address);	//00662268
-SCBW_DATA(u8*,  ReturnToIdleOrder,		unitsDat[14].address);	//00664898
-SCBW_DATA(u8*,  AttackUnitOrder,		unitsDat[15].address);	//00663320
-SCBW_DATA(u8*,  AttackMoveOrder,		unitsDat[16].address);	//00663A50
-SCBW_DATA(u8*,  GroundWeapon,			unitsDat[17].address);	//006636B8
-SCBW_DATA(u8*,  MaxGroundHits,			unitsDat[18].address);	//006645E0
-SCBW_DATA(u8*,  AirWeapon,				unitsDat[19].address);	//006616E0
-SCBW_DATA(u8*,  MaxAirHits,				unitsDat[20].address);	//0065FC18
-//SCBW_DATA(u8*, ???,					unitsDat[21].address);	//00660178
-SCBW_DATA(u32*, BaseProperty,			unitsDat[22].address);  //00664080 AKA SpecialAbilityFlags, UnitProperty, etc. Use with UnitProperty::Enum.
-SCBW_DATA(u8*,  SeekRange,				unitsDat[23].address);  //00662DB8 AKA Target Acquisition Range, Acquire Target Range, etc.
-SCBW_DATA(u8*,  SightRange,				unitsDat[24].address);	//00663238
-SCBW_DATA(u8*,  ArmorUpgrade,			unitsDat[25].address);	//006635D0
-SCBW_DATA(u8*,  SizeType,				unitsDat[26].address);	//00662180
-SCBW_DATA(u8*,  ArmorAmount,			unitsDat[27].address);	//0065FEC8
-SCBW_DATA(u8*,  RightClickAction,		unitsDat[28].address);	//00662098
-SCBW_DATA(u16*, SoundReady,				unitsDat[29].address);	//00661FC0
-SCBW_DATA(u16*, SoundWhatFirst,			unitsDat[30].address);	//0065FFB0
-SCBW_DATA(u16*, SoundWhatLast,			unitsDat[31].address);	//00662BF0
-SCBW_DATA(u16*, SoundAnnoyedFirst,		unitsDat[32].address);	//00663B38
-SCBW_DATA(u16*, SoundAnnoyedLast,		unitsDat[33].address);	//00661EE8
-SCBW_DATA(u16*, SoundYesFirst,			unitsDat[34].address);	//00663C10
-SCBW_DATA(u16*, SoundYesLast,			unitsDat[35].address);	//00661440
-//SCBW_DATA(u16*, ???,					unitsDat[36].address);	//00662860
-//SCBW_DATA(u16*, ???,					unitsDat[37].address);	//006626E0
-SCBW_DATA(Box16*, UnitBounds,			unitsDat[38].address);	//006617C8
-//SCBW_DATA(u16*, ???,					unitsDat[39].address);	//00662F88
-SCBW_DATA(u16*, MineralCost,			unitsDat[40].address);	//00663888
-SCBW_DATA(u16*, GasCost,				unitsDat[41].address);	//0065FD00
-SCBW_DATA(u16*, TimeCost,				unitsDat[42].address);	//00660428
-//SCBW_DATA(u16*, ???,					unitsDat[43].address);	//00660A70
-SCBW_DATA(GroupFlag*, GroupFlags,		unitsDat[44].address);	//006637A0
-SCBW_DATA(u8*,  SupplyProvided,			unitsDat[45].address);  //006646C8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
-SCBW_DATA(u8*,  SupplyRequired,			unitsDat[46].address);  //00663CE8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
-SCBW_DATA(u8*,  SpaceRequired,			unitsDat[47].address);	//00664410
-SCBW_DATA(u8*,  SpaceProvided,			unitsDat[48].address);	//00660988
-SCBW_DATA(u16*, BuildScore,				unitsDat[49].address);	//00663408
-SCBW_DATA(u16*, DestroyScore,			unitsDat[50].address);	//00663EB8
-SCBW_DATA(u16*, MapStringId,			unitsDat[51].address);	//00660260
-SCBW_DATA(u8*,  BroodwarOnly,			unitsDat[52].address);	//006606D8
-//SCBW_DATA(u16*, ???,					unitsDat[53].address);	//00661518
+SCBW_DATA(u8*,		Graphic,				unitsDat[0].address);	//006644F8
+SCBW_DATA(u16*,		SubUnit,				unitsDat[1].address);	//006607C0
+//SCBW_DATA(u16*,	???,					unitsDat[2].address);	//00660C38
+SCBW_DATA(u16*,		InfestedUnitPartial,	unitsDat[3].address);	//00664980, (Id - UnitId::TerranCommandCenter) for it to work, last valid id is UnitId::Special_OvermindCocoon
+SCBW_DATA(u32*,		ConstructionGraphic,	unitsDat[4].address);	//006610B0
+SCBW_DATA(u8*,		SpecialAngle,			unitsDat[5].address);	//006605F0  (used by Siege Mode ON/OFF and maybe doodad traps)
+SCBW_DATA(u8*,		ShieldsEnabled,			unitsDat[6].address);	//006647B0
+SCBW_DATA(u16*,		MaxShieldPoints,		unitsDat[7].address);	//00660E00
+SCBW_DATA(s32*,		MaxHitPoints,			unitsDat[8].address);	//00662350
+SCBW_DATA(u8*,		Elevation,				unitsDat[9].address);	//00663150
+SCBW_DATA(u8*,		MovementFlags,			unitsDat[10].address);	//00660FC8
+SCBW_DATA(u8*,		Rank,					unitsDat[11].address);	//00663DD0
+SCBW_DATA(u8*,		ComputerIdleOrder,		unitsDat[12].address);	//00662EA0
+SCBW_DATA(u8*,		HumanIdleOrder,			unitsDat[13].address);	//00662268
+SCBW_DATA(u8*,		ReturnToIdleOrder,		unitsDat[14].address);	//00664898
+SCBW_DATA(u8*,		AttackUnitOrder,		unitsDat[15].address);	//00663320
+SCBW_DATA(u8*,		AttackMoveOrder,		unitsDat[16].address);	//00663A50
+SCBW_DATA(u8*,		GroundWeapon,			unitsDat[17].address);	//006636B8
+SCBW_DATA(u8*,		MaxGroundHits,			unitsDat[18].address);	//006645E0
+SCBW_DATA(u8*,		AirWeapon,				unitsDat[19].address);	//006616E0
+SCBW_DATA(u8*,		MaxAirHits,				unitsDat[20].address);	//0065FC18
+//SCBW_DATA(u8*,	???,					unitsDat[21].address);	//00660178
+SCBW_DATA(u32*,		BaseProperty,			unitsDat[22].address);  //00664080 AKA SpecialAbilityFlags, UnitProperty, etc. Use with UnitProperty::Enum.
+SCBW_DATA(u8*,		SeekRange,				unitsDat[23].address);  //00662DB8 AKA Target Acquisition Range, Acquire Target Range, etc.
+SCBW_DATA(u8*,		SightRange,				unitsDat[24].address);	//00663238
+SCBW_DATA(u8*,		ArmorUpgrade,			unitsDat[25].address);	//006635D0
+SCBW_DATA(u8*,		SizeType,				unitsDat[26].address);	//00662180
+SCBW_DATA(u8*,		ArmorAmount,			unitsDat[27].address);	//0065FEC8
+SCBW_DATA(u8*,		RightClickAction,		unitsDat[28].address);	//00662098
+SCBW_DATA(u16*,		SoundReady,				unitsDat[29].address);	//00661FC0
+SCBW_DATA(u16*,		SoundWhatFirst,			unitsDat[30].address);	//0065FFB0
+SCBW_DATA(u16*,		SoundWhatLast,			unitsDat[31].address);	//00662BF0
+SCBW_DATA(u16*,		SoundAnnoyedFirst,		unitsDat[32].address);	//00663B38
+SCBW_DATA(u16*,		SoundAnnoyedLast,		unitsDat[33].address);	//00661EE8
+SCBW_DATA(u16*,		SoundYesFirst,			unitsDat[34].address);	//00663C10
+SCBW_DATA(u16*,		SoundYesLast,			unitsDat[35].address);	//00661440
+SCBW_DATA(Point16*,	unitsDat36,				unitsDat[36].address);	//00662860
+//SCBW_DATA(u16*,	???,					unitsDat[37].address);	//006626E0
+SCBW_DATA(Box16*,	UnitBounds,				unitsDat[38].address);	//006617C8
+//SCBW_DATA(u16*,	???,					unitsDat[39].address);	//00662F88
+SCBW_DATA(u16*,		MineralCost,			unitsDat[40].address);	//00663888
+SCBW_DATA(u16*,		GasCost,				unitsDat[41].address);	//0065FD00
+SCBW_DATA(u16*,		TimeCost,				unitsDat[42].address);	//00660428
+//SCBW_DATA(u16*,	???,					unitsDat[43].address);	//00660A70
+SCBW_DATA(GroupFlag*, GroupFlags,			unitsDat[44].address);	//006637A0
+SCBW_DATA(u8*,		SupplyProvided,			unitsDat[45].address);  //006646C8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
+SCBW_DATA(u8*,		SupplyRequired,			unitsDat[46].address);  //00663CE8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
+SCBW_DATA(u8*,		SpaceRequired,			unitsDat[47].address);	//00664410
+SCBW_DATA(u8*,		SpaceProvided,			unitsDat[48].address);	//00660988
+SCBW_DATA(u16*,		BuildScore,				unitsDat[49].address);	//00663408
+SCBW_DATA(u16*,		DestroyScore,			unitsDat[50].address);	//00663EB8
+SCBW_DATA(u16*,		MapStringId,			unitsDat[51].address);	//00660260
+SCBW_DATA(u8*,		BroodwarOnly,			unitsDat[52].address);	//006606D8
+//SCBW_DATA(u16*, ???,						unitsDat[53].address);	//00661518
 } //units_dat (last entry at 0x00513EAC)
 
 namespace flingy_dat {
@@ -274,7 +274,7 @@ SCBW_DATA(u8*,  UseWeaponTargeting, ordersDat[1].address);	//00664B00
 //SCBW_DATA(u8*,  ???,				ordersDat[3].address);	//00665A00
 //SCBW_DATA(u8*,  ???,				ordersDat[4].address);	//00664A40
 //SCBW_DATA(u8*,  ???,				ordersDat[5].address);	//006657C0
-//SCBW_DATA(u8*,  ???,				ordersDat[6].address);	//00665040
+SCBW_DATA(u8*,  ordersDat_6,		ordersDat[6].address);	//00665040
 //SCBW_DATA(u8*,  ???,				ordersDat[7].address);	//00665100
 //SCBW_DATA(u8*,  ???,				ordersDat[8].address);	//00665700
 //SCBW_DATA(u8*,  ???,				ordersDat[9].address);	//006651C0
