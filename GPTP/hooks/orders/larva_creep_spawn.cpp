@@ -1,9 +1,5 @@
 #include "larva_creep_spawn.h"
 #include <SCBW/api.h>
-#include <SCBW/scbwdata.h>
-#include <logger.h>
-
-#define WRITE_TO_LOG(x) if(*elapsedTimeFrames%100 == 0) GPTP::logger<<x<<std::endl
 
 //Helper functions definitions
 
@@ -30,16 +26,22 @@ void function_0049D660(CUnit* main_building) {
 
 	Point32 coords;
 
+	//look for a location to spawn a larva at
 	if(function_004E8E10(main_building,&coords)) {
 
 		CUnit* unit_created = CreateUnit(UnitId::ZergLarva, coords.x, coords.y, main_building->playerId);
 
 		if(unit_created != NULL) {
 
+			//update various stuff (set hp, set shield...) not finished on CreateUnit
 			function_004A01F0(unit_created);
+			
 			updateUnitStrength(unit_created);
 
 			unit_created->connectedUnit = main_building;
+			
+			//set mainOrderState depending on the collision
+			//state with the connected building			
 			function_004E8DA0(unit_created);
 
 			if(main_building->pAI != NULL)
@@ -47,9 +49,11 @@ void function_0049D660(CUnit* main_building) {
 
 		} //if(unit_created != NULL)
 
-	} //if(!function_004E8E10(main_building,&coords))
+	} //if(function_004E8E10(main_building,&coords))
 
 } //void function_0049D660(CUnit* main_building) 
+
+;
 
 //filter for larva in internal game searches, use the limit of 3 larvas
 bool function_004E8C80(CUnit* unit, CUnit* main_building) {
@@ -88,8 +92,6 @@ void secondaryOrd_SpawningLarva(CUnit* unit) {
 
 	u16* const LARVA_COUNTER = (u16*)0x0067D3F8;
 
-	WRITE_TO_LOG("Begin");
-
 	if(unit->orderQueueTimer == 0 && unit->playerId != 11) {
 
 		//EA79E
@@ -106,8 +108,6 @@ void secondaryOrd_SpawningLarva(CUnit* unit) {
 		//Count existing larvas in LARVA_COUNTER
 		IterateUnitsAtLocationTargetProc_LarvaCount(unit,&coords);
 
-		WRITE_TO_LOG("Iterated successfully");
-
 		if(*LARVA_COUNTER < 3) {
 
 			if(unit->building.larvaTimer != 0)
@@ -117,27 +117,29 @@ void secondaryOrd_SpawningLarva(CUnit* unit) {
 				Point32 coords_2;
 
 				//EA80E:
-				WRITE_TO_LOG("EA80E");
 				unit->building.larvaTimer = 37; /*0x25*/
 
+				//if failed to find a spawn point for larva
+				//set the timer before retry to 3
 				if(!function_004E8E10(unit,&coords_2))
-					unit->building.larvaTimer = 3;	//failed to find a spawn point for larva
+					unit->building.larvaTimer = 3;
 				else {
 
 					//EA830:
-					WRITE_TO_LOG("EA830");
-
 					CUnit* new_larva = CreateUnit(UnitId::ZergLarva,coords_2.x,coords_2.y,unit->playerId);
 
 					if(new_larva != NULL) {
 
+						//update various stuff (set hp, set shield...) not finished on CreateUnit
 						function_004A01F0(new_larva);
+						
 						updateUnitStrength(new_larva);
 
 						new_larva->connectedUnit = unit;
+						
+						//set mainOrderState depending on the collision
+						//state with the connected building						
 						function_004E8DA0(new_larva);
-
-						WRITE_TO_LOG("new larva handled");
 
 						if(unit->pAI != NULL)
 							AI_TrainingOverlord(unit,new_larva);
@@ -174,6 +176,11 @@ void secondaryOrd_SpreadCreepSpawningLarva(CUnit* unit) {
 		u8 result_00414680;
 
 		unit->building.creepTimer = 15; /*0F*/
+		
+		//look for a place to spawn creep on
+		//I'm not sure how the return value is
+		//calculated 
+		//(number of creep tiles/distance/other?)		
 		result_00414680 = function_00414680(UnitId::ZergHive,unit->sprite->position.x,unit->sprite->position.y);
 
 		if(result_00414680 == 0) {
@@ -203,8 +210,7 @@ void secondaryOrd_SpreadCreepSpawningLarva(CUnit* unit) {
 
 	}
 
-
-}
+} //void secondaryOrd_SpreadCreepSpawningLarva(CUnit* unit)
 
 ;
 
@@ -214,7 +220,7 @@ void secondaryOrd_SpreadCreepSpawningLarva(CUnit* unit) {
 
 namespace {
 
-	u32 Func_Sub414680 = 0x00414680;
+	const u32 Func_Sub414680 = 0x00414680;
 	u8 function_00414680(u32 unitId, int x, int y) {
 
 		static u8 return_value;
@@ -232,8 +238,10 @@ namespace {
 		return return_value;
 
 	}
+	
+	;
 
-	u32 Func_AI_TrainingOverlord = 0x00435770;
+	const u32 Func_AI_TrainingOverlord = 0x00435770;
 	void AI_TrainingOverlord(CUnit* main_building, CUnit* larva) {
 
 		__asm {
@@ -248,7 +256,7 @@ namespace {
 
 	;
 
-	u32 Func_UpdateUnitStrength = 0x0049FA40;
+	const u32 Func_UpdateUnitStrength = 0x0049FA40;
 	void updateUnitStrength(CUnit* unit) {
 
 		__asm {
@@ -262,7 +270,7 @@ namespace {
 
 	;
 
-	u32 Func_Sub4A01F0 = 0x004A01F0;
+	const u32 Func_Sub4A01F0 = 0x004A01F0;
 	void function_004A01F0(CUnit* unit) {
 
 		__asm {
@@ -276,7 +284,7 @@ namespace {
 
 	;
 
-	u32 Func_CreateUnit = 0x004A09D0;
+	const u32 Func_CreateUnit = 0x004A09D0;
 	CUnit* CreateUnit(u32 unitId, int x, int y, u32 playerId) {
 
 		static CUnit* unit_created;
@@ -298,9 +306,9 @@ namespace {
 
 	;
 
-	u32 Func_IterateUnitsAtLocationTargetProc = 0x004E8280;
+	const u32 Func_IterateUnitsAtLocationTargetProc = 0x004E8280;
 	//hardcoding the larva count function, keeping the return value
-	//thoguh it's unused here
+	//though it's unused here
 	u32 IterateUnitsAtLocationTargetProc_LarvaCount(CUnit* unit, Box16* coords) {
 
 		static u32 return_value;
@@ -321,7 +329,7 @@ namespace {
 
 	;
 
-	u32 Func_Sub4E8DA0 = 0x004E8DA0;
+	const u32 Func_Sub4E8DA0 = 0x004E8DA0;
 	void function_004E8DA0(CUnit* unit) {
 
 		__asm {
@@ -335,8 +343,7 @@ namespace {
 
 	;
 
-	u32 Func_Sub4E8E10 = 0x004E8E10;
-	//Find coordinates at which larva can be created?
+	const u32 Func_Sub4E8E10 = 0x004E8E10;
 	bool function_004E8E10(CUnit* unit, Point32* coords) {
 
 		static Bool32 return_pre_value;
@@ -353,6 +360,8 @@ namespace {
 		return (return_pre_value != 0);
 
 	}
+	
+	;
 
 } //Unnamed namespace
 
