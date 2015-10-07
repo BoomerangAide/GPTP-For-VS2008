@@ -1,6 +1,5 @@
 #include "infestation.h"
 #include <SCBW/api.h>
-#include <SCBW/scbwdata.h>
 
 //Helper functions definitions
 
@@ -35,6 +34,8 @@ namespace hooks {
 		return returnValue;
 
 	}
+	
+	;
 
 	//replace 0x00402210 CC_CanBeInfested
 	bool isInfestableUnit(const CUnit *unit) {
@@ -59,6 +60,8 @@ namespace hooks {
 		return returnValue;
 
 	}
+	
+	;
 
 	//Based on and replace orders_InfestMine1 (0x004EA4C0)
 	void orderMorphIntoInfested(CUnit *unitInfested) {
@@ -177,6 +180,8 @@ namespace hooks {
 			orderReturnToIdle(unitInfested);
 
 	}
+	
+	;
 
 	//Based on and replace 004EA290 orders_InfestMine4
 	void orderInfestTarget(CUnit *unitInfesting) {
@@ -297,7 +302,7 @@ namespace hooks {
 
 	} //void orderInfestTarget(CUnit *unitInfesting)
 
-
+	;
 
 } //hooks
 
@@ -319,7 +324,6 @@ void orderReturnToIdle(CUnit *unit) {
 
 }
 
-//the name is a guess from the context
 const u32 Func_Sub_464930 = 0x00464930;
 void disconnectFromAddOn(CUnit *unit) {
 
