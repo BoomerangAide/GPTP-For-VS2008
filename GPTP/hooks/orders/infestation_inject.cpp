@@ -26,6 +26,8 @@ void __declspec(naked) unitCanInfestWrapper() {
 
 }
 
+;
+
 //Inject with jmpPatch()
 void __declspec(naked) unitCanBeInfestedWrapper() {
 
@@ -48,6 +50,8 @@ void __declspec(naked) unitCanBeInfestedWrapper() {
 
 }
 
+;
+
 //Inject with jmpPatch()
 void __declspec(naked) unitMorphIntoInfestedOrder() {
 
@@ -68,6 +72,8 @@ void __declspec(naked) unitMorphIntoInfestedOrder() {
 
 }
 
+;
+
 //Inject with jmpPatch()
 void __declspec(naked) unitInfestOrder() {
 
@@ -87,6 +93,8 @@ void __declspec(naked) unitInfestOrder() {
 	}
 
 }
+
+;
 
 } //unnamed namespace
 
