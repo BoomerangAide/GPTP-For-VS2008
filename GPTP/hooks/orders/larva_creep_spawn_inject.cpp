@@ -27,6 +27,8 @@ void __declspec(naked) function_0049D660_Wrapper() {
 
 }
 
+;
+
 //0x004E8C80
 void __declspec(naked) function_004E8C80_Wrapper(){
 
@@ -57,6 +59,8 @@ void __declspec(naked) function_004E8C80_Wrapper(){
 
 }
 
+;
+
 //0x004EA780
 void __declspec(naked) secondaryOrd_SpawningLarva_Wrapper(){
 
@@ -81,6 +85,8 @@ void __declspec(naked) secondaryOrd_SpawningLarva_Wrapper(){
 
 }
 
+;
+
 //0x004EA880
 void __declspec(naked) secondaryOrd_SpreadCreepSpawningLarva_Wrapper(){
 
@@ -100,7 +106,7 @@ void __declspec(naked) secondaryOrd_SpreadCreepSpawningLarva_Wrapper(){
 
 }
 
-
+;
 
 } //unnamed namespace
 
