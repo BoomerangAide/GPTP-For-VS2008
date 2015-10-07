@@ -1,5 +1,4 @@
 #include "merge_units.h"
-#include <SCBW/scbwdata.h>
 #include <SCBW/api.h>
 
 #ifndef MAXINT32
