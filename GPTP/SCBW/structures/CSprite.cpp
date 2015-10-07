@@ -4,13 +4,12 @@
 #include <algorithm>
 #include <cassert>
 
-//V241 for VS2008
-
 //Functionally identical to playSpriteIscript() (offset 0x00499D00)
-void CSprite::playIscriptAnim(IscriptAnimation::Enum animation) {
+void CSprite::playIscriptAnim(IscriptAnimation::Enum animation, bool bReplaceCurrentScript) {
   assert(this);
-  for (CImage *img = this->images.head; img; img = img->link.next)
-    img->playIscriptAnim(animation);
+  if(bReplaceCurrentScript || !(this->flags & CSprite_Flags::IscriptCode))
+	  for (CImage *img = this->images.head; img; img = img->link.next)
+		img->playIscriptAnim(animation);
 }
 
 void CSprite::free() {
