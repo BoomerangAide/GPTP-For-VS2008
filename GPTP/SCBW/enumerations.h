@@ -421,3 +421,16 @@ enum Enum {
 	LightUpButton		= 0x0000000E
 };
 }
+
+//Use with units_dat::RightClickAction
+namespace RightClickActions {
+	enum Enum : u8 {
+		NoCommand_AutoAttack = 0,
+		NormalMove_NormalAttack = 1,
+		NormalMove_NoAttack = 2,
+		NoMove_NormalAttack = 3,
+		Harvest = 4,
+		HarvestAndRepair = 5,
+		Unknown = 6				//only by ComSat addon
+};
+}
