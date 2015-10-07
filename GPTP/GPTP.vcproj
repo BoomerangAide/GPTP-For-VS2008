@@ -220,6 +220,14 @@
 			<File
 				RelativePath=".\hooks\orders\larva_creep_spawn_inject.cpp"
 				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\liftland.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\liftland_inject.cpp"
+				>
 			</File>			
 			<File
 				RelativePath=".\logger.cpp"
@@ -713,6 +721,10 @@
 			</File>	
 			<File
 				RelativePath=".\hooks\orders\larva_creep_spawn.h"
+				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\liftland.h"
 				>
 			</File>			
 			<File
