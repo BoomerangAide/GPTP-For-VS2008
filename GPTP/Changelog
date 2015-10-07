@@ -6,6 +6,7 @@ Update 3:
 -Fix for CUnit::getColor (so it return the correct value...probably all the time)
 ** Unit Merge (from archons merge) hook **
 ** Larva and Creep Spawn (concentrating more on larvas) hook **
+** Lift and Land hook **
 
 *Planned:
     -more hooks for orders
