@@ -1,6 +1,5 @@
 #include "siege_transform.h"
 #include <SCBW/api.h>
-#include <SCBW/scbwdata.h>
 #include <cassert>
 
 //Helper functions definitions
@@ -204,8 +203,6 @@ const u32 Func_UnitSetRetreatPoint = 0x004011A0;
 //angleValue is a guess
 void unitSetRetreatPoint(CUnit *unit, u8 angleValue) {
 
-  assert(unit);
-
   __asm {
     PUSHAD
 	MOV AL, angleValue
@@ -226,8 +223,6 @@ bool getCloserToDestination_sub402BE0(CUnit *unit) {
 
 	static Bool32 bResult;
 
-	assert(unit);
-
   __asm {
     PUSHAD
 	MOV ESI, unit
@@ -243,8 +238,6 @@ bool getCloserToDestination_sub402BE0(CUnit *unit) {
 const u32 Func_OrderReturnToIdle = 0x00463770;
 void orderReturnToIdle(CUnit *unit) {
 
-  assert(unit);
-
   __asm {
     PUSHAD
 	MOV ESI, unit
@@ -258,8 +251,6 @@ const u32 Func_Sub464290_CheckForCloseUnit = 0x00464290;
 bool checkForCloseUnit_sub464290(CUnit *unit) {
 
 	static Bool32 bResult;
-
-	assert(unit);
 
   __asm {
     PUSHAD
@@ -277,7 +268,6 @@ void playSubunitIscript(CUnit *unit, IscriptAnimation::Enum anim) {
 
 	u32 anim_ = anim;
 
-	assert(unit);
 	assert(unit->subunit);
 
   __asm {
