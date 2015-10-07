@@ -48,7 +48,7 @@ void transferResourceToWorkerHook(CUnit *worker, CUnit *resource) {
   u32 chunkImageId;
   bool isMineral = false;
 
-  if (176 <= resource->id && resource->id <= 178) {  //Is a mineral patch
+  if (UnitId::ResourceMineralField <= resource->id && resource->id <= UnitId::ResourceMineralFieldType3) {  //Is a mineral patch
     chunkImageId = ImageId::MineralChunkType1;
     isMineral = true;
   }
