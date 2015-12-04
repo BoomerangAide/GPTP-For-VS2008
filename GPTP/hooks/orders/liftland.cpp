@@ -35,7 +35,7 @@ namespace {
 	void function_00498150(CSprite* sprite, u8 newVerticalOffset);													//0x00498150
 	void function_004997E0(CSprite* sprite);																		//0x004997E0
 	void function_004C3B40(CUnit* unit);																			//0x004C3B40
-	void function_004EB9C0(CUnit* unit, int x, int y);																//0x004EB9C0
+	bool function_004EB9C0(CUnit* unit, int x, int y);																//0x004EB9C0
 
 } //unnamed namespace
 
@@ -879,7 +879,9 @@ void function_004C3B40(CUnit* unit) {
 ;
 
 const u32 Func_Sub4EB9C0 = 0x004EB9C0;
-void function_004EB9C0(CUnit* unit, int x, int y) {
+bool function_004EB9C0(CUnit* unit, int x, int y) {
+	
+	static Bool32 bPreResult;
 
 	__asm {
 		PUSHAD
@@ -887,8 +889,11 @@ void function_004EB9C0(CUnit* unit, int x, int y) {
 		MOV ECX, x
 		MOV EAX, y
 		CALL Func_Sub4EB9C0
+		MOV bPreResult, EAX
 		POPAD
 	}
+	
+	return (bPreResult != 0);
 
 }
 
