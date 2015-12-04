@@ -319,7 +319,7 @@ namespace hooks {
 		currentSubUnitMainOrderId = *BUTTONSET_SUBUNIT_MAINORDERID;
 
 		//if the subunit hold the weapon, get the icon from it
-		if(currentSubUnitMainOrderId == 0xFF)
+		if(currentSubUnitMainOrderId != 0xFF)
 			currentSubUnitButtonIcon = orders_dat::ButtonIcon[currentSubUnitMainOrderId];
 		else
 			currentSubUnitButtonIcon = 0xFFFF;
@@ -362,15 +362,13 @@ namespace hooks {
 		if(currentButtonDlg == NULL)
 			*BUTTONSET_MAINBUTTONGRAPHIC = 0xFFFF;
 		else {
-
-			u16 currentButtonDlgGraphic = currentButtonDlg->graphic;
 			
 			if( !(currentButtonDlg->flags & BinDlgFlags::Unknown0) ) {
 				currentButtonDlg->flags |= BinDlgFlags::Unknown0;
 				updateDialog(currentButtonDlg);
 			}
 
-			*BUTTONSET_MAINBUTTONGRAPHIC = currentButtonDlgGraphic;
+			*BUTTONSET_MAINBUTTONGRAPHIC = usedButtonIcon;
 
 		}
 
