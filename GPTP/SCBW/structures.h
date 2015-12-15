@@ -162,7 +162,7 @@ struct GrpFrame {
   s8  y;
   s8  width;
   s8  height;
-  u32 dataOffset;
+  u32 dataOffset;	//might be u16* (but as a pointer, would still fit in u32)
 };
 
 C_ASSERT(sizeof(GrpFrame) == 8); 
@@ -208,36 +208,36 @@ C_ASSERT(sizeof(ColorShiftData) == 20);
 
 //Based on BWAPI's Offsets.h
 struct ActiveTile {
-  u8 visibilityFlags;
-  u8 exploredFlags;
-  u8 isWalkable         : 1; // Set on tiles that can be walked on
-  u8 unknown1           : 1; // Unused?
-  u8 isUnwalkable       : 1; // Set on tiles that can't be walked on
-  u8 unknown2           : 1; // Unused?
-  u8 hasDoodadCover     : 1; // Set when a doodad cover (trees) occupies the area
-  u8 unknown3           : 1; // Unused?
-  u8 hasCreep           : 1; // Set when creep occupies the area
-  u8 alwaysUnbuildable  : 1; // always unbuildable, like water
-  u8 groundHeight       : 3; // ground height; 1 for low ground, 2 for middle ground and 4 for high ground
-  u8 currentlyOccupied  : 1; // unbuildable but can be made buildable
-  u8 creepReceeding     : 1; // Set when the nearby structure supporting the creep is destroyed
-  u8 cliffEdge          : 1; // Set if the tile is a cliff edge
-  u8 temporaryCreep     : 1; // Set when the creep occupying the area was created. Not set if creep tiles were preplaced. Used in drawing routine.
-  u8 unknown4           : 1; // Unused?
+/*00*/  u8 visibilityFlags;
+/*01*/  u8 exploredFlags;
+/*02*/  u8 isWalkable         : 1; // Set on tiles that can be walked on
+		u8 unknown1           : 1; // Unused?
+		u8 isUnwalkable       : 1; // Set on tiles that can't be walked on
+		u8 unknown2           : 1; // Unused?
+		u8 hasDoodadCover     : 1; // Set when a doodad cover (trees) occupies the area
+		u8 unknown3           : 1; // Unused?
+		u8 hasCreep           : 1; // Set when creep occupies the area
+		u8 alwaysUnbuildable  : 1; // always unbuildable, like water
+/*03*/  u8 groundHeight       : 3; // ground height; 1 for low ground, 2 for middle ground and 4 for high ground
+		u8 currentlyOccupied  : 1; // unbuildable but can be made buildable
+		u8 creepReceeding     : 1; // Set when the nearby structure supporting the creep is destroyed
+		u8 cliffEdge          : 1; // Set if the tile is a cliff edge
+		u8 temporaryCreep     : 1; // Set when the creep occupying the area was created. Not set if creep tiles were preplaced. Used in drawing routine.
+		u8 unknown4           : 1; // Unused?
 };
 
 C_ASSERT(sizeof(ActiveTile) == 4);
 //static_assert(sizeof(ActiveTile) == 4, "The size of the ActiveTile structure is invalid");
 
 struct GroupFlag {
-  u8 isZerg         : 1;
-  u8 isTerran       : 1;
-  u8 isProtoss      : 1;
-  u8 isMen          : 1;
-  u8 isBuilding     : 1;
-  u8 isFactory      : 1;
-  u8 isIndependent  : 1;
-  u8 isNeutral      : 1;
+  u8 isZerg         : 1;	/*0x01*/
+  u8 isTerran       : 1;	/*0x02*/
+  u8 isProtoss      : 1;	/*0x04*/
+  u8 isMen          : 1;	/*0x08*/
+  u8 isBuilding     : 1;	/*0x10*/
+  u8 isFactory      : 1;	/*0x20*/
+  u8 isIndependent  : 1;	/*0x40*/
+  u8 isNeutral      : 1;	/*0x80*/
 };
 
 C_ASSERT(sizeof(GroupFlag) == 1);
@@ -339,63 +339,63 @@ C_ASSERT(sizeof(GuiOverlay) == 44); //0x2C
 //-------- AI related stuff --------//
 
 struct AI_Main {
-  s32 oreCollection;
-  s32 gasCollection;
-  s32 supplyCollection;
-  s32 ore;
-  s32 gas;
-  s32 supply;
-  u8  unknown_0x18;
-  u8  newBuildType;
-  u16 nextBuildType;
-  void  *pTownMain;
-  u32 unknown_0x20[124];
-  u8  unknown_0x210;
-  u8  builtSomething;
-  u8  AI_NukeRate;
-  u8  AI_Attacks;
-  u32 AI_LastNukeTime;
-  struct {
-    u16 isSecureFinished    : 1;
-    u16 isTownStarted       : 1;
-    u16 isDefaultBuildOff   : 1;
-    u16 isTransportsOff     : 1;
-    u16 isFarmsNotimingOn   : 1;
-    u16 isUseMapSettings    : 1;
-    u16 flag_0x40           : 1;
-    u16 spreadCreep         : 1;
-    u16 flag_0x100          : 1;
-    u16 hasStrongestGndArmy : 1;  //Set if the AI's ground army is stronger than the total strength of the strongest enemy force
-    u16 bUpgradesFinished   : 1;
-    u16 bTargetExpansion    : 1;
+/*000*/  s32 oreCollection;
+/*004*/  s32 gasCollection;
+/*008*/  s32 supplyCollection;
+/*00C*/  s32 ore;
+/*010*/  s32 gas;
+/*014*/  s32 supply;
+/*018*/  u8  unknown_0x18;
+/*019*/  u8  newBuildType;
+/*01A*/  u16 nextBuildType;
+/*01C*/  void  *pTownMain;
+/*020*/  u32 unknown_0x20[124];
+/*210*/  u8  unknown_0x210;
+/*211*/  u8  builtSomething;
+/*212*/  u8  AI_NukeRate;
+/*213*/  u8  AI_Attacks;
+/*214*/  u32 AI_LastNukeTime;
+/*218*/  struct {
+    u16 isSecureFinished    : 1;	/*0001*/
+    u16 isTownStarted       : 1;	/*0002*/
+    u16 isDefaultBuildOff   : 1;	/*0004*/
+    u16 isTransportsOff     : 1;	/*0008*/
+    u16 isFarmsNotimingOn   : 1;	/*0010*/
+    u16 isUseMapSettings    : 1;	/*0020*/
+    u16 flag_0x40           : 1;	/*0040*/
+    u16 spreadCreep         : 1;	/*0080*/
+    u16 flag_0x100          : 1;	/*0100*/
+    u16 hasStrongestGndArmy : 1;	/*0200*/ //Set if the AI's ground army is stronger than the total strength of the strongest enemy force
+    u16 bUpgradesFinished   : 1;	/*0400*/
+    u16 bTargetExpansion    : 1;	/*0800*/
   } AI_Flags;
-  u16 AI_PanicBlock;
-  u16 AI_MaxForce;
-  u16 AI_AttackGroup;
-  u16 waitForceCount;
-  u8  AI_DefaultMin;
-  u8  unknown_0x223;
-  u32 lastIndividualUpdateTime;
-  u32 AI_AttackTimer;
-  u8  unknown_0x22C;
-  u8  spellcasterTimer;
-  u8  attackManagerTimer;
-  u8  AI_IfDif;
-  u16 AI_AttackGroups[64];
-  u32 AI_DefenseBuild_GG[10];
-  u32 AI_DefenseBuild_AG[10];
-  u32 AI_DefenseBuild_GA[10];
-  u32 AI_DefenseBuild_AA[10];
-  u32 AI_DefenseUse_GG[10];
-  u32 AI_DefenseUse_AG[10];
-  u32 AI_DefenseUse_GA[10];
-  u32 AI_DefenseUse_AA[10];
-  u8  AI_DefineMax[UNIT_TYPE_COUNT];
-  CUnit *mainMedic;
-  Box32 genCmdLoc;
+/*21A*/  u16 AI_PanicBlock;
+/*21C*/  u16 AI_MaxForce;
+/*21E*/  u16 AI_AttackGroup;
+/*220*/  u16 waitForceCount;
+/*222*/  u8  AI_DefaultMin;
+/*223*/  u8  unknown_0x223;
+/*224*/  u32 lastIndividualUpdateTime;
+/*228*/  u32 AI_AttackTimer;
+/*22C*/  u8  unknown_0x22C;
+/*22D*/  u8  spellcasterTimer;
+/*22E*/  u8  attackManagerTimer;
+/*22F*/  u8  AI_IfDif;
+/*230*/  u16 AI_AttackGroups[64];
+/*2B0*/  u32 AI_DefenseBuild_GG[10];
+/*2D8*/  u32 AI_DefenseBuild_AG[10];
+/*300*/  u32 AI_DefenseBuild_GA[10];
+/*328*/  u32 AI_DefenseBuild_AA[10];
+/*350*/  u32 AI_DefenseUse_GG[10];
+/*378*/  u32 AI_DefenseUse_AG[10];
+/*3A0*/  u32 AI_DefenseUse_GA[10];
+/*3C8*/  u32 AI_DefenseUse_AA[10];
+/*3F0*/  u8  AI_DefineMax[UNIT_TYPE_COUNT];
+/*4D4*/  CUnit *mainMedic;
+/*4D8*/  Box32 genCmdLoc;
 };
 
-C_ASSERT(sizeof(AI_Main) == 1256); 
+C_ASSERT(sizeof(AI_Main) == 1256); /*0x4E8*/
 //static_assert(sizeof(AI_Main) == 1256, "The size of the AI_Main structure is invalid");
 
 struct AiCaptain {
