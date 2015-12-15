@@ -11,6 +11,8 @@ struct PLAYER {
 /*0A*/  u8    force;
 /*0B*/  char  name[25];
 
+/*struct size = 36 (0x24)*/
+
   /// return the possibly non-standard color of the 
   /// current player
   u8 getColor();
