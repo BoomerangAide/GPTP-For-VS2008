@@ -524,7 +524,7 @@ u32 getUnitMovableState(CUnit *unit) {
 u32 Func_IsTargetWithinMinRange = 0x00430F10;
 bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range) {
 
-	static Bool32 bResult;
+	static Bool32 bPreResult;
 
 	__asm {
 		PUSHAD
@@ -532,11 +532,11 @@ bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range) {
 		PUSH range
 		MOV ECX, unit
 		CALL Func_IsTargetWithinMinRange
-		MOV bResult, EAX
+		MOV bPreResult, EAX
 		POPAD
 	}
 
-	return (bResult == 1);
+	return (bPreResult != 0);
 
 }
 
@@ -557,7 +557,7 @@ bool advanceRemainingBuildTime_Sub466940(CUnit* unit) {
 		POPAD
 	}
 
-	return (bTimeWasZero == 1);
+	return (bTimeWasZero != 0);
 
 }
 
@@ -738,7 +738,7 @@ const u32 Func_Sub4EB960 = 0x004EB960;
 //if setMoveTarget_xy returned true
 bool delayedSetMoveTarget_xy_Sub4EB960(CUnit* unit, u16 x, u16 y) {
 
-	Bool32 bResult;
+	Bool32 bPreResult;
 
 	__asm {
 		PUSHAD
@@ -746,11 +746,11 @@ bool delayedSetMoveTarget_xy_Sub4EB960(CUnit* unit, u16 x, u16 y) {
 		MOVSX EBX, x
 		MOV EAX, unit
 		CALL Func_Sub4EB960
-		MOV bResult, EAX
+		MOV bPreResult, EAX
 		POPAD
 	}
 
-	return (bResult == 1);
+	return (bPreResult != 0);
 
 }
 
