@@ -186,6 +186,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\hooks\orders\base_orders\attack_orders.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\base_orders\attack_orders_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hooks\interface\buttonsets.cpp"
 				>
 			</File>
@@ -695,6 +703,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\hooks\orders\base_orders\attack_orders.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\interface\buttonsets.h"
 				>
