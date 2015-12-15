@@ -7,6 +7,7 @@ Update 3:
 ** Unit Merge (from archons merge) hook **
 ** Larva and Creep Spawn (concentrating more on larvas) hook **
 ** Lift and Land hook **
+** Attack orders hooks **
 
 *Planned:
     -more hooks for orders
