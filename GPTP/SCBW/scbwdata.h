@@ -171,7 +171,7 @@ SCBW_DATA(u16*,		SoundAnnoyedFirst,		unitsDat[32].address);	//00663B38
 SCBW_DATA(u16*,		SoundAnnoyedLast,		unitsDat[33].address);	//00661EE8
 SCBW_DATA(u16*,		SoundYesFirst,			unitsDat[34].address);	//00663C10
 SCBW_DATA(u16*,		SoundYesLast,			unitsDat[35].address);	//00661440
-SCBW_DATA(Point16*,	unitsDat36,				unitsDat[36].address);	//00662860
+SCBW_DATA(Point16*,	BuildingDimensions,		unitsDat[36].address);	//00662860
 //SCBW_DATA(u16*,	???,					unitsDat[37].address);	//006626E0
 SCBW_DATA(Box16*,	UnitBounds,				unitsDat[38].address);	//006617C8
 //SCBW_DATA(u16*,	???,					unitsDat[39].address);	//00662F88
