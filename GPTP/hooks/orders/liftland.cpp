@@ -109,8 +109,8 @@ void orders_BuildingLand(CUnit* unit) {
 
 			int x,y;
 
-			x = units_dat::unitsDat36[unit->id].x;
-			y = units_dat::unitsDat36[unit->id].y;
+			x = units_dat::BuildingDimensions[unit->id].x;
+			y = units_dat::BuildingDimensions[unit->id].y;
 
 			if(x<0) x+=1;if(y<0) y+=1;
 
