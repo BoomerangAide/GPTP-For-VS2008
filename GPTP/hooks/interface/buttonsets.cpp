@@ -3,10 +3,17 @@
 namespace {
 
 	//Helper function
-	void updateDialog(BinDlg* dialog);
-	void replayStatBtns(BinDlg* dialog);
-	void function_4591D0();
-	void function_459770();
+	void disableDialog(BinDlg* dialog);		/*0x00418640*/
+	void showDialog(BinDlg* dialog);		/*0x004186A0*/
+	void hideDialog(BinDlg* dialog);		/*0x00418700*/
+	void function_418E00(BinDlg* dialog);	/*0x00418E00*/
+	void updateDialog(BinDlg* dialog);		/*0x0041C400*/
+	void replayStatBtns(BinDlg* dialog);	/*0x00427A80*/
+	void function_4591D0();					/*0x004591D0*/
+	void function_459770();					/*0x00459770*/
+
+	u32 fxnInteract(BinDlg* dialog, void* data_struct);
+	s32 req_check(u32 reqFunc, u32 reqVar, u32 playerId, CUnit* unit);
 
 } //unnamed namespace
 
@@ -83,6 +90,8 @@ enum Enum : u32 {
 };
 }
 
+;
+
 //Main names from Firegraft, comments names from vgce
 namespace ButtonActions {
 enum Enum : u32 {
@@ -148,6 +157,9 @@ enum Enum : u32 {
 	Change_Displayed_Buttons = 0x00459AF0								//BTNSACT_ChangeButtons
 };
 }
+
+
+;
 
 //Example on how to create a custom button set.
 //This make a copy of the Marine buttonset.
@@ -373,6 +385,8 @@ namespace hooks {
 		}
 
 	} //void updateButtonSet_Sub458D50()
+
+	;
 	
 	; //458DE0
 
@@ -431,6 +445,9 @@ namespace hooks {
 	//you created here in GPTP using something
 	//based on getCustomButtonSet method or
 	//a more customized way.
+	//Note: if you use updateButtonSet_Sub4591D0,
+	//you can disable the injection of this
+	//function in the _inject.cpp file.
 	BUTTON_SET* getButtonSet(int index) {
 		return &(buttonSetTable[index]);
 	}
@@ -646,11 +663,248 @@ namespace hooks {
 		
 	} //void updateCurrentButtonset()
 
+	;
+
+	void updateButtonSet_Sub4591D0() {
+
+	BinDlg**	const BUTTONSET_DIALOG	=				(BinDlg**)	0x0068C148;
+	u16*		const BUTTONSET_PORTRAIT_BUTTONSETID =	(u16*)		0x0068C14C;
+	BUTTON_SET* const current_buttonset = getButtonSet(*BUTTONSET_PORTRAIT_BUTTONSETID);
+	u32*		const unknown_0066FF60 =				(u32*)		0x0066FF60;
+
+	bool bStopThere = false;
+	bool jumpto59336 = false;
+	bool jumpto5933C = false;
+	bool jumpto5934E = false;
+
+	s32 current_button_state;
+	BUTTON* current_button;
+	BinDlg* current_dialog;	//BinDlg version of the button most of the time
+	u16 buttons_count = 0;
+
+	current_dialog = *BUTTONSET_DIALOG;
+	current_button = current_buttonset->firstButton;
+	current_button_state = BUTTON_STATE::Disabled;
+
+	if(current_dialog->controlType != DialogControlTypes::DialogBox)
+		current_dialog = current_dialog->parent;
+
+	//59203:
+	current_dialog = (BinDlg*)current_dialog->childrenSmk;
+
+	while(current_dialog != NULL && current_dialog->index != 1)
+		current_dialog = current_dialog->next;
+
+	if(current_dialog == NULL || current_dialog->index != 1)
+		bStopThere = true;
+
+	while(!bStopThere) {
+
+		//59230
+		if(current_dialog->index < 1)
+			bStopThere = true;
+		else
+		if(current_dialog->index > 9)
+			jumpto5934E = true;
+		else { //loop to ignore the first unused/disabled buttons
+
+			current_button_state = BUTTON_STATE::Disabled;
+
+			while (current_button_state == BUTTON_STATE::Disabled && (buttons_count < current_buttonset->buttonsInSet)) {
+
+				current_button_state = req_check((u32)current_button->reqFunc,current_button->reqVar,*LOCAL_NATION_ID,*activePortraitUnit);
+
+				if(current_button_state == BUTTON_STATE::Disabled) {
+					buttons_count++;
+					current_button++;	//select next button (advance by sizeof(BUTTON))
+				}
+
+			};
+
+		}
+
+		//59278
+		if(!bStopThere && !jumpto5934E) {
+
+			jumpto5933C = 
+				(!*IS_IN_REPLAY) &&
+				(*activePortraitUnit != NULL) &&
+				( (*activePortraitUnit)->playerId != *LOCAL_NATION_ID );
+
+			if(!jumpto5933C) {
+
+				//5929A:
+
+				if(	buttons_count >= current_buttonset->buttonsInSet ||
+					current_dialog->index < current_button->position)
+					jumpto5933C = true;
+				else {
+
+					//592B5
+					current_dialog->user = (u32*)current_button;
+
+					if(current_dialog->graphic != current_button->iconID) {
+
+						//592C2
+
+						current_dialog->graphic = current_button->iconID;
+
+						if( !(current_dialog->flags & BinDlgFlags::Unknown0) ) {
+							current_dialog->flags |= BinDlgFlags::Unknown0;
+							updateDialog(current_dialog);
+						}
+
+						struct {
+							u32 unknown_value_1;	//[EBP-1C]
+							u32 unknown_value_2;	//[EBP-18]
+							u32 not_allocated;		//[EBP-14]
+							u16 unknown_value_3;	//[EBP-10]
+							Point16 mouse_coords;	//[EBP-0C]
+							u16 not_allocated_2;	//[EBP-0A]
+							u32 buttonState;		//[EBP-08]
+							BUTTON_SET* buttonset;	//[EBP-04]
+						} stack_placeholder;
+
+						stack_placeholder.unknown_value_1 = 0x00000006;			/*0x00*/
+						stack_placeholder.unknown_value_2 = 0x00000000;			/*0x04*/
+						/*				  not_allocated							  0x08*/
+						stack_placeholder.unknown_value_3 = 0x000E;				/*0x0C*/
+						stack_placeholder.mouse_coords.x = mouse->x;			/*0x0E*/
+						stack_placeholder.mouse_coords.y = mouse->y;			/*0x10*/
+						/*				  not_allocated_2						  0x12*/
+						stack_placeholder.buttonState = current_button_state;	/*0x14*/
+						stack_placeholder.buttonset = current_buttonset;		/*0x18*/
+
+						fxnInteract(current_dialog,&stack_placeholder);
+
+						current_button_state = stack_placeholder.buttonState;
+
+					}
+
+					//5930B
+					showDialog(current_dialog);
+
+					if(current_button_state == BUTTON_STATE::Invisible) {
+
+						disableDialog(current_dialog);
+
+						//5931C
+						if(*unknown_0066FF60 == 0x15) {
+							current_button->actStringID = 0x02FA; /*Text: Not Implemented.*/
+							current_button++;	//select next button (advance by sizeof(BUTTON)
+							buttons_count++;
+							jumpto5934E = true;
+						}
+						else
+							jumpto59336 = true;
+
+					}
+
+					//59331
+					if(!jumpto59336 && !jumpto5934E)
+						function_418E00(current_dialog);
+
+					if(!jumpto5934E) {
+						//59336
+						current_button++;	//select next button (advance by sizeof(BUTTON)
+						buttons_count++;
+						jumpto5934E = true;
+					}
+
+				} //not met conditions to jump to 5933C for now
+
+			} //if(!jumpto5933C)
+
+		} //if(!bStopThere && !jumpto5934E)
+
+		if(!bStopThere && !jumpto5934E) { 
+			//5933C
+			hideDialog(current_dialog);
+			current_dialog->graphic = 0xFFFF;
+			current_dialog->user = NULL;
+		}
+
+		//5934E
+		current_dialog = current_dialog->next;
+
+		if(current_dialog == NULL)
+			bStopThere = true;
+
+		jumpto59336 = false;
+		jumpto5933C = false;
+		jumpto5934E = false;
+
+	} //while(!bStopThere)
+
+} //void updateButtonSet_Sub4591D0()
+
+;
+
+;
+
 } //hooks
+
+;
 
 namespace {
 
 	/**** Definitions of helper functions. Do NOT modify anything below! ****/
+
+	const u32 Func_DisableDialog = 0x00418640;
+	void disableDialog(BinDlg* dialog) {
+
+		__asm {
+			PUSHAD
+			MOV ESI, dialog
+			CALL Func_DisableDialog
+			POPAD
+		}
+
+	}
+
+	;
+
+	const u32 Func_ShowDialog = 0x004186A0;
+	void showDialog(BinDlg* dialog) {
+
+		__asm {
+			PUSHAD
+			MOV ESI, dialog
+			CALL Func_ShowDialog
+			POPAD
+		}
+
+	}
+
+	;
+
+	const u32 Func_HideDialog = 0x00418700;
+	void hideDialog(BinDlg* dialog) {
+
+		__asm {
+			PUSHAD
+			MOV ESI, dialog
+			CALL Func_HideDialog
+			POPAD
+		}
+
+	}
+
+	;
+
+	const u32 Func_Sub418E00 = 0x00418E00;
+	void function_418E00(BinDlg* dialog) {
+
+		__asm {
+			PUSHAD
+			MOV ESI, dialog
+			CALL Func_Sub418E00
+			POPAD
+		}
+
+	}
+
+	;
 
 	const u32 Func_UpdateDialog	= 0x0041C400;
 	void updateDialog(BinDlg* dialog) {
@@ -662,6 +916,8 @@ namespace {
 		}
 	}
 
+	;
+
 	const u32 Func_ReplayStatBtns = 0x00427A80;
 	void replayStatBtns(BinDlg* dialog) {
 		__asm {
@@ -672,14 +928,20 @@ namespace {
 		}
 	}
 
+	;
+
 	const u32 Func_Sub_4591D0 = 0x004591D0;
 	void function_4591D0() {
+
 		__asm {
 			PUSHAD
 			CALL Func_Sub_4591D0
 			POPAD
 		}
+
 	}
+
+	;
 
 	const u32 Func_Sub_459770 = 0x00459770;
 	void function_459770() {
@@ -689,5 +951,48 @@ namespace {
 			POPAD
 		}
 	}
+
+	;
+
+	u32 fxnInteract(BinDlg* dialog, void* data_struct) {
+
+		static u32 return_value;
+		static u32 fxnInteract = (u32)dialog->fxnInteract;
+
+		__asm {
+			PUSHAD
+			MOV ESI, dialog
+			MOV ECX, dialog
+			MOV EDX, data_struct
+			CALL fxnInteract
+			MOV return_value, EAX
+			POPAD
+		}
+
+		return return_value;
+
+	}
+
+	;
+
+	s32 req_check(u32 reqFunc, u32 reqVar, u32 playerId, CUnit* unit) {
+
+		static s32 return_value;
+
+		__asm {
+			PUSHAD
+			MOV ECX, reqVar
+			MOV EDX, playerId
+			PUSH unit
+			CALL reqFunc
+			MOV return_value, EAX
+			POPAD
+		}
+
+		return return_value;
+
+	}
+
+	;
 
 } //unnamed namespace
