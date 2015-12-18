@@ -346,48 +346,48 @@ enum Enum {
 
 namespace BinDlgFlags {
 enum Enum {
-	Unknown0 =					0x00000001,	//0x00000001
-	Disabled =					0x00000002,	//0x00000002
-	Active =					0x00000004,	//0x00000004
-	Visible =					0x00000008,	//0x00000008
-	RespondsToEvents =			0x00000010,	//0x00000010
-	Unknown5 =					0x00000020,	//0x00000020
-	CancelButton =				0x00000040,	//0x00000040
-	NoHoverSound =				0x00000080,	//0x00000080
-	SpecialHotkeyVirtualKey =	0x00000100,	//0x00000100
-	HasHotkey =					0x00000200,	//0x00000200
-	SmallestFontSize10 =		0x00000400,	//0x00000400
-	LargerFontSize16 =			0x00000800,	//0x00000800
-	Unknown12 =					0x00001000,	//0x00001000
-	TransparentHideColor0 =		0x00002000,	//0x00002000
-	LargestFontSize16x =		0x00004000,	//0x00004000
-	AlternateStyleWC2 =			0x00008000,	//0x00008000
-	SmallerFontSize14 =			0x00010000,	//0x00010000
-	RemoveStyles =				0x00020000,	//0x00020000
-	ApplyTranslucency =			0x00040000,	//0x00040000
-	DefaultButton =				0x00080000,	//0x00080000
-	BringToFront =				0x00100000,	//0x00100000
-	HorizontalAlignmentLeft =	0x00200000,	//0x00200000
-	HorizontalAlignmentRight =	0x00400000,	//0x00400000
-	HorizontalAlignmentCenter =	0x00800000,	//0x00800000
-	VerticalAlignmentTop =		0x01000000,	//0x01000000
-	VerticalAlignmentMiddle =	0x02000000,	//0x02000000
-	VerticalAlignmentBottom =	0x04000000,	//0x04000000
-	Unknown27 =					0x08000000,	//0x08000000
-	ReverseDialogDirection =	0x10000000,	//0x10000000
-	UseAlternateStyle =			0x20000000,	//0x20000000
-	NoClickSound =				0x40000000,	//0x40000000
-	HighlightText =				0x80000000	//0x80000000
+	Unknown0 =					0x00000001,
+	Disabled =					0x00000002,
+	Active =					0x00000004,
+	Visible =					0x00000008,
+	RespondsToEvents =			0x00000010,
+	Unknown5 =					0x00000020,
+	CancelButton =				0x00000040,
+	NoHoverSound =				0x00000080,
+	SpecialHotkeyVirtualKey =	0x00000100,
+	HasHotkey =					0x00000200,
+	SmallestFontSize10 =		0x00000400,
+	LargerFontSize16 =			0x00000800,
+	Unknown12 =					0x00001000,
+	TransparentHideColor0 =		0x00002000,
+	LargestFontSize16x =		0x00004000,
+	AlternateStyleWC2 =			0x00008000,
+	SmallerFontSize14 =			0x00010000,
+	RemoveStyles =				0x00020000,
+	ApplyTranslucency =			0x00040000,
+	DefaultButton =				0x00080000,
+	BringToFront =				0x00100000,
+	HorizontalAlignmentLeft =	0x00200000,
+	HorizontalAlignmentRight =	0x00400000,
+	HorizontalAlignmentCenter =	0x00800000,
+	VerticalAlignmentTop =		0x01000000,
+	VerticalAlignmentMiddle =	0x02000000,
+	VerticalAlignmentBottom =	0x04000000,
+	Unknown27 =					0x08000000,
+	ReverseDialogDirection =	0x10000000,
+	UseAlternateStyle =			0x20000000,
+	NoClickSound =				0x40000000,
+	HighlightText =				0x80000000
 };
 }
 
 namespace SmkFlags {
 enum Enum {
-	FadeIn			= 0x0001,	//0x0001
-	Dark			= 0x0002,	//0x0002
-	RepeatForever	= 0x0004,	//0x0004
-	ShowIfOver		= 0x0008,	//0x0008
-	Unknown4		= 0x0010,	//0x0010
+	FadeIn			= 0x0001,
+	Dark			= 0x0002,
+	RepeatForever	= 0x0004,
+	ShowIfOver		= 0x0008,
+	Unknown4		= 0x0010,
 	Flag_0020		= 0x0020,
 	Flag_0040		= 0x0040,
 	Flag_0080		= 0x0080,
