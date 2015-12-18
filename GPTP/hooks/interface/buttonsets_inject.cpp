@@ -8,18 +8,24 @@ const u32 Func_UpdateButtonSetEx = 0x00458BC0;
 void __declspec(naked) updateButtonSetExWrapper() {
 
 	__asm {
-		PUSHAD
+		PUSH EBP
 		MOV EBP, ESP
+		SUB ESP, 0x08
+		PUSHAD
 	}
 
 	hooks::updateButtonSetEx();
 
 	__asm {
 		POPAD
+		MOV ESP, EBP
+		POP EBP
 		RET
 	}
 
 }
+
+;
 
 //Originally 00458D50  sub_458D50
 const u32 Func_Sub_458D50 = 0x00458D50;
@@ -36,6 +42,8 @@ void __declspec(naked) updateButtonSet_Sub458D50Wrapper() {
 
 }
 
+;
+
 //Originally 00458DE0  updateButtonSet
 const u32 Func_UpdateButtonSet = 0x00458DE0;
 void __declspec(naked) updateButtonSetWrapper() {
@@ -50,6 +58,31 @@ void __declspec(naked) updateButtonSetWrapper() {
 	}
 
 }
+
+;
+
+const u32 Func_Sub_4591D0 = 0x004591D0;
+void __declspec(naked) function_4591D0Wrapper() {
+
+	__asm {
+		PUSH EBP
+		MOV EBP, ESP
+		SUB ESP, 0x1C
+		PUSHAD
+	}
+
+	hooks::updateButtonSet_Sub4591D0();
+
+	__asm{
+		POPAD
+		MOV ESP, EBP
+		POP EBP
+		RET
+	}
+
+}
+
+;
 
 //Originally 004599A0  updateCurrentButtonset
 const u32 Func_UpdateCurrentButtonset = 0x004599A0;
@@ -72,10 +105,14 @@ void __declspec(naked) updateCurrentButtonsetWrapper() {
 
 }
 
+;
+
 //Modify offset 004591ED to use the custom
 //getButtonSet function
 //Don't replace the entire function
-const u32 Func_Sub_4591D0 = 0x004591ED;
+//You can (and should) disable this if you're
+//already using the hooked 4591D0 function.
+const u32 Func_Sub_4591ED = 0x004591ED;
 const u32 Patch_For_Sub4591D0_Back = 0x004591F4;
 void __declspec(naked) getButtonSetPatch_For_Sub4591D0() {
 
@@ -104,16 +141,19 @@ void __declspec(naked) getButtonSetPatch_For_Sub4591D0() {
 
 }
 
+;
+
 } //unnamed namespace
 
 namespace hooks {
 
 void injectButtonSetHooks() {
-  jmpPatch(updateButtonSetExWrapper,			Func_UpdateButtonSetEx, 1);
-  jmpPatch(updateButtonSet_Sub458D50Wrapper,	Func_Sub_458D50, 2);
-  jmpPatch(updateButtonSetWrapper,				Func_UpdateButtonSet);
-  jmpPatch(getButtonSetPatch_For_Sub4591D0,		Func_Sub_4591D0, 1);
-  jmpPatch(updateCurrentButtonsetWrapper,		Func_UpdateCurrentButtonset, 6);
+	jmpPatch(getButtonSetPatch_For_Sub4591D0,	Func_Sub_4591ED, 1);
+	jmpPatch(updateButtonSetExWrapper,			Func_UpdateButtonSetEx, 1);
+	jmpPatch(updateButtonSet_Sub458D50Wrapper,	Func_Sub_458D50, 2);
+	jmpPatch(updateButtonSetWrapper,			Func_UpdateButtonSet);
+	jmpPatch(function_4591D0Wrapper,			Func_Sub_4591D0, 1);
+	jmpPatch(updateCurrentButtonsetWrapper,		Func_UpdateCurrentButtonset, 6);
 }
 
 } //hooks
