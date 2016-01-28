@@ -47,6 +47,7 @@
 #include "hooks/orders/larva_creep_spawn.h"
 #include "hooks/orders/liftland.h"
 #include "hooks/orders/base_orders/attack_orders.h"
+#include "hooks/interface/place_building.h"
 
 #include "AI/spellcasting.h"
 
@@ -77,6 +78,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
   hooks::injectLarvaCreepSpawnHooks();
   hooks::injectLiftLandHooks();
   hooks::injectAttackOrdersHooks();
+  hooks::injectPlaceBuildingHooks();
 
   hooks::injectApplyUpgradeFlags();
   hooks::injectAttackPriorityHooks();
