@@ -180,7 +180,7 @@ SCBW_DATA(Box16*,	UnitBounds,				unitsDat[38].address);	//006617C8
 SCBW_DATA(u16*,		MineralCost,			unitsDat[40].address);	//00663888
 SCBW_DATA(u16*,		GasCost,				unitsDat[41].address);	//0065FD00
 SCBW_DATA(u16*,		TimeCost,				unitsDat[42].address);	//00660428
-//SCBW_DATA(u16*,	???,					unitsDat[43].address);	//00660A70
+SCBW_DATA(u16*,		unitsDat43,				unitsDat[43].address);	//00660A70
 SCBW_DATA(GroupFlag*, GroupFlags,			unitsDat[44].address);	//006637A0
 SCBW_DATA(u8*,		SupplyProvided,			unitsDat[45].address);  //006646C8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
 SCBW_DATA(u8*,		SupplyRequired,			unitsDat[46].address);  //00663CE8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
