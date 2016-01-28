@@ -447,7 +447,7 @@ class StringTbl {
       else if (index <= getStringCount())
         return (const char*)(buffer) + buffer[index];
       else
-        return "";
+        return (const char*)0x00501B7D;	//StringEmpty in scbwdata.h, SC default empty string
     }
 
   private:
