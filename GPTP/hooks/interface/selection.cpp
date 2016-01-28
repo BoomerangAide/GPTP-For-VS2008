@@ -597,7 +597,7 @@ namespace {
 		return (unit->status & (UnitStatus::CloakingForFree + UnitStatus::Burrowed)) != 0;
 	}
 	
-	u32 Func_memcpy_0 = 0x00408FD0;
+	const u32 Func_memcpy_0 = 0x00408FD0;
 	void SC_memcpy_0(u32 dest, u32 src, u32 memsize) {
 
 		__asm {
@@ -613,7 +613,7 @@ namespace {
 	}
 
 	
-	u32 Func_GetAllUnitsInBounds = 0x0042FF80;
+	const u32 Func_GetAllUnitsInBounds = 0x0042FF80;
 	CUnit** getAllUnitsInBounds(Box16* coords) {
 
 		static CUnit** units_in_bounds;
@@ -631,7 +631,7 @@ namespace {
 	}
 
 	
-	u32 Func_Sub_468670 = 0x00468670;
+	const u32 Func_Sub_468670 = 0x00468670;
 	void function_00468670(CUnit* unit) {
 
 		__asm {
@@ -644,7 +644,7 @@ namespace {
 	}
 
 	
-	u32 Func_Unit_isUnselectable = 0x0046ED80;
+	const u32 Func_Unit_isUnselectable = 0x0046ED80;
 	bool unit_isUnselectable(u16 unitId) {
 
 		Bool32 bHalfReturnValue;
@@ -665,7 +665,7 @@ namespace {
 
 
 	
-	u32 Func_Sub_6F040 = 0x0046F040;
+	const u32 Func_Sub_6F040 = 0x0046F040;
 	void function_0046F040(CUnit* current_unit, CUnit** unit_list, CUnit* clicked_unit, u32 list_length) {																//
 
 		__asm {
@@ -682,7 +682,7 @@ namespace {
 
 
 	
-	u32 Func_Sub_46F290 = 0x0046F290;
+	const u32 Func_Sub_46F290 = 0x0046F290;
 	u32 combineLists_Sub_6F290(CUnit* unit,CUnit** unit_list_1,CUnit** unit_list_2,u32 list_length) {
 
 		u32 return_value;
@@ -703,7 +703,7 @@ namespace {
 	}
 
 	
-	u32 Func_Sub_46FA00 = 0x0046FA00;
+	const u32 Func_Sub_46FA00 = 0x0046FA00;
 	void applyNewSelect_Sub_6FA00(CUnit** unit_list,u32 unit_list_length) {
 
 		__asm {
@@ -718,7 +718,7 @@ namespace {
 
 	}
 	
-	u32 Func_CUnitToUnitID = 0x0047B1D0;
+	const u32 Func_CUnitToUnitID = 0x0047B1D0;
 	u32 CUnitToUnitID(CUnit* unit) {
 
 		static u32 return_value;
@@ -739,7 +739,7 @@ namespace {
 
 
 	
-	u32 Func_Unit_IsStandardAndMovable = 0x0047B770;
+	const u32 Func_Unit_IsStandardAndMovable = 0x0047B770;
 	bool unit_IsStandardAndMovable(CUnit* unit) {
 
 		Bool32 return_value_unconverted;
@@ -758,7 +758,7 @@ namespace {
 
 
 	
-	u32 Func_SelectBuildingSFX = 0x0048F910;
+	const u32 Func_SelectBuildingSFX = 0x0048F910;
 	void selectBuildingSFX(CUnit* unit) {
 
 		__asm {
@@ -771,7 +771,7 @@ namespace {
 	}
 
 	
-	u32 Func_SelectSingleUnitFromID = 0x00496D30;
+	const u32 Func_SelectSingleUnitFromID = 0x00496D30;
 	Bool32 selectSingleUnitFromID(u32 unitIndex) {
 
 		Bool32 bReturnedValue;
@@ -789,7 +789,7 @@ namespace {
 	}
 
 	
-	u32 Func_CreateNewUnitSelectionsFromList = 0x0049AE40;
+	const u32 Func_CreateNewUnitSelectionsFromList = 0x0049AE40;
 	void CreateNewUnitSelectionsFromList(CUnit** unit_list, u32 unit_list_length) {
 
 		__asm {
@@ -803,7 +803,7 @@ namespace {
 	}	
 
 	
-	u32 Func_CMDACT_Select = 0x004C0860;
+	const u32 Func_CMDACT_Select = 0x004C0860;
 	void CMDACT_Select(CUnit** unit_list, u32 unit_list_length) {
 
 		__asm {
