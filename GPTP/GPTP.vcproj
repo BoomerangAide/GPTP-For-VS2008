@@ -248,6 +248,14 @@
 			<File
 				RelativePath=".\hooks\orders\merge_units_inject.cpp"
 				>
+			</File>	
+			<File
+				RelativePath=".\hooks\interface\place_building.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\interface\place_building_inject.cpp"
+				>
 			</File>			
 			<File
 				RelativePath=".\SCBW\structures\Player.cpp"
@@ -751,6 +759,10 @@
 				RelativePath=".\MPQDraftPlugin.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\interface\place_building.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\SCBW\structures\Player.h"
 				>
