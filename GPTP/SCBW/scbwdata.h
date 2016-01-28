@@ -69,6 +69,8 @@ SCBW_DATA(Resources*,     resources,      0x0057F0F0);
 SCBW_DATA(const StringTbl*, statTxtTbl,         0x006D1238);
 SCBW_DATA(const StringTbl*, mapStringTbl,       0x005993D4);
 
+SCBW_DATA(const char*,	  StringEmpty,			0x00501B7D);
+
 /// Units that are selected by the current player (or the player viewing the replay).
 struct UnitsSel { CUnit* unit[SELECTION_ARRAY_LENGTH]; };
 SCBW_DATA(const UnitsSel*, clientSelectionGroup, 0x00597208);
@@ -415,7 +417,7 @@ SCBW_DATA(const Bool32*,  IS_REPLAY_PAUSED,			0x006D11B0);
 SCBW_DATA(Bool32*,        IS_IN_GAME_LOOP,			0x006D11C8);
 SCBW_DATA(u32*,           lastRandomNumber,     	0x0051CA14);  //See scbw::random(), scbw::randBetween()
 SCBW_DATA(Bool32*,        canUpdatePoweredStatus,	0x0063FF44);
-SCBW_DATA(const Bool32*,  IS_PLACING_BUILDING,  	0x00640880);
+SCBW_DATA(Bool32*		  IS_PLACING_BUILDING,  	0x00640880);
 
 //-------- Tech levels --------//
 
