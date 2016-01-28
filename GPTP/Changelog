@@ -4,6 +4,8 @@ Update 3:
 -Moving my orders based hooks in a separate subfolder
 -Fix for drawEllipse graphics function and adding drawDottedEllipse function
 -Fix for CUnit::getColor (so it return the correct value...probably all the time)
+-Add StringEmpty variable in scbwdata.h (in case Starcraft would check if a string is empty by comparing
+	the pointer to a char* to that value (could happen since it's the official empty string address))
 ** Unit Merge (from archons merge) hook **
 ** Larva and Creep Spawn (concentrating more on larvas) hook **
 ** Lift and Land hook **
