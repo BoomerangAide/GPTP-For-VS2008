@@ -5,6 +5,8 @@
 
 namespace hooks {
 
+u32 function_00473FB0(CUnit* unit, u32 playerId, int x, int y, u32 unitId, u32 unk1, u32 unk2, u32 unk3, u32 unk4);
+
 void placebuildingRefineryCheck(CUnit* unit);						//0048E1E0	placebuildingRefineryCheck
 void doPlacebuildingChecking(CUnit* unit);							//0048E210  doPlacebuildingChecking
 void placebuildingNormalProc();										//0048E490  placebuildingNormalProc
