@@ -2,21 +2,168 @@
 
 namespace {
 
-	void updateCurrentButtonset();																/*0x004599A0*/
-	bool function_463A10(CUnit* unit, u16 unitId);												/*0x00463A10*/
-	void parseUnitsDatReqs();																	/*0x0046E100*/
-	u32 function_473EF0(CUnit* unit, u32 playerId, u32 dimensionX, u32 dimensionY, u16 unitId);	/*0x00473EF0*/
-	void SetInGameInputProcs();																	/*0x00484CC0*/
-	void function_48DAF0(u32 unitToBuildId, Bool32 unknown);									/*0x0048DAF0*/
-	void refreshScreen();																		/*0x0048DDC0*/					//refreshScreen
-	void placebuildingRefineryProc();															//0x0048E430*/
-	void createPylonAura();																		//0x00493640*/
-	void function_4D5B60();																		/*0x004D5B60*/
-	void function_4F31D0(const char* message);													/*0x004F31D0*/
+	bool unitHasPathToDestOnGround(CUnit* unit, int x, int y);											/*0x0042FA00*/
+	void updateCurrentButtonset();																		/*0x004599A0*/
+	bool function_463A10(CUnit* unit, u16 unitId);														/*0x00463A10*/
+	void parseUnitsDatReqs();																			/*0x0046E100*/	
+	u32 function_473010(int x, int y, s16 dimension_X, s16 dimension_Y, 
+						u8 playerId, u32 unk1, u32 unk2, u32 unk4);										/*0x00473010*/
+	u32 function_473150(int x, int y, s16 dimension_X, s16 dimension_Y, 
+						u8 playerId, u32 unk1, u32 unk2);												/*0x00473150*/
+	u32 function_473720(
+		CUnit* unit, int x, int y, u32 playerId, u32 unitId, 
+		s16 dimension_X, s16 dimension_Y, u32 unk1, u32 unkProperties, u32 unk3, u32 unk4);				/*0x00473720*/
+	u32 function_473920(int x, int y, u32 unitId, u8 playerId);											/*0x00473920*/
+	u32 function_473A10(int x, int y, u32 unitId, s16 dimension_X, s16 dimension_Y, 
+						u32 playerId, u32 unk1, u32 unk2);												/*0x00473A10*/
+	u32 function_473EF0(CUnit* unit, u32 playerId, u32 dimensionX, u32 dimensionY, u16 unitId);			/*0x00473EF0*/
+	u32 vespeneGeyserPlacebox(int x, int y, u32 playerId, u32 unknown);									/*0x00473DB0*/
+	bool unit_isRefineryUnit(u32 unitId);																/*0x0047AFE0*/
+	void SetInGameInputProcs();																			/*0x00484CC0*/
+	void function_48DAF0(u32 unitToBuildId, Bool32 unknown);											/*0x0048DAF0*/
+	void refreshScreen();																				/*0x0048DDC0*/
+	void placebuildingRefineryProc();																	//0x0048E430*/
+	void createPylonAura();																				//0x00493640*/
+	void function_4D5B60();																				/*0x004D5B60*/
+	void function_4F31D0(const char* message);															/*0x004F31D0*/
 
 } //unnamed namespace
 
 namespace hooks {
+
+//Check whether a bui
+u32 function_00473FB0(CUnit* builderUnit, u32 playerId, int x, int y, u32 builtUnitId, u32 unk1, u32 unk2, u32 unk3, u32 unk4 ) {
+
+	u32 return_value;
+	s16 buildDimensions_X,buildDimensions_Y;
+	Bool32 bIsNotAddon;
+
+	//This is probably what that is
+	CUnit** const builderUnitForAI = (CUnit**)0x006D5DCC;
+
+	bool bBuilderConditionsOk = false;
+	bool bJumpToEnd = false;
+
+	if( ( (s16)(units_dat::BuildingDimensions[builtUnitId].x) ) < 0 )
+		buildDimensions_X = (units_dat::BuildingDimensions[builtUnitId].x + 31) / 32;
+	else
+		buildDimensions_X = units_dat::BuildingDimensions[builtUnitId].x / 32;
+
+	if( ( (s16)(units_dat::BuildingDimensions[builtUnitId].y) ) < 0 )
+		buildDimensions_Y = (units_dat::BuildingDimensions[builtUnitId].y + 31) / 32;
+	else
+		buildDimensions_Y = units_dat::BuildingDimensions[builtUnitId].y / 32;
+
+	bIsNotAddon = !(units_dat::BaseProperty[builtUnitId] & UnitProperty::Addon); 
+
+	return_value = 3;
+
+	if(
+		(s16)x >= 0 && 
+		(s16)y >= 0 &&
+		((s16)x + buildDimensions_X) <= mapTileSize->width &&
+		((s16)y + buildDimensions_Y) <= mapTileSize->height
+	)
+	{
+		//74046
+		bool bCannotBuildHere = false;
+		return_value = 7;
+
+		//check if the builder can reach the building placement location on ground, the second condition is
+		//about lifted off building (since air units can go anywhere, no need for this check)
+		if( (builderUnit != NULL) && !( builderUnit->status & (UnitStatus::InAir + UnitStatus::GroundedBuilding) ) )
+			bCannotBuildHere = !unitHasPathToDestOnGround(builderUnit,x*32,y*32);
+
+		//74075
+		if(!bCannotBuildHere) {
+
+			bBuilderConditionsOk = !unit_isRefineryUnit(builtUnitId);
+
+			if(!bBuilderConditionsOk)
+				return_value = vespeneGeyserPlacebox((s16)x,(s16)y,playerId,unk2);
+			
+		}
+
+	}
+
+	if(!bBuilderConditionsOk) {
+		//74099:
+		//if in building placement mode, visually set all tiles at current location
+		//as unplaceable (meaning only red and no green)
+		memset((int*)(0x006408F8 + unk1*48), return_value, 48); 
+		bJumpToEnd = true;
+	}
+
+	if(!bJumpToEnd) {
+
+		//740CA:
+		if(units_dat::BaseProperty[builtUnitId] & UnitProperty::RequiredPsi) {
+
+			//check for Protoss buildings requiring nearby pylon
+			return_value = function_473920(x,y,builtUnitId,playerId);
+
+			if(return_value != 0) {
+				//74099:
+				//if in building placement mode, visually set all tiles at current location
+				//as unplaceable (meaning only red and no green)
+				memset((int*)(0x006408F8 + unk1*48), return_value, 48); 
+				bJumpToEnd = true;
+			}
+
+		}
+
+		if(!bJumpToEnd) {
+
+			u32 temp_return_value;
+			u32 temp_return_value_2;
+
+			//740F5:
+
+			if(builderUnit != NULL && builderUnit->id == UnitId::ZergNydusCanal)
+				//check specific to a nydus canal building his exit
+				temp_return_value = function_473150(x,y,buildDimensions_X,buildDimensions_Y,playerId,unk1,unk2);
+			else {
+
+				//74119:
+				if(units_dat::BaseProperty[builtUnitId] & UnitProperty::CreepBuilding)
+					//check for buildings built on creep
+					temp_return_value = function_473010(x,y,buildDimensions_X,buildDimensions_Y,playerId,unk1,unk2,unk4);
+				else //7413D:
+					//check for others buildings
+					temp_return_value = function_473A10(x,y,builtUnitId,buildDimensions_X,buildDimensions_Y,playerId,unk1,unk2);
+
+			}
+
+			//74154:
+
+			//I suppose it's an AI unit for special AI behavior
+			if(*builderUnitForAI != NULL)
+				builderUnit = *builderUnitForAI;
+
+			//74162:
+			//Last check applying for all buildings
+			temp_return_value_2 = 
+				function_473720(
+					builderUnit,x,y,playerId,builtUnitId,buildDimensions_X,buildDimensions_Y,
+					unk1,bIsNotAddon,unk3,unk4);
+
+			//check the 2 temporary return values, and choose the one
+			//indicating an error (higher value), unless they're both
+			//0 in which case the building is placeable
+			if(temp_return_value <= temp_return_value_2)
+				return_value = temp_return_value_2;
+			else
+				return_value = temp_return_value;
+
+		}
+
+	}
+
+	return return_value;
+
+} //u32 function_00473FB0(CUnit* builderUnit, u8 playerId, int x, int y, u16 builtUnitId, u32 unk1, u32 unk2, u32 unk3, u32 unk4 )
+
+;
 
 void placebuildingRefineryCheck(CUnit* unit) {
 
@@ -245,6 +392,27 @@ namespace {
 
 	/**** Definitions of helper functions. Do NOT modify anything below! ****/
 
+	const u32 Func_unitHasPathToDestOnGround = 0x0042FA00;
+	bool unitHasPathToDestOnGround(CUnit* unit, int x, int y) {
+
+		static Bool32 bPreResult;
+
+		__asm {
+			PUSHAD
+			PUSH y
+			MOV EDX, x
+			MOV EAX, unit
+			CALL Func_unitHasPathToDestOnGround
+			MOV bPreResult, EAX
+			POPAD
+		}
+
+		return (bPreResult != 0);
+
+	}
+
+	;
+
 	const u32 Func_updateCurrentButtonset = 0x004599A0;
 	void updateCurrentButtonset() {
 		__asm {
@@ -294,6 +462,171 @@ namespace {
 
 	;
 
+	const u32 Func_Sub473010 = 0x00473010;
+	u32 function_473010(int x, int y, s16 dimension_X, s16 dimension_Y, u8 playerId, u32 unk1, u32 unk2, u32 unk4) {
+		
+		static u32 return_value;
+		static Point16 pos;
+
+		pos.x = dimension_X;
+		pos.y = dimension_Y;
+
+		__asm {
+			PUSHAD
+			PUSH unk4
+			PUSH unk2
+			PUSH unk1
+			MOV AL, playerId
+			PUSH pos
+			PUSH y
+			PUSH x
+			CALL Func_Sub473010
+			MOV return_value, EAX
+			POPAD
+		}
+
+		return return_value;
+
+	}
+
+	;
+
+	const u32 Func_Sub473150 = 0x00473150;
+	u32 function_473150(int x, int y, s16 dimension_X, s16 dimension_Y, u8 playerId, u32 unk1, u32 unk2) {
+
+		static u32 return_value;
+		static Point16 pos;
+
+		pos.x = dimension_X;
+		pos.y = dimension_Y;
+
+		__asm {
+			PUSHAD
+			PUSH unk2
+			PUSH unk1
+			MOV AL, playerId
+			PUSH pos
+			PUSH y
+			PUSH x
+			CALL Func_Sub473150
+			MOV return_value, EAX
+			POPAD
+		}
+
+		return return_value;
+
+	}
+
+	;
+
+	const u32 Func_Sub473720 = 0x00473720;
+	u32 function_473720(
+		CUnit* unit, int x, int y, u32 playerId, u32 unitId, 
+		s16 dimension_X, s16 dimension_Y, u32 unk1, u32 unkProperties, u32 unk3, u32 unk4)
+	{
+
+		static u32 return_value;
+		static Point16 pos;
+
+		pos.x = dimension_X;
+		pos.y = dimension_Y;
+
+		__asm {
+			PUSHAD
+			PUSH unk4
+			PUSH unk3
+			PUSH unkProperties
+			PUSH unk1
+			PUSH pos
+			PUSH unitId
+			PUSH playerId
+			PUSH x
+			MOV EAX, y
+			PUSH unit
+			CALL Func_Sub473720
+			MOV return_value, EAX
+			POPAD
+		}
+
+		return return_value;
+		
+	}
+
+	;
+
+	const u32 Func_Sub473920 = 0x00473920;
+	u32 function_473920(int x, int y, u32 unitId, u8 playerId) {
+
+		static u32 return_value;
+
+		__asm {
+			PUSHAD
+			MOVZX EAX, playerId
+			MOV ESI, unitId
+			PUSH y
+			PUSH x
+			CALL Func_Sub473920
+			MOV return_value, EAX
+			POPAD
+		}
+
+		return return_value;
+
+	}
+
+	;
+
+	const u32 Func_Sub473A10 = 0x00473A10;
+	u32 function_473A10(int x, int y, u32 unitId, s16 dimension_X, s16 dimension_Y, u32 playerId, u32 unk1, u32 unk2) {
+
+		static u32 return_value;
+		static Point16 pos;
+
+		pos.x = dimension_X;
+		pos.y = dimension_Y;
+
+		__asm {
+			PUSHAD
+			PUSH unk2
+			PUSH unk1
+			PUSH pos
+			PUSH playerId
+			MOV EAX, unitId
+			PUSH y
+			PUSH x
+			CALL Func_Sub473A10
+			MOV return_value, EAX
+			POPAD
+		}
+
+		return return_value;
+
+	}
+
+	;
+
+	const u32 Func_vespeneGeyserPlacebox = 0x00473DB0;
+	u32 vespeneGeyserPlacebox(int x, int y, u32 playerId, u32 unknown) {
+
+		static u32 return_value;
+
+		__asm {
+			PUSHAD
+			PUSH unknown
+			PUSH playerId
+			PUSH y
+			PUSH x
+			CALL Func_vespeneGeyserPlacebox
+			MOV return_value, EAX
+			POPAD
+		}
+
+		return return_value;
+
+	}
+
+	;
+
 	const u32 Func_Sub473EF0 = 0x00473EF0;
 	u32 function_473EF0(CUnit* unit, u32 playerId, u32 dimensionX, u32 dimensionY, u16 unitId) {
 
@@ -319,6 +652,17 @@ namespace {
 
 		return return_value;
 
+	}
+
+	;
+
+	//Identical to code at 0x0047AFE0
+	bool unit_isRefineryUnit(u32 unitId) {
+		return (
+			unitId == UnitId::TerranRefinery || 
+			unitId == UnitId::ZergExtractor || 
+			unitId == UnitId::ProtossAssimilator
+			);
 	}
 
 	;
