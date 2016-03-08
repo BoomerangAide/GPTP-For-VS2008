@@ -272,14 +272,14 @@ void orders_TurretAttack(CUnit* unit) {
 
 			if(jump_to_77A70) {
 
-				u8 orderProperty;
 				jump_to_77A70 = false;
 
 				while(!jump_to_77CDA && unit->orderQueueTail != NULL) {
 
-					orderProperty = orders_dat::ordersDat_6[unit->orderQueueTail->orderId];
-
-					if(orderProperty == 0 && unit->orderQueueTail->orderId != OrderId::TurretGuard)
+					if(
+						!orders_dat::CanBeInterrupted[unit->orderQueueTail->orderId] && 
+						unit->orderQueueTail->orderId != OrderId::TurretGuard
+					)
 						jump_to_77CDA = true;
 					else
 						//77A94:
