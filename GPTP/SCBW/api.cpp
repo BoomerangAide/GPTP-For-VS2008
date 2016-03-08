@@ -408,6 +408,7 @@ void refreshScreen() {
   memset(refreshRegions, 1, 1200);
 }
 
+/* /!\ Not working like 004DC550  RandBetween /!\ */
 u32 randBetween(u32 min, u32 max) {
   assert(min <= max);
   return min + ((max - min + 1) * random() >> 15);
