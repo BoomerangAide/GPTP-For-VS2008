@@ -20,8 +20,8 @@ namespace {
 	void function_0046A560(CUnit* unit);																			//0x0046A560
 	void function_0046A5A0(CUnit* unit);																			//0x0046A5A0
 	u32 function_00473FB0(CUnit* unit, u8 playerId, int x, int y, u16 unitId, u8 unk1, u8 unk2, u8 unk3, u8 unk4 );	//0x00473FB0
-	void removeOrderFromUnitQueue(const CUnit *unit);																//0x004742D0
-	void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, const CUnit* target, u16 targetUnitId);			//0x004745F0
+	void removeOrderFromUnitQueue(CUnit *unit);																		//0x004742D0
+	void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, CUnit* target, u16 targetUnitId);				//0x004745F0
 	void function_00474760(CUnit* unit, COrder* order, u8 orderId);													//0x00474760
 	void orderComputer_cl(CUnit *unit, u8 orderId); 																//0x00475310
 	void actUnitReturnToIdle(CUnit *unit);																			//0x00475420
@@ -63,7 +63,7 @@ void orders_BuildingLand(CUnit* unit) {
 			while(unit->orderQueueTail != NULL && !bLoopBreak) {
 
 				bLoopBreak =
-					(orders_dat::ordersDat_6[unit->orderQueueTail->orderId] == 0) &&
+					!orders_dat::CanBeInterrupted[unit->orderQueueTail->orderId] &&
 					(unit->orderQueueTail->orderId != OrderId::BuildingLiftoff);
 
 				if(!bLoopBreak)
@@ -651,23 +651,25 @@ u32 function_00473FB0(CUnit* unit, u8 playerId, int x, int y, u16 unitId, u8 unk
 
 ;
 
-const u32 Func_RemoveOrderFromUnitQueue = 0x004742D0;
-void removeOrderFromUnitQueue(const CUnit *unit) {
+const u32 Func_removeOrderFromUnitQueue = 0x004742D0;
+void removeOrderFromUnitQueue(CUnit *unit) {
+	
+	static COrder* orderQueueHead = unit->orderQueueHead;
 
-  __asm {
-    PUSHAD
-	MOV ECX, unit
-	MOV EAX, [ECX+74]
-	CALL Func_RemoveOrderFromUnitQueue
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV ECX, unit
+		MOV EAX, orderQueueHead
+		CALL Func_RemoveOrderFromUnitQueue
+		POPAD
+	}
 
 }
 
 ;
 
 const u32 Func_PerformAnotherOrder = 0x004745F0;
-void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, const CUnit* target, u16 targetUnitId) {
+void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, CUnit* target, u16 targetUnitId) {
 
 	__asm {
 		PUSHAD
