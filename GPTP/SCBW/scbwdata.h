@@ -180,7 +180,7 @@ SCBW_DATA(Box16*,	UnitBounds,				unitsDat[38].address);	//006617C8
 SCBW_DATA(u16*,		MineralCost,			unitsDat[40].address);	//00663888
 SCBW_DATA(u16*,		GasCost,				unitsDat[41].address);	//0065FD00
 SCBW_DATA(u16*,		TimeCost,				unitsDat[42].address);	//00660428
-//SCBW_DATA(u16*,	???,					unitsDat[43].address);	//00660A70
+SCBW_DATA(u16*,		unitsDat43,				unitsDat[43].address);	//00660A70
 SCBW_DATA(GroupFlag*, GroupFlags,			unitsDat[44].address);	//006637A0
 SCBW_DATA(u8*,		SupplyProvided,			unitsDat[45].address);  //006646C8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
 SCBW_DATA(u8*,		SupplyRequired,			unitsDat[46].address);  //00663CE8 Supply shown in-game is (true supply) / 2; e.g. Zerglings have 1 true supply, Marines have 2 true supply, etc.
@@ -270,25 +270,25 @@ SCBW_DATA(u16*, Label,              techdataDat[7].address);	//006562A0
 namespace orders_dat {
 SCBW_DATA(const DatLoad*, ordersDat, 0x00513EC8);
 
-SCBW_DATA(u16*, Label,              ordersDat[0].address);	//00665280
-SCBW_DATA(u8*,  UseWeaponTargeting, ordersDat[1].address);	//00664B00
-//SCBW_DATA(u8*,  ???,				ordersDat[2].address);	//00665940
-//SCBW_DATA(u8*,  ???,				ordersDat[3].address);	//00665A00
-//SCBW_DATA(u8*,  ???,				ordersDat[4].address);	//00664A40
-//SCBW_DATA(u8*,  ???,				ordersDat[5].address);	//006657C0
-SCBW_DATA(u8*,  ordersDat_6,		ordersDat[6].address);	//00665040
-//SCBW_DATA(u8*,  ???,				ordersDat[7].address);	//00665100
-//SCBW_DATA(u8*,  ???,				ordersDat[8].address);	//00665700
-//SCBW_DATA(u8*,  ???,				ordersDat[9].address);	//006651C0
-//SCBW_DATA(u8*,  ???,				ordersDat[10].address);	//006654C0
-//SCBW_DATA(u8*,  ???,				ordersDat[11].address);	//00664C80
-//SCBW_DATA(u8*,  ???,				ordersDat[12].address);	//00664BC0
-//SCBW_DATA(u8*,  ???,				ordersDat[13].address);	//00665880
-SCBW_DATA(u8*,  TechUsed,           ordersDat[14].address);	//00664E00
-//SCBW_DATA(u8*,  ???,				ordersDat[15].address);	//00664D40
-SCBW_DATA(u16*,	ButtonIcon,			ordersDat[16].address);	//00664EC0
-//SCBW_DATA(u16*,  ???,				ordersDat[17].address);	//00665580
-//SCBW_DATA(u8*,  ???,				ordersDat[18].address);	//00665400
+SCBW_DATA(u16*,		Label,              ordersDat[0].address);	//00665280
+SCBW_DATA(u8*,		UseWeaponTargeting, ordersDat[1].address);	//00664B00
+//SCBW_DATA(u8*,	???,				ordersDat[2].address);	//00665940
+//SCBW_DATA(u8*,	???,				ordersDat[3].address);	//00665A00
+//SCBW_DATA(u8*,	???,				ordersDat[4].address);	//00664A40
+//SCBW_DATA(u8*,	???,				ordersDat[5].address);	//006657C0
+SCBW_DATA(Bool8*,	CanBeInterrupted,	ordersDat[6].address);	//00665040
+//SCBW_DATA(u8*,	???,				ordersDat[7].address);	//00665100
+//SCBW_DATA(u8*,	???,				ordersDat[8].address);	//00665700
+//SCBW_DATA(u8*,	???,				ordersDat[9].address);	//006651C0
+//SCBW_DATA(u8*,	???,				ordersDat[10].address);	//006654C0
+//SCBW_DATA(u8*,	???,				ordersDat[11].address);	//00664C80
+//SCBW_DATA(u8*,	???,				ordersDat[12].address);	//00664BC0
+//SCBW_DATA(u8*,	???,				ordersDat[13].address);	//00665880
+SCBW_DATA(u8*,		TechUsed,           ordersDat[14].address);	//00664E00
+//SCBW_DATA(u8*,	???,				ordersDat[15].address);	//00664D40
+SCBW_DATA(u16*,		ButtonIcon,			ordersDat[16].address);	//00664EC0
+//SCBW_DATA(u16*,	???,				ordersDat[17].address);	//00665580
+//SCBW_DATA(u8*,	???,				ordersDat[18].address);	//00665400
 } //orders_dat (last entry at 0x00513FA0)
 
 namespace sprites_dat {
