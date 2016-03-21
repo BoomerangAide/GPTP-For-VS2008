@@ -43,7 +43,7 @@ namespace hooks {
 
 	}
 
-
+	;
 	
 	const u32 Hook_SortAllUnits = 0x0046F0F0;
 	void __declspec(naked) SortAllUnits_Wrapper() {
@@ -77,6 +77,8 @@ namespace hooks {
 		}
 
 	}
+	
+	;
 
 	void injectSelectMod() {
 		jmpPatch(function_0046FB40_Wrapper,	Hook_function_0046FB40, 27);
