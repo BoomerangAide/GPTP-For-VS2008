@@ -12,8 +12,8 @@ namespace {
 	void function_4591D0();					/*0x004591D0*/
 	void function_459770();					/*0x00459770*/
 
-	u32 fxnInteract(BinDlg* dialog, void* data_struct);
-	s32 req_check(u32 reqFunc, u32 reqVar, u32 playerId, CUnit* unit);
+	u32 fxnInteract(BinDlg* dialog, u32 data_struct);
+	s32 req_check(u32 reqFunc, u16 reqVar, u32 playerId, CUnit* unit);
 
 } //unnamed namespace
 
@@ -712,7 +712,7 @@ namespace hooks {
 
 			while (current_button_state == BUTTON_STATE::Disabled && (buttons_count < current_buttonset->buttonsInSet)) {
 
-				current_button_state = req_check((u32)current_button->reqFunc,current_button->reqVar,*LOCAL_NATION_ID,*activePortraitUnit);
+				current_button_state = req_check((u32)current_button->reqFunc,(u8)current_button->reqVar,(u8)*LOCAL_NATION_ID,*activePortraitUnit);
 
 				if(current_button_state == BUTTON_STATE::Disabled) {
 					buttons_count++;
@@ -746,6 +746,17 @@ namespace hooks {
 					if(current_dialog->graphic != current_button->iconID) {
 
 						//592C2
+						static struct {
+							u32 unknown_value_1;	//[EBP-1C]
+							u32 unknown_value_2;	//[EBP-18]
+							u32 not_allocated;		//[EBP-14]
+							u16 unknown_value_3;	//[EBP-10]
+							s16 mouseY;				//[EBP-0E]
+							s16 mouseX;				//[EBP-0C]
+							u16 not_allocated_2;	//[EBP-0A]
+							u32 buttonState;		//[EBP-08]
+							BUTTON_SET* buttonset;	//[EBP-04]
+						} stack_placeholder;						
 
 						current_dialog->graphic = current_button->iconID;
 
@@ -754,28 +765,18 @@ namespace hooks {
 							updateDialog(current_dialog);
 						}
 
-						struct {
-							u32 unknown_value_1;	//[EBP-1C]
-							u32 unknown_value_2;	//[EBP-18]
-							u32 not_allocated;		//[EBP-14]
-							u16 unknown_value_3;	//[EBP-10]
-							Point16 mouse_coords;	//[EBP-0C]
-							u16 not_allocated_2;	//[EBP-0A]
-							u32 buttonState;		//[EBP-08]
-							BUTTON_SET* buttonset;	//[EBP-04]
-						} stack_placeholder;
+						stack_placeholder.not_allocated	= 0;
+						stack_placeholder.not_allocated_2 = 0;
 
-						stack_placeholder.unknown_value_1 = 0x00000006;			/*0x00*/
-						stack_placeholder.unknown_value_2 = 0x00000000;			/*0x04*/
-						/*				  not_allocated							  0x08*/
-						stack_placeholder.unknown_value_3 = 0x000E;				/*0x0C*/
-						stack_placeholder.mouse_coords.x = mouse->x;			/*0x0E*/
-						stack_placeholder.mouse_coords.y = mouse->y;			/*0x10*/
-						/*				  not_allocated_2						  0x12*/
-						stack_placeholder.buttonState = current_button_state;	/*0x14*/
-						stack_placeholder.buttonset = current_buttonset;		/*0x18*/
+						stack_placeholder.unknown_value_1 = 0x00000006;
+						stack_placeholder.unknown_value_2 = 0x00000000;
+						stack_placeholder.unknown_value_3 = 0x000E;
+						stack_placeholder.mouseY = mouse->y;
+						stack_placeholder.mouseX = mouse->x;
+						stack_placeholder.buttonState = current_button_state;
+						stack_placeholder.buttonset = current_buttonset;
 
-						fxnInteract(current_dialog,&stack_placeholder);
+						fxnInteract(current_dialog,(u32)&stack_placeholder);
 
 						current_button_state = stack_placeholder.buttonState;
 
@@ -954,7 +955,8 @@ namespace {
 
 	;
 
-	u32 fxnInteract(BinDlg* dialog, void* data_struct) {
+	//dev info: this call 4598D0
+	u32 fxnInteract(BinDlg* dialog, u32 data_struct_offset) {
 
 		static u32 return_value;
 		static u32 fxnInteract = (u32)dialog->fxnInteract;
@@ -963,7 +965,7 @@ namespace {
 			PUSHAD
 			MOV ESI, dialog
 			MOV ECX, dialog
-			MOV EDX, data_struct
+			MOV EDX, data_struct_offset
 			CALL fxnInteract
 			MOV return_value, EAX
 			POPAD
@@ -975,13 +977,14 @@ namespace {
 
 	;
 
-	s32 req_check(u32 reqFunc, u32 reqVar, u32 playerId, CUnit* unit) {
+	//dev info: examples of calls: 429520,428e60,428420,4287D0,4292C0
+	s32 req_check(u32 reqFunc, u16 reqVar, u32 playerId, CUnit* unit) {
 
 		static s32 return_value;
 
 		__asm {
 			PUSHAD
-			MOV ECX, reqVar
+			MOV CX, reqVar
 			MOV EDX, playerId
 			PUSH unit
 			CALL reqFunc
