@@ -47,6 +47,8 @@
 #include "hooks/orders/larva_creep_spawn.h"
 #include "hooks/orders/liftland.h"
 #include "hooks/orders/base_orders/attack_orders.h"
+#include "hooks/orders/base_orders/stopholdpos_orders.h"
+#include "hooks/orders/spells/recall_spell.h"
 
 #include "AI/spellcasting.h"
 
@@ -77,6 +79,8 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
   hooks::injectLarvaCreepSpawnHooks();
   hooks::injectLiftLandHooks();
   hooks::injectAttackOrdersHooks();
+  hooks::injectStopHoldPosOrdersHooks();
+  hooks::injectRecallSpellHooks();
 
   hooks::injectApplyUpgradeFlags();
   hooks::injectAttackPriorityHooks();
