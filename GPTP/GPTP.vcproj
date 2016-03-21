@@ -262,6 +262,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\orders\spells\recall_spell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\recall_spell.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\recall_spell_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hooks\interface\selection.cpp"
 				>
 			</File>
@@ -275,6 +287,14 @@
 			</File>
 			<File
 				RelativePath=".\hooks\orders\siege_transform_inject.cpp"
+				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\base_orders\stopholdpos_orders.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\base_orders\stopholdpos_orders_inject.cpp"
 				>
 			</File>			
 			<Filter
@@ -773,6 +793,10 @@
 			</File>
 			<File
 				RelativePath=".\SCBW\enumerations\SpriteId.h"
+				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\base_orders\stopholdpos_orders.h"
 				>
 			</File>			
 			<File
