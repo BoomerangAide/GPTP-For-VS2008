@@ -10,7 +10,6 @@ void __declspec(naked) updateButtonSetExWrapper() {
 	__asm {
 		PUSH EBP
 		MOV EBP, ESP
-		SUB ESP, 0x08
 		PUSHAD
 	}
 
@@ -67,7 +66,6 @@ void __declspec(naked) function_4591D0Wrapper() {
 	__asm {
 		PUSH EBP
 		MOV EBP, ESP
-		SUB ESP, 0x1C
 		PUSHAD
 	}
 
