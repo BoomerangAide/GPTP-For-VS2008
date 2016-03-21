@@ -32,7 +32,8 @@ namespace hooks {
 		previous_pos.x = target->sprite->position.x;
 		previous_pos.y = target->sprite->position.y;
 
-		//1st step to move the unit (can still be cancelled easily)
+		//identical code to setUnitPosition() but for some reason, is
+		//using another function to do exactly the same thing
 		function_004EBAE0(target,caster->getX(),caster->getY());
 
 		if(!scbw::checkUnitCollisionPos(target,&(caster->sprite->position),&new_pos,NULL,false,0))
