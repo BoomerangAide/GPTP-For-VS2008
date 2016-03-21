@@ -409,11 +409,15 @@ void refreshScreen() {
 }
 
 /* /!\ Not working like 004DC550  RandBetween /!\ */
+/* Also this doesn't update the RNG */
 u32 randBetween(u32 min, u32 max) {
   assert(min <= max);
   return min + ((max - min + 1) * random() >> 15);
 }
 
+//similar to 004DC4A0 RandomizeShort, but don't update
+//the RNG and don't use a parameter among possible
+//differences
 u16 random() {
   if (*IS_IN_GAME_LOOP) {
     *lastRandomNumber = 22695477 * (*lastRandomNumber) + 1;
