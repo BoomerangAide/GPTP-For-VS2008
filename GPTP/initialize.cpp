@@ -49,6 +49,7 @@
 #include "hooks/orders/base_orders/attack_orders.h"
 #include "hooks/orders/base_orders/stopholdpos_orders.h"
 #include "hooks/orders/spells/recall_spell.h"
+#include "hooks/orders/enter_nydus.h"
 
 #include "AI/spellcasting.h"
 
@@ -81,6 +82,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
   hooks::injectAttackOrdersHooks();
   hooks::injectStopHoldPosOrdersHooks();
   hooks::injectRecallSpellHooks();
+  hooks::injectEnterNydusHooks();
 
   hooks::injectApplyUpgradeFlags();
   hooks::injectAttackPriorityHooks();
