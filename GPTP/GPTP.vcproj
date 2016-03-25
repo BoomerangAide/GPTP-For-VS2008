@@ -206,6 +206,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\orders\enter_nydus.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\enter_nydus_inject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\hook_tools.cpp"
 				>
 			</File>
@@ -735,6 +743,10 @@
 				RelativePath=".\definitions.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\orders\enter_nydus.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\SCBW\enumerations\FlingyId.h"
 				>
