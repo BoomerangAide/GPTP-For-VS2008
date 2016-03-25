@@ -14,6 +14,7 @@ Update 3:
 ** Attack orders hooks **
 ** Stop/Hold Position orders hooks **
 ** Recall Spell hooks **
+** Enter Nydus hooks **
 
 *Planned:
     -more hooks for orders
@@ -21,6 +22,7 @@ Update 3:
     -(in this update or later) attempts on CMDACT functions (to improve orders useability)
     -(if possible) research on cheat codes (are there unknown/incomplete ones?Is it possible to add some?)
     -others???
+    -make commonly used helper into functions centralized somewhere else (api,CUnit,scbwdata or whatever fit)
 
 -------------------------
 
