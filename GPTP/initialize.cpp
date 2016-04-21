@@ -51,7 +51,7 @@
 #include "hooks/orders/spells/recall_spell.h"
 #include "hooks/orders/enter_nydus.h"
 
-#include "AI/spellcasting.h"
+//#include "AI/spellcasting.h"
 
 /// This function is called when the plugin is loaded into StarCraft.
 /// You can enable/disable each group of hooks by commenting them.
@@ -79,7 +79,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
   hooks::injectMergeUnitsHooks();
   hooks::injectLarvaCreepSpawnHooks();
   hooks::injectLiftLandHooks();
-  hooks::injectAttackOrdersHooks();
+  /*hooks::injectAttackOrdersHooks(); DISABLED UNTIL FIXED*/
   hooks::injectStopHoldPosOrdersHooks();
   hooks::injectRecallSpellHooks();
   hooks::injectEnterNydusHooks();
@@ -118,7 +118,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
   
   hooks::injectUnitTooltipHook();
 
-  hooks::injectSpellcasterAI();
+  //hooks::injectSpellcasterAI();
 
   return TRUE;
 }
