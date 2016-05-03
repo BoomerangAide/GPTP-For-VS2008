@@ -1,6 +1,13 @@
 Update 3:
 
 -Minor fixes and optimizations
+-Moving functions from helpers to CUnit functions:
+	order_computerCL
+	getUnitMovableState
+	00474D60 __order (was imitated by Infestation instead of being called)
+	removeAcidSpores (not seen much as helper though)
+	issueQueuedOrderTarget
+-scbwdata.h improvements
 -Moving my orders based hooks in a separate subfolder
 -Fix for drawEllipse graphics function and adding drawDottedEllipse function
 -Fix for CUnit::getColor (so it return the correct value...probably all the time)
@@ -15,7 +22,8 @@ Update 3:
 ** Stop/Hold Position orders hooks **
 ** Recall Spell hooks **
 ** Enter Nydus hooks **
-** Weapon/Spell Hit hooks **
+** Weapon/Spell Hit hooks ** (NOTE: Old Consume hook is removed from project since it's included in this)
+** Cast Order hook **
 
 *Planned:
     -more hooks for orders
