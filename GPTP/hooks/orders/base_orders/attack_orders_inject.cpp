@@ -208,10 +208,10 @@ namespace hooks {
 		jmpPatch(orders_ReaverAttack1Wrapper,		0x00465690, 2);
 		jmpPatch(orders_CarrierAttack1Wrapper,		0x00465950, 0);
 		jmpPatch(orders_TurretAttackWrapper,		0x00477980, 1);
-		//jmpPatch(orders_AttackFixedRangeWrapper,	0x00477D00, 0);
+		jmpPatch(orders_AttackFixedRangeWrapper,	0x00477D00, 0);
 		jmpPatch(orders_SapUnitWrapper,				0x004788E0, 2);
 		jmpPatch(orders_SapLocationWrapper,			0x00478A40, 3);
-		//jmpPatch(orders_AttackMoveEPWrapper,		0x00478DE0, 1);
+		jmpPatch(orders_AttackMoveEPWrapper,		0x00478DE0, 1);
 		jmpPatch(orders_AttackMoveWrapper,			0x00479040, 0);
 		jmpPatch(orders_AttackUnitWrapper,			0x00479BD0, 2);
 	}
