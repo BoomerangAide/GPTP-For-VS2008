@@ -132,6 +132,7 @@ bool isUnderDarkSwarm(const CUnit *unit) {
 
 //Improved code from BWAPI's include/BWAPI/Position.h: getApproxDistance()
 //Logically same as function @ 0x0040C360
+//x1 = ECX;x2 = EDX;y1 = [EBP+08];y2 = [EBP+0C];
 u32 getDistanceFast(s32 x1, s32 y1, s32 x2, s32 y2) {
   int dMax = abs(x1 - x2), dMin = abs(y1 - y2);
   if (dMax < dMin)
@@ -293,17 +294,20 @@ bool moveUnit(CUnit* unit, s16 x, s16 y) {
 }
 
 const u32 Func_PrepareUnitMoveClearRefs = 0x00493CA0;
-void prepareUnitMove(CUnit *unit, bool hideUnit) {
+void prepareUnitMove(CUnit* unit, bool hideUnit) {
+
   assert(unit);
 
-  static u32 _hideUnit = hideUnit;
-  __asm {
-    PUSHAD
-    PUSH _hideUnit
-    MOV EDI, unit
-    CALL Func_PrepareUnitMoveClearRefs
-    POPAD
-  }
+  static Bool32 _hideUnit = hideUnit ? 1 : 0;
+
+	__asm {
+		PUSHAD
+		PUSH _hideUnit
+		MOV EDI, unit
+		CALL Func_PrepareUnitMoveClearRefs
+		POPAD
+	}
+
 }
 
 const u32 Func_CheckUnitCollisionPos = 0x0049D3E0;
@@ -409,7 +413,6 @@ void refreshScreen() {
 }
 
 /* /!\ Not working like 004DC550  RandBetween /!\ */
-/* Also this doesn't update the RNG */
 u32 randBetween(u32 min, u32 max) {
   assert(min <= max);
   return min + ((max - min + 1) * random() >> 15);
@@ -431,19 +434,68 @@ u16 random() {
 
 //Logically equivalent to function @ 0x004C36C0
 void refreshConsole() {
-  
-  u32*  const bCanUpdateCurrentButtonSet      = (u32*)		0x0068C1B0;
-  u8*   const bCanUpdateSelectedUnitPortrait  = (u8*)		0x0068AC74;
-  u8*   const bCanUpdateStatDataDialog        = (u8*)		0x0068C1F8;
-  BinDlg**  const someDialogUnknown           = (BinDlg**)  0x0068C1E8;
-  BinDlg**  const someDialogUnknownUser       = (BinDlg**)  0x0068C1EC;
 
-  *bCanUpdateCurrentButtonSet = 1;
-  *bCanUpdateSelectedUnitPortrait = 1;
-  *bCanUpdateStatDataDialog = 1;
-  *someDialogUnknown = NULL;
-  *someDialogUnknownUser = NULL;
-  
+	static u32*  const bCanUpdateCurrentButtonSet      = (u32*)		0x0068C1B0;
+	static u8*   const bCanUpdateSelectedUnitPortrait  = (u8*)		0x0068AC74;
+	static u8*   const bCanUpdateStatDataDialog        = (u8*)		0x0068C1F8;
+	static BinDlg**  const someDialogUnknown           = (BinDlg**)	0x0068C1E8;
+	static BinDlg**  const someDialogUnknownUser       = (BinDlg**)	0x0068C1EC;
+
+	*bCanUpdateCurrentButtonSet = 1;
+	*bCanUpdateSelectedUnitPortrait = 1;
+	*bCanUpdateStatDataDialog = 1;
+	*someDialogUnknown = NULL;
+	*someDialogUnknownUser = NULL;
+
+}
+
+const u32 Func_MoveScreen = 0x0049C440;
+//Player check added based on how others functions test it
+//Values above or equal to 8 means all players
+//Equivalent to moveScreenToUnit @ 0x004E6020
+void MoveScreenToUnit(CUnit* unit, u32 playerId) {
+
+	if(playerId >= 8 || playerId == *LOCAL_NATION_ID) {
+
+		int x,y;
+
+		x = (s16)unit->sprite->position.x;
+		y = (s16)unit->sprite->position.x;
+
+		if(x < 0) x += 31;
+		if(y < 0) y += 31;
+
+		x = ((x/32) - 6) * 32;
+		y = ((y/32) - 10) * 32;
+
+		__asm {
+			PUSHAD
+			MOV ECX, y
+			MOV EAX, x
+			CALL Func_MoveScreen
+			POPAD
+		}
+
+	}
+
+}
+
+const u32 Func_minimapPing = 0x004A34C0;
+//Player check added based on how others functions test it
+//Values above or equal to 8 means all players
+//x and y are coords as gotten from unit->sprite->position
+void minimapPing(u32 x, u32 y, s32 color, u32 playerId) {
+
+	if(playerId >= 8 || playerId == *LOCAL_NATION_ID)
+		__asm {
+			PUSHAD
+			PUSH color
+			PUSH y
+			PUSH x
+			CALL Func_minimapPing
+			POPAD
+		}
+
 }
 
 } //scbw
