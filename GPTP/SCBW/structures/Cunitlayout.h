@@ -181,15 +181,15 @@ struct CUnitLayout {
 /*0x0D8*/         u8        resourceGroup;  
 /*0x0D9*/         u8        resourceBelongsToAI;
                 } resource;  /** When the unit is resource container */
-                CUnit*    nydusExit; /** connected nydus canal */
-                CUnit*    ghostNukeMissile;     //Tentative (is CSprite* in BWAPI)
-                CSprite*  pylonAura;
+/*0x0D0*/       CUnit*    nydusExit; /** connected nydus canal */
+/*0x0D0*/       CUnit*    ghostNukeMissile;     //Tentative (is CSprite* in BWAPI)
+/*0x0D0*/       CSprite*  pylonAura;
                 struct {
 /*0x0D0*/         CUnit*  nuke;  // attached nuke
 /*0x0D4*/         bool    isReady;
                 } silo;
-                Box16     hatcheryHarvestValue; // wtf???
-                Point16   powerupOrigin;
+/*0x0D0*/       Box16     hatcheryHarvestValue; // wtf???
+/*0x0D0*/       Point16   powerupOrigin;
               };
             } building;
 
