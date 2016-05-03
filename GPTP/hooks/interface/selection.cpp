@@ -276,8 +276,8 @@ namespace hooks {
 
 		Bool32* const IS_DOUBLE_CLICKING =	(Bool32*)	0x0066FF58;
 
-		u32* const unknown_value_06BEE64 =		(u32*) 0x006BEE64; //value going in/out 6BEE70 array
-		u32* const unknown_array_size_06BEE6C =	(u32*) 0x006BEE6C; //size of array 006BEE70
+		u32* const unknown_value_6BEE64 =		(u32*) 0x006BEE64; //value going in/out 6BEE70 array
+		u32* const unknown_array_size_6BEE6C =	(u32*) 0x006BEE6C; //size of array 006BEE70
 		u32* const unknown_array_006BEE70 =		(u32*) 0x006BEE70; //array of values
 
 		Bool8* const bCanUpdateSelectedUnitData		= (Bool8*)	0x0059723C;
