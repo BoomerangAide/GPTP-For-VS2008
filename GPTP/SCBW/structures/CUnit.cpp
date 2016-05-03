@@ -5,7 +5,7 @@
 
 //-------- Unit stats and properties --------//
 
-extern const u32 Func_CanDetect = 0x00403430;
+extern const u32 Func_CanDetect = 0x00403430; //unitHasNoStatusAilments
 bool CUnit::canDetect() const {
   assert(this);
   static u32 result;
@@ -17,6 +17,14 @@ bool CUnit::canDetect() const {
     MOV result, EAX
     POPAD
   }
+
+//(units_dat::BaseProperty[this->id] & UnitProperty::Detector) &&
+//(this->status & UnitStatus::Completed) &&
+//( !(this->status & UnitStatus::UNKNOWN2) ) &&
+//(this->lockdownTimer == 0) &&
+//(this->stasisTimer == 0) &&
+//(this->maelstromTimer == 0) &&
+//(this->isBlind == 0);
 
   return result != 0;
 }
@@ -80,6 +88,7 @@ u16 CUnit::getMaxEnergy() const {
   assert(this);
   
   static u16 result;
+
   __asm {
     PUSHAD
     MOV EAX, this
@@ -113,6 +122,7 @@ u32 CUnit::getMaxWeaponRange(u8 weaponId) const {
   assert(weaponId < WEAPON_TYPE_COUNT);
 
   static u32 maxWeaponRange;
+
   __asm {
     PUSHAD
     MOV BL, weaponId
@@ -164,6 +174,7 @@ u8 CUnit::getSeekRange() const {
   assert(this);
 
   static u8 seekRange;
+
   __asm {
     PUSHAD
     MOV EDX, this
@@ -181,6 +192,7 @@ u32 CUnit::getSightRange(bool isForSpellCasting) const {
 
   static u32 sightRange;
   Bool32 ignoreStatusEffects = (isForSpellCasting ? 0 : 1);
+
   __asm {
     PUSHAD
     PUSH ignoreStatusEffects
@@ -260,6 +272,17 @@ bool CUnit::isValidCaster() const {
     && !(this->status & UnitStatus::IsHallucination);
 }
 
+//Identical to function @ 0x00401DC0;
+u32 CUnit::getMovableState() {
+	if (this->moveTarget.pt != this->sprite->position)
+		return 0;
+	else 
+	if (!(this->status & UnitStatus::Unmovable))
+		return 1;
+	else
+		return 2;
+}
+
 //-------- Positions and dimensions --------//
 
 u16 CUnit::getX() const {
@@ -330,6 +353,7 @@ void CUnit::damageWith(s32 damage, u8 weaponId, CUnit *attacker,
   s32 attackingPlayer_  = attackingPlayer;
   s32 direction_        = direction;
   s32 damageDivisor_    = damageDivisor;
+
   __asm {
     PUSHAD
     MOV EDI, this
@@ -349,6 +373,7 @@ void CUnit::damageHp(s32 damage, CUnit *attacker, s32 attackingPlayer, bool noti
   assert(this);
 
   u32 notify_ = notify ? 1 : 0;
+
   __asm {
     PUSHAD
     PUSH notify_
@@ -384,47 +409,72 @@ void CUnit::reduceDefensiveMatrixHp(s32 amount) {
 
 const u32 Func_RemoveUnit = 0x00475710; //AKA orders_SelfDestructing()
 void CUnit::remove() {
-  assert(this);
 
-  __asm {
-    PUSHAD
-    MOV EAX, this
-    CALL Func_RemoveUnit
-    POPAD
-  }
+	assert(this);
+
+	__asm {
+		PUSHAD
+		MOV EAX, this
+		CALL Func_RemoveUnit
+		POPAD
+	}
+
 }
 
 const u32 Func_RemoveLockdown = 0x00454D90;
 void CUnit::removeLockdown() {
-  assert(this);
-  __asm {
-    PUSHAD
-    MOV ESI, this
-    CALL Func_RemoveLockdown
-    POPAD
-  }
+
+	assert(this);
+
+	__asm {
+		PUSHAD
+		MOV ESI, this
+		CALL Func_RemoveLockdown
+		POPAD
+	}
+
 }
 
 const u32 Func_RemoveMaelstrom = 0x00454D20;
 void CUnit::removeMaelstrom() {
-  assert(this);
-  __asm {
-    PUSHAD
-    MOV ESI, this
-    CALL Func_RemoveMaelstrom
-    POPAD
-  }
+
+	assert(this);
+
+	__asm {
+		PUSHAD
+		MOV ESI, this
+		CALL Func_RemoveMaelstrom
+		POPAD
+	}
+
 }
 
 const u32 Func_RemoveStasisField = 0x004F62D0;
 void CUnit::removeStasisField() {
-  assert(this);
-  __asm {
-    PUSHAD
-    MOV ESI, this
-    CALL Func_RemoveStasisField
-    POPAD
-  }
+
+	assert(this);
+
+	__asm {
+		PUSHAD
+		MOV ESI, this
+		CALL Func_RemoveStasisField
+		POPAD
+	}
+
+}
+
+const u32 Func_RemoveAcidSpores = 0x004F4160;
+void CUnit::removeAcidSpores() {
+
+	assert(this);
+
+	__asm {
+		PUSHAD
+		MOV EDX, this
+		CALL Func_RemoveAcidSpores
+		POPAD
+	}
+
 }
 
 //-------- Unit orders --------//
@@ -451,20 +501,43 @@ void CUnit::orderTo(u8 orderId, u16 x, u16 y) {
   prepareForNextOrder(this);
 }
 
-//Logically equivalent to function @ 0x004753A0
-void CUnit::orderToIdle() {
-  assert(this);
+//Logically equivalent to function orderComputer_cl @ 0x00475310
+//used in hooks so not doing assert, mind it if used in mods
+void CUnit::orderComputerCL(u8 orderId) {
+	this->userActionFlags |= 1;
+	this->order(orderId,0,0,NULL,UnitId::None,true);
+	prepareForNextOrder(this);
+}
 
-  if (this->orderQueueHead) {
-    this->userActionFlags |= 1;
-    prepareForNextOrder(this);
-  }
-  else {
-    if (this->pAI)
-      this->orderTo(OrderId::ComputerAI);
-    else
-      this->orderTo(units_dat::ReturnToIdleOrder[this->id]);
-  }
+//Equivalent to 00474D60 __order function
+void CUnit::orderSimple(u8 orderId, bool stopPreviousOrders) {
+	this->order(orderId,0,0,NULL,UnitId::None,stopPreviousOrders);
+}
+
+//Equivalent to 00474D10 issueQueuedOrderTarget function
+void CUnit::issueQueuedOrderTarget(u8 orderId, CUnit* target, bool stopPreviousOrders) {
+	if(target == NULL)
+		this->order(orderId,0,0,NULL,UnitId::None,stopPreviousOrders);
+	else
+		this->order(orderId,target->sprite->position.x,target->sprite->position.y,target,UnitId::None,stopPreviousOrders);
+}
+
+//Logically equivalent to function toIdle @ 0x004753A0
+void CUnit::orderToIdle() {
+
+	assert(this);
+
+	if (this->orderQueueHead) {
+		this->userActionFlags |= 1;
+		prepareForNextOrder(this);
+	}
+	else {
+		if (this->pAI)
+			this->orderTo(OrderId::ComputerAI);
+		else
+			this->orderTo(units_dat::ReturnToIdleOrder[this->id]);
+	}
+
 }
 
 const u32 Func_Order = 0x00474810;
@@ -592,9 +665,9 @@ graphics::ColorId CUnit::getColor() {
 }
 
 graphics::ColorId CUnit::getColor(CUnit* unit) {
-	
+
 	//getColourID internal function
-	const u32 Func_getColourID = 0x0049B0E0;	
+	const u32 Func_getColourID = 0x0049B0E0;
 
 	graphics::ColorId return_value;
 
@@ -621,7 +694,7 @@ graphics::ColorId CUnit::getColor(CUnit* unit) {
 
 		}
 		else
-			return_value = graphics::BLACK; // will return 0/black if abnormal playerId		
+			return_value = graphics::BLACK; // will return 0/black if abnormal playerId
 
 	}
 	else
@@ -634,7 +707,6 @@ graphics::ColorId CUnit::getColor(CUnit* unit) {
 //-------- Distances and terrain --------//
 
 u32 CUnit::getDistanceToTarget(const CUnit *target) const {
-
   assert(this);
   assert(target);
 
@@ -762,6 +834,7 @@ extern const u32 Func_FireUnitWeapon = 0x00479C90;
 void CUnit::fireWeapon(u8 weaponId) const {
   assert(this);
   static u32 weaponId_ = weaponId;
+
   __asm {
     PUSHAD
     PUSH weaponId_
@@ -844,6 +917,7 @@ bool CUnit::isDead() const {
   return (!this->sprite) || (this->mainOrderId == OrderId::Die);
 }
 
+//Probably equivalent to function @ 0x0047B910
 bool CUnit::isTargetEnemy(const CUnit* target) const {
   assert(this);
   return scbw::isUnitEnemy(this->playerId, target);
