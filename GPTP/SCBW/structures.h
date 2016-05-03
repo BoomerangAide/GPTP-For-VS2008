@@ -83,10 +83,10 @@ struct DOODAD {
 };
 
 struct CThingy {
-  CThingy *prev;
-  CThingy *next;
-  u32     unitType;
-  CSprite *sprite;
+/*00*/  CThingy *prev;
+/*04*/  CThingy *next;
+/*08*/  u32     unitType;
+/*0C*/  CSprite *sprite;
 };
 
 //---- Taken from locations.cpp ----//
