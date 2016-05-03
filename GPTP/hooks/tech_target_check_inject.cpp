@@ -2,34 +2,36 @@
 #include "tech_target_check.h"
 #include <hook_tools.h>
 
-//V241 for VS2008
-
 namespace {
 
 const u32 Func_GetTechUseErrorMessage = 0x00491E80;
 
 void __declspec(naked) getTechUseErrorMessageWrapper() {
-  static CUnit *target;
-  static u8 castingPlayer;
-  static u16 techId;
-  static u16 errorMessage;
 
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV target, EAX
-    MOV castingPlayer, BL
-    MOV EAX, [ESP + 36]   ;// (PUSHAD saves 32) + (CALL saves 4) == 36
-    MOV techId, AX
-  }
+	static CUnit *target;
+	static u8 castingPlayer;
+	static u16 techId;
+	static u32 errorMessage;
 
-  errorMessage = hooks::getTechUseErrorMessageHook(target, castingPlayer, techId);
+	__asm {
+		PUSH EBP
+		MOV EBP, ESP
+		MOV target, EAX
+		MOV castingPlayer, BL
+		MOV EAX, [EBP+0x08]
+		MOV techId, AX
+		PUSHAD
+	}
 
-  __asm {
-    POPAD
-    MOV AX, errorMessage
-    RETN 4
-  }
+	errorMessage = hooks::getTechUseErrorMessageHook(target, castingPlayer, techId);
+
+	__asm {
+		POPAD
+		MOV EAX, errorMessage
+		POP EBP
+		RETN 4
+	}
+
 }
 
 } //Unnamed namespace
@@ -37,7 +39,7 @@ void __declspec(naked) getTechUseErrorMessageWrapper() {
 namespace hooks {
 
 void injectTechTargetCheckHooks() {
-  jmpPatch(getTechUseErrorMessageWrapper, Func_GetTechUseErrorMessage);
+  jmpPatch(getTechUseErrorMessageWrapper, Func_GetTechUseErrorMessage, 4);
 }
 
 u16 getTechUseErrorMessage(const CUnit *target, u8 castingPlayer, u16 techId) {
