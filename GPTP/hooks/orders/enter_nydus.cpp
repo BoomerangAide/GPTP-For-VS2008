@@ -4,11 +4,7 @@
 //helper functions def
 
 namespace {
-
-	u32 getUnitMovableState(CUnit* unit);					//0x00401DC0
-	void orderComputer_cl(CUnit* unit, u8 orderId); 		//0x00475310
 	bool orderToMoveToTarget(CUnit *unit, CUnit *target);	//0x004EB980
-
 } //unnamed namespace
 
 namespace hooks {
@@ -69,9 +65,9 @@ namespace hooks {
 			else { //EA253
 
 				if(unit->pAI != NULL)
-					orderComputer_cl(unit,OrderId::ComputerAI);
+					unit->orderComputerCL(OrderId::ComputerAI);
 				else
-					orderComputer_cl(unit,units_dat::ReturnToIdleOrder[unit->id]);
+					unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
 
 			}
 
@@ -109,9 +105,9 @@ namespace hooks {
 			else { //EA497
 
 				if(unit->pAI != NULL)
-					orderComputer_cl(unit,OrderId::ComputerAI);
+					unit->orderComputerCL(OrderId::ComputerAI);
 				else
-					orderComputer_cl(unit,units_dat::ReturnToIdleOrder[unit->id]);
+					unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
 
 			}
 
@@ -126,7 +122,7 @@ namespace hooks {
 			else
 			if(unit->mainOrderState == 1) { //EA43B
 
-				u8 movableState = getUnitMovableState(unit);
+				u8 movableState = unit->getMovableState();
 
 				if(movableState == 1)
 					unit->mainOrderState = 2;
@@ -152,36 +148,6 @@ namespace hooks {
 //-------- Helper function definitions. Do NOT modify! --------//
 
 namespace {
-
-	//Identical to function @ 0x00401DC0;
-	u32 getUnitMovableState(CUnit *unit) {
-
-		if (unit->moveTarget.pt != unit->sprite->position)
-			return 0;
-		else 
-		if (!(unit->status & UnitStatus::Unmovable))
-			return 1;
-		else
-			return 2;
-
-	}
-
-	;
-
-	const u32 Func_OrderComputer_cl = 0x00475310;
-	void orderComputer_cl(CUnit* unit, u8 orderId) {
-
-		__asm {
-			PUSHAD
-			MOV CL, orderId
-			MOV ESI, unit
-			CALL Func_OrderComputer_cl
-			POPAD
-		}
-
-	}
-
-	;
 
 	const u32 Func__moveToTarget = 0x004EB980;
 	bool orderToMoveToTarget(CUnit *unit, CUnit *target) {
