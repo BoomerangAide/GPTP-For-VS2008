@@ -224,17 +224,8 @@ namespace hooks {
 				showAndEnableUnit(unitInfesting);
 
 				if(unitInfesting->orderQueueHead != NULL) {
-
-					unitInfesting->order( //args based on 00474D60 __order function (which is the one calling this order)
-						units_dat::ReturnToIdleOrder[unitInfesting->id],	//((u8*)(0x00664898))[unitInfesting->id]
-						0,
-						0,
-						NULL,
-						UnitId::None,
-						true);
-
+					unitInfesting->orderSimple(units_dat::ReturnToIdleOrder[unitInfesting->id],false);
 					bReturnToIdle = true;
-
 				}
 				else
 					bReturnToIdle = true;
@@ -325,6 +316,8 @@ void orderReturnToIdle(CUnit* unit) {
 
 }
 
+;
+
 const u32 Func_Sub_464930 = 0x00464930;
 void disconnectFromAddOn(CUnit* unit) {
 
@@ -337,6 +330,7 @@ void disconnectFromAddOn(CUnit* unit) {
 
 }
 
+;
 
 const u32 Func_RefundAllQueueSlots = 0x00466E80;
 void refundAllQueueSlots(CUnit* unit) {
@@ -349,6 +343,8 @@ void refundAllQueueSlots(CUnit* unit) {
   }
 
 }
+
+;
 
 const u32 Func_removeOrderFromUnitQueue = 0x004742D0;
 void removeOrderFromUnitQueue(CUnit* unit) {
@@ -365,6 +361,8 @@ void removeOrderFromUnitQueue(CUnit* unit) {
 
 }
 
+;
+
 const u32 Func_ActUnitReturnToIdle = 0x00475420;
 void actUnitReturnToIdle(CUnit* unit) {
 
@@ -376,6 +374,8 @@ void actUnitReturnToIdle(CUnit* unit) {
   }
 
 }
+
+;
 
 //Related to path/movement decision
 const u32 Func_sub_4EB290 = 0x004EB290;
@@ -389,6 +389,8 @@ void setNextWaypoint_Sub4EB290(CUnit* unit) {
   }
 }
 
+;
+
 const u32 Func_IncrementUnitDeathScores = 0x00488AF0;
 void incrementUnitDeathScores(CUnit* unit, u8 player) {
 
@@ -401,6 +403,8 @@ void incrementUnitDeathScores(CUnit* unit, u8 player) {
   }
 
 }
+
+;
 
 const u32 Func_IncrementUnitScores = 0x00488BF0;
 const u32 Func_IncrementUnitScoresEx = 0x00488D50;
@@ -455,6 +459,8 @@ void incrementUnitScores(CUnit* unit, s8 value) {
 
 }
 
+;
+
 const u32 Func_Sub_49E4E0 = 0x0049E4E0;
 void initializeEmptyUnitsLinkedListRef_Sub49E4E0(CUnit* unit, u8 playerId) {
 
@@ -472,6 +478,8 @@ void initializeEmptyUnitsLinkedListRef_Sub49E4E0(CUnit* unit, u8 playerId) {
   }
 
 }
+
+;
 
 const u32 Func_Sub_49EFA0 = 0x0049EFA0;
 //non-generic version specific to this context
@@ -497,6 +505,7 @@ void readUnitsArray_Sub49EFA0(CUnit* unit, u8 playerId) {
 
 }
 
+;
 
 const u32 Func_Sub_4E5D60 = 0x004E5D60;
 void changeUnitButtonSet_Sub_4E5D60(CUnit* unit, u16 buttonSetId) {
@@ -513,6 +522,8 @@ void changeUnitButtonSet_Sub_4E5D60(CUnit* unit, u16 buttonSetId) {
 
 
 
+;
+
 //This is what hide the infesting unit
 const u32 Func_unitDeathSomething_0 = 0x004E6340;
 void hideAndDisableUnit(CUnit* unit) {
@@ -525,6 +536,8 @@ void hideAndDisableUnit(CUnit* unit) {
 	  }
 
 }
+
+;
 
 //What make the target reappear
 const u32 Func_InitUnitTrapDoodad = 0x004E6490;
@@ -539,6 +552,8 @@ void showAndEnableUnit(CUnit* unit) {
 }
 
 
+;
+
 //not related with assigning orders, but only with
 //destinations of orders
 const u32 Func_OrdersHoldPositionSuicidal = 0x004EB5B0;
@@ -552,6 +567,8 @@ void makeToHoldPosition(CUnit* unit) {
 	}
 
 }
+
+;
 
 } //Unnamed namespace
 
