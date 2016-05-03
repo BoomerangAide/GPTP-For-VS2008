@@ -1,15 +1,18 @@
 #include "attack_orders.h"
 #include <SCBW/api.h>
-#include <logger.h>
 
-#define WRITE_TO_LOG(x) GPTP::logger<<x<<std::endl
+#ifndef TRUE
+#define TRUE 1
+#endif
+#ifndef FALSE
+#define FALSE 0
+#endif
 
 //helper functions def
 
 namespace {
 
 bool unitCanSeeCloakedTarget(CUnit* unit, CUnit* target);												//0x00401D60
-u32 getUnitMovableState(CUnit* unit);																	//0x00401DC0
 bool isInfestableUnit(CUnit* unit);																		//0x00402210
 bool unitCanInfest(CUnit* unit);																		//0x00402750
 bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range);										//0x00430F10
@@ -18,11 +21,10 @@ CUnit* findBestAttackTarget(CUnit* unit);																//0x00443080
 bool function_00462EA0(CUnit* unit, u8 unknownByteValue);												//0x00462EA0
 void function_00465780(CUnit* unit);																	//0x00465780
 void removeOrderFromUnitQueue(CUnit* unit);																//0x004742D0
-void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, const CUnit* target, u16 targetUnitId);	//0x004745F0
+void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, const CUnit* target, u16 targetUnitId);	//0x004745F0
 void function_00474A70(CUnit* unit, CUnit* target, u8 orderId);											//0x00474A70
-void orderComputer_cl(CUnit* unit, u8 orderId); 														//0x00475310
 bool isTargetWithinMinMovementRange(CUnit* unit, CUnit* target, u32 range);								//0x004763D0
-bool function_00476610(CUnit* unit);																	//0x00476610
+bool function_00476610(CUnit* unit, int x, int y);														//0x00476610
 bool isUnitInWeaponRange(CUnit* unit, CUnit* target);													//0x00476870
 void getWeaponBeginIscript(CUnit* unit, IscriptAnimation::Enum anim);									//0x00476ED0
 void function_00477510(CUnit* unit);																	//0x00477510
@@ -48,8 +50,6 @@ namespace hooks {
 
 void orders_ReaverAttack1(CUnit* unit) {
 
-	//WRITE_TO_LOG("orders_ReaverAttack1");
-
 	CUnit* target = unit->orderTarget.unit;
 
 	if(target == NULL) {
@@ -62,10 +62,10 @@ void orders_ReaverAttack1(CUnit* unit) {
 		else {
 			//656B2:
 			if(unit->pAI != NULL)
-				orderComputer_cl(unit,OrderId::ComputerAI);
+				unit->orderComputerCL(OrderId::ComputerAI);
 			else
 				//656C6:
-				orderComputer_cl(unit,units_dat::ReturnToIdleOrder[unit->id]);
+				unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
 		}
 
 	}
@@ -99,23 +99,19 @@ void orders_ReaverAttack1(CUnit* unit) {
 			function_00474A70(unit,target,newOrderId);
 			prepareForNextOrder(unit);
 
-			//new status keep initial HoldingPosition and Disabled flags, and
-			//add flags set after called functions besides IsSelfDestructing
-			unit->status = status_saved |= (unit->status &= ~(UnitStatus::Disabled + UnitStatus::IsSelfDestructing));
+			//restore the "disabled" and "holding position" status if they were lost
+			unit->status &= ~(UnitStatus::Disabled + UnitStatus::HoldingPosition);
+			unit->status = status_saved | unit->status;
 
 		}
 
 	}
-
-	//WRITE_TO_LOG("orders_ReaverAttack1 END"<<std::endl);
 
 } //void orders_ReaverAttack1(CUnit* unit)
 
 ;
 
 void orders_CarrierAttack1(CUnit* unit) {
-
-	//WRITE_TO_LOG("orders_CarrierAttack1");
 
 	CUnit* target = unit->orderTarget.unit;
 
@@ -129,9 +125,9 @@ void orders_CarrierAttack1(CUnit* unit) {
 		else {
 			//65981
 			if(unit->pAI != NULL)
-				orderComputer_cl(unit,OrderId::ComputerAI);
+				unit->orderComputerCL(OrderId::ComputerAI);
 			else //65998
-				orderComputer_cl(unit,units_dat::ReturnToIdleOrder[unit->id]);
+				unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
 		}
 
 	}
@@ -146,7 +142,7 @@ void orders_CarrierAttack1(CUnit* unit) {
 			u32 status_saved = (unit->status & UnitStatus::Disabled) + (unit->status & UnitStatus::HoldingPosition);
 			u8 newOrderId;
 
-			//give orders to the interceptors
+			//give orders to interceptors/scarabs (through outHangarChild)
 			function_00465780(unit);
 
 			if(unit->id == UnitId::ProtossReaver || unit->id == UnitId::Hero_Warbringer) {
@@ -169,36 +165,31 @@ void orders_CarrierAttack1(CUnit* unit) {
 			function_00474A70(unit,target,newOrderId);
 			prepareForNextOrder(unit);
 
-			//new status keep initial HoldingPosition and Disabled flags, and
-			//add flags set after called functions besides IsSelfDestructing
-			unit->status = status_saved |= (unit->status &= ~(UnitStatus::Disabled + UnitStatus::IsSelfDestructing));
+			//restore the "disabled" and "holding position" status if they were lost
+			unit->status &= ~(UnitStatus::Disabled + UnitStatus::HoldingPosition);
+			unit->status = status_saved | unit->status;
 
 		}
 
 	}
 
-
-	//WRITE_TO_LOG("orders_CarrierAttack1 END"<<std::endl);
-
 } //void orders_CarrierAttack1(CUnit* unit)
 
 ;
 
-
 void orders_TurretAttack(CUnit* unit) {
 
-	//WRITE_TO_LOG("orders_TurretAttack");
-
 	CUnit* target;
-
-	Point16 position;	//replace [EBP-0C] as global storage
+	CUnit* current_unit;
+	u8 current_unit_weaponId;
 	
 	bool jump_to_77A45 = false;
 	bool jump_to_77A70 = false;
 	bool jump_to_77A9D = false;
-	bool jump_to_77AFE = false;
 	bool jump_to_77AB7 = false;
+	bool jump_to_77AFE = false;
 	bool jump_to_77CDA = false;
+	bool bJumpToEarlierCode;
 
 	//perform lots of checks, possibly in an attempt to
 	//auto-select a better target if the turret has choice
@@ -226,10 +217,7 @@ void orders_TurretAttack(CUnit* unit) {
 	else {
 	
 		//77A04
-		CUnit* current_unit;
-		bool bJumpToEarlierCode;
-
-		if(unit->subunit->isSubunit()) 
+		if((unit->subunit)->isSubunit()) 
 			current_unit = unit->subunit;
 		else
 			current_unit = unit;
@@ -250,281 +238,266 @@ void orders_TurretAttack(CUnit* unit) {
 		else
 			jump_to_77A45 = true;
 
-		do {
+	} //If Unit Able To Fight (various conditions)
 
-			bJumpToEarlierCode = false;
+	do {
 
-			if(jump_to_77A45) {
+		bJumpToEarlierCode = false;
 
-				jump_to_77A45 = false;
+		if(jump_to_77A45) {
 
-				unit->userActionFlags |= 1;
+			unit->userActionFlags |= 1;
 
-				if(unit->mainOrderId == OrderId::Die)
-					prepareForNextOrder(unit);	//77CED
-				else {
-					position.x = 0;
-					position.y = 0;
-					jump_to_77A70 = true;
-				}
+			if(unit->mainOrderId == OrderId::Die)
+				prepareForNextOrder(unit);	//77CED
+			else
+				jump_to_77A70 = true;
 
-			} //if(jump_to_77A45)
+		} //if(jump_to_77A45)
 
-			if(jump_to_77A70) {
+		jump_to_77A45 = false;
 
-				jump_to_77A70 = false;
+		if(jump_to_77A70) { //77A70
 
-				while(!jump_to_77CDA && unit->orderQueueTail != NULL) {
+			bool bStopLoop77A70 = false;
 
-					if(
-						!orders_dat::CanBeInterrupted[unit->orderQueueTail->orderId] && 
-						unit->orderQueueTail->orderId != OrderId::TurretGuard
-					)
-						jump_to_77CDA = true;
-					else
-						//77A94:
-						removeOrderFromUnitQueue(unit);
-				}
-				
-				if(unit->orderQueueTail == NULL)
-					jump_to_77CDA = true;
+			while(!bStopLoop77A70 && unit->orderQueueTail != NULL) {
 
-			}
-
-			if(jump_to_77A9D) {
-
-				//77A9D
-				jump_to_77A9D = false;
-
-				if(unitCanInfest(unit)) {
-
-					if(isInfestableUnit(target))
-						jump_to_77AFE = true;
-					else {
-						jump_to_77A45 = true;
-						bJumpToEarlierCode = true;
-					}
-
-				}
+				if(
+					!orders_dat::CanBeInterrupted[unit->orderQueueTail->orderId] && 
+					unit->orderQueueTail->orderId != OrderId::TurretGuard
+				)
+					bStopLoop77A70 = true;
 				else
-					jump_to_77AB7 = true;
-
+					//77A94:
+					removeOrderFromUnitQueue(unit);
 			}
+			
+			jump_to_77CDA = true;
 
-			if(jump_to_77AB7) {
+		}
 
-				jump_to_77AB7 = false;
+		jump_to_77A70 = false;
 
-				if(unit->id == UnitId::ProtossArbiter && unit->pAI != NULL) {
+		if(jump_to_77A9D) { //77A9D
+
+			if(unitCanInfest(unit)) {
+
+				if(isInfestableUnit(target))
+					jump_to_77AFE = true;
+				else {
 					jump_to_77A45 = true;
 					bJumpToEarlierCode = true;
 				}
+
+			}
+			else
+				jump_to_77AB7 = true;
+
+		}
+
+		jump_to_77A9D = false;
+
+		if(jump_to_77AB7) {
+
+			if(unit->id == UnitId::ProtossArbiter && unit->pAI != NULL) {
+				jump_to_77A45 = true;
+				bJumpToEarlierCode = true;
+			}
+			else {
+
+				//77ACC
+				if(target->status & UnitStatus::InAir)
+					current_unit_weaponId = units_dat::AirWeapon[current_unit->id]; //77AD2
+				else
+					current_unit_weaponId = current_unit->getGroundWeapon();		//77AE6
+
+				//77AF6
+				if(current_unit_weaponId == WeaponId::None) {
+					jump_to_77A45 = true;
+					bJumpToEarlierCode = true;
+				}
+				else
+					jump_to_77AFE = true;
+
+			} //if(unit->id != UnitId::ProtossArbiter || unit->pAI == NULL)
+
+		}
+
+		jump_to_77AB7 = false;
+
+		if(jump_to_77AFE) {
+
+			if(!isTargetVisible(unit,target)) {
+				jump_to_77A45 = true;
+				bJumpToEarlierCode = true;
+			}
+			else {
+
+				//77B0E
+				CUnit* current_subunit = unit->subunit;
+				bool jump_to_77BD7 = false;
+
+				if(
+					unit->id != UnitId::TerranSiegeTankTankModeTurret ||
+					current_subunit->pAI == NULL ||
+					(current_subunit->canUseTech(TechId::TankSiegeMode,unit->playerId) != TRUE) ||
+					!isUnitVisible(unit)
+				)
+					jump_to_77BD7 = true;
 				else {
 
-					u8 current_unit_weaponId;
+					//77B5F:
+					u32 result_getMaxWpnRange = unit->getMaxWeaponRange(units_dat::GroundWeapon[UnitId::TerranSiegeTankSiegeModeTurret]);
 
-					//77ACC
-					if(target->status & UnitStatus::InAir)
-						current_unit_weaponId = units_dat::AirWeapon[current_unit->id]; //77AD2
-					else
-						current_unit_weaponId = current_unit->getGroundWeapon();		//77AE6
-
-					//77AF6
-					if(current_unit_weaponId == WeaponId::None || !isTargetVisible(unit,target)) {
-						jump_to_77A45 = true;
-						bJumpToEarlierCode = true;
-					}
+					if(!isTargetWithinMinMovementRange(current_subunit,target,result_getMaxWpnRange))
+						jump_to_77BD7 = true;
 					else {
 
-						//77B0E
-						CUnit* unit_holder_for_siege_tank = unit->subunit;
-						bool jump_to_77BD7 = false;
+						//77B77:
+						result_getMaxWpnRange = unit->getMaxWeaponRange(units_dat::GroundWeapon[UnitId::TerranSiegeTankTankModeTurret]);
 
 						if(
-							unit->id != UnitId::TerranSiegeTankTankModeTurret ||
-							unit_holder_for_siege_tank->subunit->pAI == NULL ||
-							unit_holder_for_siege_tank->canUseTech(TechId::TankSiegeMode,unit->playerId) ||
-							!isUnitVisible(unit)
+							isTargetWithinMinMovementRange(current_subunit,target,result_getMaxWpnRange) ||
+							isUnitCritter(target)
 						)
 							jump_to_77BD7 = true;
-						else {
+						else { //77B9D
 
-							//77B5F:
-							u32 result_getMaxWpnRange = unit->getMaxWeaponRange(units_dat::GroundWeapon[UnitId::TerranSiegeTankSiegeModeTurret]);
+							unit->orderComputerCL(OrderId::Nothing2);
 
-							if(!isTargetWithinMinMovementRange(unit_holder_for_siege_tank,target,result_getMaxWpnRange))
-								jump_to_77BD7 = true;
-							else {
+							//this orderId is hardcoded, not calculated 
+							unit->orderSimple(units_dat::AttackUnitOrder[UnitId::TerranSiegeTankSiegeModeTurret],false);
 
-								//77B77:
-								result_getMaxWpnRange = unit->getMaxWeaponRange(units_dat::GroundWeapon[UnitId::TerranSiegeTankTankModeTurret]);
+							current_subunit->orderComputerCL(OrderId::SiegeMode);
 
-								if(
-									isTargetWithinMinMovementRange(unit_holder_for_siege_tank,target,result_getMaxWpnRange) ||
-									isUnitCritter(target)
-								)
-									jump_to_77BD7 = true;
-								else {
-
-									orderComputer_cl(unit,OrderId::Nothing2);
-
-									unit->order( //args based on 00474D60 __order function (which is the one calling this order)
-										units_dat::AttackUnitOrder[UnitId::TerranSiegeTankSiegeModeTurret],	//hardcoded unitId param
-										0,
-										0,
-										NULL,
-										UnitId::None,
-										true);
-
-									orderComputer_cl(unit_holder_for_siege_tank,OrderId::SiegeMode);
-
-									unit->order(	//using issueQueuedOrderTarget @ 74D10 logic
-										units_dat::AttackUnitOrder[UnitId::TerranSiegeTankSiegeMode],
-										target->sprite->position.x,
-										target->sprite->position.y,
-										target,
-										UnitId::None,
-										false
-									);
-
-								}
-
-							} //if(isTargetWithinMinMovementRange(unit_holder_for_siege_tank,target,result_getMaxWpnRange))
+							//this orderId is hardcoded, not calculated 
+							current_subunit->issueQueuedOrderTarget(units_dat::AttackUnitOrder[UnitId::TerranSiegeTankSiegeMode],target,false);
 
 						}
 
-						if(jump_to_77BD7) {
+					} //if(isTargetWithinMinMovementRange(current_subunit,target,result_getMaxWpnRange))
 
-							bool jump_to_77C78 = false;
-							bool jump_to_77CA1 = false;
+				}
 
-							jump_to_77BD7 = false;
+				if(jump_to_77BD7) {
 
-							if(target != NULL) {
+					bool jump_to_77C78 = false;
+					bool jump_to_77CA1 = false;
 
-								if(isTargetVisible(unit,target)) {
+					if(target != NULL) {
 
-									if(	unit->subunit != NULL && 
-										units_dat::BaseProperty[unit->subunit->id] & UnitProperty::Subunit
-									)
-										current_unit = unit->subunit;
-									else
-										current_unit = unit;
+						if(isTargetVisible(unit,target)) {
 
-									//77C0C:
-
-									if(target->status & UnitStatus::InAir)
-										current_unit_weaponId = current_unit->getAirWeapon();
-									else
-										current_unit_weaponId = current_unit->getGroundWeapon(); //include the lurker special case so it's ok
-
-									//77C40
-									if(current_unit_weaponId == WeaponId::None)
-										jump_to_77C78 = true;
-									else
-									if(	weapons_dat::MinRange[current_unit_weaponId] != 0 &&
-										isTargetWithinMinRange(current_unit, target, weapons_dat::MinRange[current_unit_weaponId])
-									)
-										jump_to_77C78 = true;
-									else {
-
-										//77C63:
-										if(	isTargetWithinMinMovementRange(
-												unit,
-												target,
-												unit->getMaxWeaponRange(current_unit_weaponId)
-											)
-										)
-											jump_to_77CA1 = true;
-										else
-											jump_to_77C78 = true;
-
-									}
-
-								} //if(isTargetVisible(unit,target))
-								else
-									jump_to_77C78 = true;
-
-							} //if(target != NULL)
+							if(	(unit->subunit)->isSubunit() )
+								current_unit = unit->subunit;
 							else
-								jump_to_77CA1 = true;
+								current_unit = unit;
 
-							if(jump_to_77C78) {
+							//77C0C:
+							if(target->status & UnitStatus::InAir)
+								current_unit_weaponId = current_unit->getAirWeapon();
+							else
+								current_unit_weaponId = current_unit->getGroundWeapon(); //include the lurker special case so it's ok
 
-								jump_to_77C78 = false;
+							//77C40
+							if(current_unit_weaponId >= WeaponId::None)
+								jump_to_77C78 = true;
+							else
+							if(	weapons_dat::MinRange[current_unit_weaponId] != 0 &&
+								isTargetWithinMinRange(current_unit, target, weapons_dat::MinRange[current_unit_weaponId])
+							)
+								jump_to_77C78 = true;
+							else {
 
-								if(	unit->subunit->mainOrderId == units_dat::AttackUnitOrder[unit->subunit->id] &&
-									getRightClickActionOrder(unit) != RightClickActions::NoMove_NormalAttack
+								//77C63:
+
+								if(	isTargetWithinMinMovementRange
+									(
+										current_unit,
+										target,
+										unit->getMaxWeaponRange(current_unit_weaponId)
+									)
 								)
 									jump_to_77CA1 = true;
 								else
-									orderComputer_cl(unit,OrderId::TurretGuard);	//77C93
+									jump_to_77C78 = true;
 
 							}
 
-							if(jump_to_77CA1) {
+						} //if(isTargetVisible(unit,target))
+						else
+							jump_to_77C78 = true;
 
-								jump_to_77CA1 = false;
+					} //if(target != NULL)
+					else
+						jump_to_77CA1 = true;
 
-								if(	unit->orderTarget.pt.x != unit->nextTargetWaypoint.x ||
-									unit->orderTarget.pt.y != unit->nextTargetWaypoint.y
-								)
-								{
-									unit->nextTargetWaypoint.x = unit->orderTarget.pt.x;
-									unit->nextTargetWaypoint.y = unit->orderTarget.pt.y;
-								}
+					if(jump_to_77C78) {
 
-								//77CC1
-								if(!(unit->subunit->movementFlags & MovementFlags::Accelerating))
-									getWeaponBeginIscript(unit,IscriptAnimation::GndAttkRpt);
+						if(	(unit->subunit)->mainOrderId == units_dat::AttackUnitOrder[(unit->subunit)->id] &&
+							getRightClickActionOrder(unit->subunit) != RightClickActions::NoMove_NormalAttack
+						)
+							jump_to_77CA1 = true;
+						else
+							unit->orderComputerCL(OrderId::TurretGuard);	//77C93
 
-							}
+					}
 
-						} //if(jump_to_77BD7)
+					jump_to_77C78 = false;
 
-					} //if (current_unit_weaponId != WeaponId::None && isTargetVisible(unit,target))
+					if(jump_to_77CA1) {
 
-				} //if(unit->id != UnitId::ProtossArbiter || unit->pAI == NULL)
+						if(	unit->orderTarget.pt.x != unit->nextTargetWaypoint.x ||
+							unit->orderTarget.pt.y != unit->nextTargetWaypoint.y
+						)
+						{
+							unit->nextTargetWaypoint.x = unit->orderTarget.pt.x;
+							unit->nextTargetWaypoint.y = unit->orderTarget.pt.y;
+						}
+
+						//77CC1
+						if(!((unit->subunit)->movementFlags & MovementFlags::Accelerating))
+							getWeaponBeginIscript(unit,IscriptAnimation::GndAttkRpt);
+
+					}
+
+					jump_to_77CA1 = false;
+
+				} //if(jump_to_77BD7)
+
+				jump_to_77BD7 = false;
 
 			}
+		} //if(jump_to_77AFE)
 
-			if(jump_to_77CDA) {
+		jump_to_77AFE = false;
+		
+		if(jump_to_77CDA) {
 
-				Point16 empty_pos = {0,0};
+			performAnotherOrder(
+				unit,
+				OrderId::TurretGuard,
+				0,
+				0,
+				NULL,
+				UnitId::None
+			);
 
-				jump_to_77CDA = false;
+			prepareForNextOrder(unit);
 
-				performAnotherOrder(
-					unit,
-					OrderId::TurretGuard,
-					&empty_pos,
-					target,
-					UnitId::None
-				);
+		}
 
-				prepareForNextOrder(unit);
+		jump_to_77CDA = false;
 
-			}
-
-		}while (bJumpToEarlierCode);
-
-	} //If Unit Able To Fight (various conditions)
-
-
-	//WRITE_TO_LOG("orders_TurretAttack END"<<std::endl);
+	} while(bJumpToEarlierCode);
 
 } //void orders_TurretAttack(CUnit* unit)
 
 
 ;
 
-//Could not be tested and thus is disabled in 
-//attack_orders_inject.cpp
-//If you find out when it's called, tell me
-//UndeadStar / BoomerangAide
 void orders_AttackFixedRange(CUnit* unit) {
-
-	WRITE_TO_LOG("orders_AttackFixedRange");
 
 	CUnit* target;
 
@@ -564,7 +537,7 @@ void orders_AttackFixedRange(CUnit* unit) {
 		bool jump_to_77DEF = false;
 
 		//77DB4:
-		if(unit->subunit->isSubunit())
+		if(unit->subunit->isSubunit()) //check if is not null AND is a subunit
 			current_unit = unit->subunit;
 		else
 			current_unit = unit;
@@ -598,16 +571,16 @@ void orders_AttackFixedRange(CUnit* unit) {
 
 				//77E09:
 				if(unit->id == UnitId::ProtossArbiter && unit->pAI != NULL)
-					jump_to_77E48;
+					jump_to_77E48 = true;
 				else {
 
 					u8 currentWeaponId;
 
 					//77E1A:
 					if(target->status & UnitStatus::InAir)
-						currentWeaponId = unit->getAirWeapon();
+						currentWeaponId = current_unit->getAirWeapon();
 					else
-						currentWeaponId = unit->getGroundWeapon();
+						currentWeaponId = current_unit->getGroundWeapon();
 
 					//77E44
 					if(currentWeaponId != WeaponId::None)
@@ -617,9 +590,9 @@ void orders_AttackFixedRange(CUnit* unit) {
 
 				}
 
-			}
+			} //unit cannot infest
 
-		}
+		} //jump_to_77DEF
 
 	} //if unit able to fight (several conditions)
 
@@ -631,9 +604,9 @@ void orders_AttackFixedRange(CUnit* unit) {
 		}
 		else
 		if(unit->pAI != NULL) //77E6B
-			orderComputer_cl(unit,OrderId::ComputerAI);
+			unit->orderComputerCL(OrderId::ComputerAI);
 		else //77E83
-			orderComputer_cl(unit,units_dat::ReturnToIdleOrder[unit->id]);
+			unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
 
 	}
 
@@ -642,19 +615,9 @@ void orders_AttackFixedRange(CUnit* unit) {
 		bool jump_to_77EC8 = false;
 		bool jump_to_77ED6 = false;
 
-		if(isUnitInWeaponRange(unit,target))
-			jump_to_77ED6 = true;
-		else
-		if(unit->pAI == NULL)
-			jump_to_77EC8 = true;
-		else
-			unit->orderTo(OrderId::AttackMove, unit->orderTarget.pt.x, unit->orderTarget.pt.y);
+		if(isUnitInWeaponRange(unit,target)) {
 
-		if(jump_to_77EC8)
-			unit->orderToIdle();
-
-		if(jump_to_77ED6) {
-
+			//77ED6
 			if(	unit->orderTarget.pt.x != unit->nextTargetWaypoint.x ||
 				unit->orderTarget.pt.y != unit->nextTargetWaypoint.y
 			)
@@ -666,19 +629,19 @@ void orders_AttackFixedRange(CUnit* unit) {
 			getWeaponBeginIscript(unit,IscriptAnimation::GndAttkRpt);
 
 		}
+		else
+		if(unit->pAI == NULL)
+			unit->orderToIdle(); //77EC8
+		else
+			unit->orderTo(OrderId::AttackMove, unit->orderTarget.pt.x, unit->orderTarget.pt.y);
 
 	}
-
-
-	WRITE_TO_LOG("orders_AttackFixedRange END"<<std::endl);
 
 } //void orders_AttackFixedRange(CUnit* unit)
 
 ;
 
 void orders_SapUnit(CUnit* unit) {
-
-	//WRITE_TO_LOG("orders_SapUnit");
 
 	CUnit* target = unit->orderTarget.unit;
 
@@ -691,9 +654,9 @@ void orders_SapUnit(CUnit* unit) {
 		else {
 
 			if(unit->pAI != NULL)
-				orderComputer_cl(unit,OrderId::ComputerAI);
+				unit->orderComputerCL(OrderId::ComputerAI);
 			else
-				orderComputer_cl(unit,units_dat::ReturnToIdleOrder[unit->id]);
+				unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
 			
 		} //if(unit->orderQueueHead == NULL)
 
@@ -704,19 +667,18 @@ void orders_SapUnit(CUnit* unit) {
 			unit->orderTo(OrderId::Move,target->sprite->position.x,target->sprite->position.y);
 		else {//7894D
 
-			//to skip mainOrderState == 3 if the function should end,
-			//but an unknown change in a subfonction could cause it
-			//to try to load mainOrderState == 3 directly instead
 			bool bStopThere = false;
 
 			if(unit->mainOrderState == 0) { //78965
 				if(moveToTarget(unit,target))
 					unit->mainOrderState = 1;
+				else
+					bStopThere = true;
 			} //if(unit->mainOrderState == 0)
 			
-			if(unit->mainOrderState == 1) { //78975
+			if(!bStopThere && unit->mainOrderState == 1) { //78975
 
-				u32 unitMovableState = getUnitMovableState(unit);
+				u32 unitMovableState = unit->getMovableState();
 				
 				if(
 					!isTargetWithinMinRange(unit,target,4) &&
@@ -728,26 +690,18 @@ void orders_SapUnit(CUnit* unit) {
 						isTargetWithinMinRange(unit,target,256) &&
 						target->movementFlags & MovementFlags::Accelerating
 					)
-					{
-
 						//maybe trigger the acceleration of the infested
 						//terran, or something else related to distances?
 						function_00495400(unit,target);
 
-						bStopThere = true;
-
-					}
-					else { //789BF
-
+					else //789BF
 						//may cause the unit to go to idle, or
 						//execute and return the (unused here) 
 						//result of moveToTarget @ 0x004EB720,
 						//or something else
 						function_004EB900(unit,target);
 
-						bStopThere = true;
-
-					}
+					bStopThere = true;
 
 				}
 				else { //789CC
@@ -798,15 +752,11 @@ void orders_SapUnit(CUnit* unit) {
 
 	} //if(target != NULL)
 
-	//WRITE_TO_LOG("orders_SapUnit END"<<std::endl);
-
 } //void orders_SapUnit(CUnit* unit)
 
 ;
 
 void orders_SapLocation(CUnit* unit) {
-
-	//WRITE_TO_LOG("orders_SapLocation");
 
 	bool bStopThere = false;
 
@@ -850,8 +800,14 @@ void orders_SapLocation(CUnit* unit) {
 					bStopThere = true;
 				}
 
-
 			}
+
+/*The original code set EAX to 0 or 1 depending on Unmovable status,
+  then add 1 to this value, thus equality to 0 is always impossible.
+  Kept an equivalent code in comment for bugchecking
+			if((unit->status & UnitStatus::Unmovable) + 1) == false
+				bStopThere = true;	
+*/
 
 			if(!bStopThere) { //78AF3
 
@@ -883,20 +839,11 @@ void orders_SapLocation(CUnit* unit) {
 
 	} //if(unit->mainOrderState == 2)
 
-	//WRITE_TO_LOG("orders_SapLocation END"<<std::endl);
-
 } //void orders_SapLocation(CUnit* unit)
 
 ;
 
-//Could not be tested and thus is disabled in 
-//attack_orders_inject.cpp
-//If you find out when it's called, tell me
-//UndeadStar / BoomerangAide
 void orders_AttackMoveEP(CUnit* unit) {
-
-	WRITE_TO_LOG("orders_AttackMoveEP");
-	WRITE_TO_LOG("used by "<<unit->getName());
 
 	u8 saved_mainOrderId = unit->mainOrderId; //[EBP-0x14]
 
@@ -912,7 +859,7 @@ void orders_AttackMoveEP(CUnit* unit) {
 		unit->mainOrderTimer = 15;
 
 		if(
-			SAI_GetRegionIdFromPxEx(unit->getX(),unit->getY())
+			SAI_GetRegionIdFromPxEx(unit->sprite->position.x,unit->sprite->position.y)
 			==
 			SAI_GetRegionIdFromPxEx(unit->orderTarget.pt.x,unit->orderTarget.pt.y)
 		)
@@ -925,7 +872,7 @@ void orders_AttackMoveEP(CUnit* unit) {
 			bool jump_to_78EAE = false;
 
 			if(
-				getUnitMovableState(unit) != 0 &&
+				unit->getMovableState() != 0 &&
 				(unit->orderTarget.pt.x != unit->sprite->position.x ||
 				 unit->orderTarget.pt.y != unit->sprite->position.y)
 			)
@@ -940,7 +887,7 @@ void orders_AttackMoveEP(CUnit* unit) {
 				)
 					jump_to_78EAE = true;
 				else //78E91
-				if(function_00476610(unit))
+				if(function_00476610(unit,(s32)unit->orderTarget.pt.x,(s32)unit->orderTarget.pt.y))
 					makeToHoldPosition(unit);
 
 			}
@@ -955,21 +902,16 @@ void orders_AttackMoveEP(CUnit* unit) {
 
 	} //if order timer is at 0 and others order checks
 
-
-	WRITE_TO_LOG("orders_AttackMoveEP END"<<std::endl);
-
 } //void orders_AttackMoveEP(CUnit* unit)
 
 ;
 
 void orders_AttackMove(CUnit* unit) {
 
-	//WRITE_TO_LOG("orders_AttackMove");
-
 	//function_00478370:
-	//probably perform checks to see if the order
-	//can be done, but which exactly I don't know
-
+	//Logically, would check if a target is in range, and
+	//if that's the case (not returning 0), stop the "move" 
+	//part that follow to attack the unit met
 	if(
 		function_00478370(unit,unit->mainOrderId) != 0 &&
 		unit->mainOrderTimer == 0
@@ -979,17 +921,17 @@ void orders_AttackMove(CUnit* unit) {
 		unit->mainOrderTimer = 15;
 
 		if(
-			unit->moveTarget.pt.x != unit->getX() ||
-			unit->moveTarget.pt.y != unit->getY()
+			unit->moveTarget.pt.x != unit->sprite->position.x ||
+			unit->moveTarget.pt.y != unit->sprite->position.y
+			/*|| (unit->status & UnitStatus::Unmovable) + 1 == 0)*/ //impossible code yet in original
 		)
+		//Logically, this function would check one last time if a target is in range,
+		//and attack it if that's the case, else AttackMove end here
 			function_00477820(unit,unit->mainOrderId); //79092
 		else
 			unit->orderToIdle();
 
 	}
-
-
-	//WRITE_TO_LOG("orders_AttackMove END"<<std::endl);
 
 } //void orders_AttackMove(CUnit* unit)
 
@@ -997,15 +939,12 @@ void orders_AttackMove(CUnit* unit) {
 
 void orders_AttackUnit(CUnit* unit) {
 
-	//WRITE_TO_LOG("orders_AttackUnit END");
-
-	bool bStopThere = false;
-
 	if(
 		playerTable[unit->playerId].type != PlayerType::Computer 
 		||
-		(	unit->orderTarget.unit != NULL && 
-			units_dat::BaseProperty[unit->orderTarget.unit->id] & UnitProperty::Building
+		(
+			unit->orderTarget.unit != NULL && 
+			units_dat::BaseProperty[(unit->orderTarget.unit)->id] & UnitProperty::Building
 		) 
 		||
 		!function_00462EA0(unit,0)	//if unit controlled by AI, do lots of things and
@@ -1030,9 +969,6 @@ void orders_AttackUnit(CUnit* unit) {
 		}
 
 	}
-
-
-	//WRITE_TO_LOG("orders_AttackUnit END"<<std::endl);
 
 } //void orders_AttackUnit(CUnit* unit)
 
@@ -1060,19 +996,6 @@ bool unitCanSeeCloakedTarget(CUnit* unit, CUnit* target) {
 
 	return (bPreResult != 0);
 
-}
-
-;
-
-//Identical to function @ 0x00401DC0;
-u32 getUnitMovableState(CUnit *unit) {
-	if (unit->moveTarget.pt != unit->sprite->position)
-		return 0;
-	else 
-	if (!(unit->status & UnitStatus::Unmovable))
-		return 1;
-	else
-		return 2;
 }
 
 ;
@@ -1118,7 +1041,7 @@ bool unitCanInfest(CUnit* unit) {
 const u32 Func_IsTargetWithinMinRange = 0x00430F10;
 bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range) {
 
-	static Bool32 bResult;
+	static Bool32 bPreResult;
 
 	__asm {
 		PUSHAD
@@ -1126,11 +1049,11 @@ bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range) {
 		PUSH range
 		MOV ECX, unit
 		CALL Func_IsTargetWithinMinRange
-		MOV bResult, EAX
+		MOV bPreResult, EAX
 		POPAD
 	}
 
-	return (bResult != 0);
+	return (bPreResult != 0);
 
 }
 
@@ -1160,7 +1083,7 @@ CUnit* findBestAttackTarget(CUnit* unit) {
 		PUSHAD
 		MOV EAX, unit
 		CALL Func_Sub443080
-		MOV EAX, result
+		MOV result, EAX
 		POPAD
 	}
 
@@ -1223,12 +1146,14 @@ void removeOrderFromUnitQueue(CUnit *unit) {
 ;
 
 const u32 Func_PerformAnotherOrder = 0x004745F0;
-void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, const CUnit* target, u16 targetUnitId) {
+void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, const CUnit* target, u16 targetUnitId) {
+
+	static Point16 pos = {x,y};
 
 	__asm {
 		PUSHAD
 		PUSH target
-		PUSH [pos]
+		PUSH pos
 		MOV BL, orderId
 		MOVZX EDX, targetUnitId
 		MOV ESI, unit
@@ -1250,21 +1175,6 @@ void function_00474A70(CUnit* unit, CUnit* target, u8 orderId) {
 		MOV EDX, unit
 		MOV EAX, target
 		CALL Func_Sub474A70
-		POPAD
-	}
-
-}
-
-;
-
-const u32 Func_OrderComputer_cl = 0x00475310;
-void orderComputer_cl(CUnit* unit, u8 orderId) {
-
-	__asm {
-		PUSHAD
-		MOV CL, orderId
-		MOV ESI, unit
-		CALL Func_OrderComputer_cl
 		POPAD
 	}
 
@@ -1294,13 +1204,15 @@ bool isTargetWithinMinMovementRange(CUnit* unit, CUnit* target, u32 range) {				
 ;
 
 const u32 Func_Sub476610 = 0x00476610;
-bool function_00476610(CUnit* unit) {
+bool function_00476610(CUnit* unit, int x, int y) {
 
 	static Bool32 bPreResult;
 
 	__asm {
 		PUSHAD
 		MOV ESI, unit
+		MOV EBX, x
+		MOV EDI, y
 		CALL Func_Sub476610
 		MOV bPreResult, EAX
 		POPAD
@@ -1315,18 +1227,18 @@ bool function_00476610(CUnit* unit) {
 const u32 Func_isUnitInWeaponRange = 0x00476870;
 bool isUnitInWeaponRange(CUnit* unit, CUnit* target) {
 
-	Bool32 pre_result;
+	static Bool32 bPreResult;
 
 	__asm {
 		PUSHAD
 		PUSH unit
 		MOV EAX, target
 		CALL Func_isUnitInWeaponRange
-		MOV pre_result, EAX
+		MOV bPreResult, EAX
 		POPAD
 	}
 
-	return (pre_result != 0);
+	return (bPreResult != 0);
 
 }
 
