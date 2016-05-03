@@ -5,8 +5,7 @@
 
 namespace {
 
-	void orderComputer_cl(CUnit* unit, u8 orderId); 								//0x00475310
-	bool setThingyVisibilityFlags(CThingy *thingy);									//0x004878F0
+	bool setThingyVisibilityFlags(CThingy* thingy);									//0x004878F0
 	CThingy* createThingy(u32 spriteId, s16 x, s16 y, u32 playerId);				//0x00488210
 	void setUnitStatTxtErrorMsg(char* message);										//0x0048CCB0
 	void playUnitSFX(u32 soundId, u16 x, u16 y, u32 unk1, u32 unk2);				//0x0048EC10
@@ -34,7 +33,7 @@ namespace hooks {
 
 		//identical code to setUnitPosition() but for some reason, is
 		//using another function to do exactly the same thing
-		function_004EBAE0(target,caster->getX(),caster->getY());
+		function_004EBAE0(target,caster->sprite->position.x,caster->sprite->position.y);
 
 		if(!scbw::checkUnitCollisionPos(target,&(caster->sprite->position),&new_pos,NULL,false,0))
 			//collision detected, cancel the movement
@@ -51,7 +50,7 @@ namespace hooks {
 
 			//stop some currently active orders
 			if(target->id != UnitId::ZergCocoon)
-				orderComputer_cl(target,units_dat::ReturnToIdleOrder[target->id]);
+				target->orderComputerCL(units_dat::ReturnToIdleOrder[target->id]);
 			
 			//create the Recall animation over the unit
 			recall_effect_sprite = createThingy(SpriteId::Recall_Field,new_pos.x,new_pos.y,0);
@@ -200,8 +199,8 @@ namespace hooks {
 					unit->energy -= techdata_dat::EnergyCost[TechId::Recall];
 
 				if(unit->orderTarget.unit != NULL) {
-					unit->orderTarget.pt.x = unit->orderTarget.unit->getX();
-					unit->orderTarget.pt.y = unit->orderTarget.unit->getY();
+					unit->orderTarget.pt.x = unit->orderTarget.unit->sprite->position.x;
+					unit->orderTarget.pt.y = unit->orderTarget.unit->sprite->position.y;
 				}
 
 				recall_effect_sprite =
@@ -278,25 +277,10 @@ namespace hooks {
 
 namespace {
 
-	const u32 Func_OrderComputer_cl = 0x00475310;
-	void orderComputer_cl(CUnit* unit, u8 orderId) {
-
-		__asm {
-			PUSHAD
-			MOV CL, orderId
-			MOV ESI, unit
-			CALL Func_OrderComputer_cl
-			POPAD
-		}
-
-	}
-
-	;
-
 	//original referenced name was sub_4878F0, but using
 	//the name from bunker_hooks.cpp since it got meaning
 	const u32 Func_SetThingyVisibilityFlags = 0x004878F0;
-	bool setThingyVisibilityFlags(CThingy *thingy) {
+	bool setThingyVisibilityFlags(CThingy* thingy) {
 
 		static Bool32 bPreResult;
 
