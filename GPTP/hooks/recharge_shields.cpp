@@ -149,18 +149,20 @@ namespace {
 
 const u32 Helper_OrderToMoveToTarget = 0x004EB980;
 bool orderToMoveToTarget(CUnit *unit, const CUnit *target) {
-  static u32 result;
-  
-  __asm {
-    PUSHAD
-    MOV EAX, target
-    MOV ECX, unit
-    CALL Helper_OrderToMoveToTarget
-    MOV result, EAX
-    POPAD
-  }
 
-  return result != 0;
+	static Bool32 result;
+  
+	__asm {
+		PUSHAD
+		MOV EAX, target
+		MOV ECX, unit
+		CALL Helper_OrderToMoveToTarget
+		MOV result, EAX
+		POPAD
+	}
+
+	return result != 0;
+
 }
 
 //Identical to function @ 0x00401DC0;
@@ -175,6 +177,7 @@ int getUnitMovementState(const CUnit *unit) {
 
 const u32 Helper_OrderToHoldPosition = 0x004EB5B0;
 void orderToHoldPosition(CUnit *unit) {
+
   __asm {
     PUSHAD
     MOV ESI, unit
@@ -185,6 +188,7 @@ void orderToHoldPosition(CUnit *unit) {
 
 const u32 Helper_InsertFirstOrder = 0x004749D0;
 void insertFirstOrder(CUnit *unit, u8 orderId) {
+
   __asm {
     PUSHAD
     MOV AL, orderId
