@@ -12,12 +12,10 @@
 
 namespace {
 
-	u32 getUnitMovableState(CUnit *unit);									//0x00401DC0
 	bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range);		//0x00430F10
 	bool advanceRemainingBuildTime_Sub466940(CUnit* unit);					//0x00466940
 	u8 function_0046A820(CUnit* unit);										//0x0046A820
 	void orderImmediate(CUnit* unit, u8 order);								//0x00474B40
-	void orderComputer_cl(CUnit *unit, u8 orderId); 						//0x00475310
 	void actUnitReturnToIdle(CUnit *unit);									//0x00475420
 	void playMorphingCompleteSound(CUnit* unit);							//0x0048F440
 	void mergeStatusIntoUnit_Sub493180(CUnit* unit_dst, CUnit* unit_src);	//0x00493180
@@ -175,9 +173,9 @@ void orders_WarpingDarkArchon(CUnit* unit) {
 
 			//9487D
 			if(unit->pAI != NULL)
-				orderComputer_cl(unit, OrderId::ComputerAI);
+				unit->orderComputerCL(OrderId::ComputerAI);
 			else
-				orderComputer_cl(unit, units_dat::ReturnToIdleOrder[unit->id]);
+				unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
 
 		}
 
@@ -207,7 +205,7 @@ void orders_WarpingDarkArchon(CUnit* unit) {
 
 			//94724
 
-			if(unit->mainOrderState != 0 && getUnitMovableState(unit) == 2) {
+			if(unit->mainOrderState != 0 && unit->getMovableState() == 2) {
 				makeToHoldPosition(unit);
 				unit->orderToIdle();
 			}
@@ -273,7 +271,7 @@ void orders_WarpingDarkArchon(CUnit* unit) {
 
 				} //if(distanceBetweenUnits <= 19)
 
-			} //if(unit->mainOrderState == 0 || getUnitMovableState(unit) != 2)
+			} //if(unit->mainOrderState == 0 || unit->getMovableState() != 2)
 
 		} //if(distanceBetweenUnits > 20)
 		else {
@@ -312,7 +310,7 @@ void orders_WarpingDarkArchon(CUnit* unit) {
 			unit->status &= ~UnitStatus::IsBuilding; //disable the flag if set
 			function_0046A820(unit); ////pathing related
 
-			orderComputer_cl(unit, OrderId::CompletingArchonSummon);
+			unit->orderComputerCL(OrderId::CompletingArchonSummon);
 
 		} //if(distanceBetweenUnits <= 20)
 
@@ -360,9 +358,9 @@ void orders_WarpingArchon(CUnit* unit) {
 
 			//94A84
 			if(unit->pAI != NULL)
-				orderComputer_cl(unit, OrderId::ComputerAI);
+				unit->orderComputerCL(OrderId::ComputerAI);
 			else
-				orderComputer_cl(unit, units_dat::ReturnToIdleOrder[unit->id]);
+				unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
 
 		}
 
@@ -392,7 +390,7 @@ void orders_WarpingArchon(CUnit* unit) {
 
 			//94944
 
-			if(unit->mainOrderState != 0 && getUnitMovableState(unit) == 2) {
+			if(unit->mainOrderState != 0 && unit->getMovableState() == 2) {
 				makeToHoldPosition(unit);
 				unit->orderToIdle();
 			}
@@ -459,7 +457,7 @@ void orders_WarpingArchon(CUnit* unit) {
 
 				} //if(distanceBetweenUnits <= 19)
 
-			} //if(unit->mainOrderState == 0 || getUnitMovableState(unit) != 2)
+			} //if(unit->mainOrderState == 0 || unit->getMovableState() != 2)
 
 		} //if(distanceBetweenUnits > 20)
 		else {
@@ -494,7 +492,7 @@ void orders_WarpingArchon(CUnit* unit) {
 			unit->status &= ~UnitStatus::IsBuilding; //disable the flag if set
 			function_0046A820(unit); ////pathing related
 
-			orderComputer_cl(unit, OrderId::CompletingArchonSummon);
+			unit->orderComputerCL(OrderId::CompletingArchonSummon);
 
 		} //if(distanceBetweenUnits <= 20)
 
@@ -507,19 +505,6 @@ void orders_WarpingArchon(CUnit* unit) {
 //-------- Helper function definitions. Do NOT modify! --------//
 
 namespace {
-
-//Identical to function @ 0x00401DC0;
-u32 getUnitMovableState(CUnit *unit) {
-	if (unit->moveTarget.pt != unit->sprite->position)
-		return 0;
-	else 
-	if (!(unit->status & UnitStatus::Unmovable))
-		return 1;
-	else
-		return 2;
-}
-
-;
 
 u32 Func_IsTargetWithinMinRange = 0x00430F10;
 bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range) {
@@ -593,21 +578,6 @@ void orderImmediate(CUnit* unit, u8 order) {
 		CALL Func_OrderImmediate
 		POPAD
 	}
-
-}
-
-;
-
-const u32 Func_OrderComputer_cl = 0x00475310;
-void orderComputer_cl(CUnit *unit, u8 orderId) {
-
-  __asm {
-    PUSHAD
-    MOV CL, orderId
-    MOV ESI, unit
-    CALL Func_OrderComputer_cl
-    POPAD
-  }
 
 }
 
