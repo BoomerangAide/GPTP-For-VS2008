@@ -9,7 +9,7 @@ CUnit* MedicHeal_TargetAcquire(CUnit* medic);															//0x004422A0
 CUnit* findBestAttackTarget(CUnit* unit);																//0x00443080
 u32 doMedicHeal(CUnit* unit, CUnit* target);															//0x00463C40
 void removeOrderFromUnitQueue(CUnit* unit);																//0x004742D0
-void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, CUnit* target, u16 targetUnitId);		//0x004745F0
+void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId);		//0x004745F0
 void orderImmediate(CUnit* unit, u8 order);																//0x00474B40
 void function_00476FC0(CUnit* unit, CUnit* target, u32 unk1, u32 unk2);									//0x00476FC0
 Bool32 function_004770E0(CUnit* unit);																	//0x004770E0
@@ -26,11 +26,12 @@ void orders_MedicHoldPosition(CUnit* unit) {
 
 	if(unit->mainOrderState == 0) {
 
+		//change move target destination to current position
 		setNextWaypoint_Sub4EB290(unit);
 
 		if(
-			unit->moveTarget.pt.x != unit->nextTargetWaypoint.x ||
-			unit->moveTarget.pt.y != unit->nextTargetWaypoint.y
+			unit->nextTargetWaypoint.x != unit->moveTarget.pt.x ||
+			unit->nextTargetWaypoint.y != unit->moveTarget.pt.y
 		)
 		{
 			unit->nextTargetWaypoint.x = unit->moveTarget.pt.x;
@@ -60,7 +61,9 @@ void orders_MedicHoldPosition(CUnit* unit) {
 	if(switchValue == 0 || switchValue == 2 || switchValue == 3) //640CD
 		unit->sprite->playIscriptAnim(IscriptAnimation::WalkingToIdle,true);
 
-	if(switchValue != 1) { //640D9
+	//640D9, continued into for values 0,2,3, and jumped into for values
+	//above 3, thus only switchValue of 1 don't go through it
+	if(switchValue != 1) {
 
 		//if timer is 0, seek a target in range
 		if(unit->mainOrderTimer == 0) {
@@ -69,8 +72,8 @@ void orders_MedicHoldPosition(CUnit* unit) {
 			unit->orderTarget.unit = MedicHeal_TargetAcquire(unit);
 
 			if(unit->orderTarget.unit != NULL) {
-				unit->orderTarget.pt.x = (unit->orderTarget.unit)->getX();
-				unit->orderTarget.pt.y = (unit->orderTarget.unit)->getY();
+				unit->orderTarget.pt.x = (unit->orderTarget.unit)->sprite->position.x;
+				unit->orderTarget.pt.y = (unit->orderTarget.unit)->sprite->position.y;
 			}
 				
 		}
@@ -97,17 +100,15 @@ void orders_MedicHoldPosition(CUnit* unit) {
 
 		//64146
 		if(
-			(unit->orderTarget.unit)->getX() != unit->nextTargetWaypoint.x ||
-			(unit->orderTarget.unit)->getY() != unit->nextTargetWaypoint.y
+			(unit->orderTarget.unit)->sprite->position.x != unit->nextTargetWaypoint.x ||
+			(unit->orderTarget.unit)->sprite->position.y != unit->nextTargetWaypoint.y
 		)
 		{
-			unit->nextTargetWaypoint.x = (unit->orderTarget.unit)->getX();
-			unit->nextTargetWaypoint.y = (unit->orderTarget.unit)->getY();
+			unit->nextTargetWaypoint.x = (unit->orderTarget.unit)->sprite->position.x;
+			unit->nextTargetWaypoint.y = (unit->orderTarget.unit)->sprite->position.y;
 		}
 
 	}
-
-
 
 } //void orders_MedicHoldPosition(CUnit* unit)
 
@@ -116,8 +117,9 @@ void orders_MedicHoldPosition(CUnit* unit) {
 void orders_ReaverStop(CUnit* unit) {
 
 	CUnit* outHangarChild = unit->carrier.outHangarChild;
-	Point16 pos = {0,0}; //[EBP-0x08]
+	Point16 pos;
 
+	//change move target destination to current position
 	setNextWaypoint_Sub4EB290(unit);
 
 	if(
@@ -140,19 +142,25 @@ void orders_ReaverStop(CUnit* unit) {
 
 			while(outHangarChild->orderQueueTail != NULL && !bNotRemovableOrder) {
 
-				if(!orders_dat::CanBeInterrupted[outHangarChild->orderQueueTail->orderId]) {
-					if(outHangarChild->orderQueueTail->orderId != OrderId::SelfDestrucing)
-						bNotRemovableOrder = true;
-					else
-						removeOrderFromUnitQueue(outHangarChild);
-				}
+				if(
+					!orders_dat::CanBeInterrupted[outHangarChild->orderQueueTail->orderId] &&
+					outHangarChild->orderQueueTail->orderId != OrderId::SelfDestrucing
+				) 
+					bNotRemovableOrder = true;
 				else
 					removeOrderFromUnitQueue(outHangarChild);
 
 			}
 
 			//65539
-			performAnotherOrder(outHangarChild,OrderId::SelfDestrucing,&pos,NULL,UnitId::None);
+			performAnotherOrder(
+				outHangarChild,
+				OrderId::SelfDestrucing,
+				0,
+				0,
+				NULL,
+				UnitId::None
+			);
 
 		}
 
@@ -167,8 +175,8 @@ void orders_ReaverStop(CUnit* unit) {
 	unit->userActionFlags |= 1;
 
 	if(unit->orderTarget.unit != NULL) {
-		pos.x = (unit->orderTarget.unit)->getX();
-		pos.y = (unit->orderTarget.unit)->getY();
+		pos.x = (unit->orderTarget.unit)->sprite->position.x;
+		pos.y = (unit->orderTarget.unit)->sprite->position.y;
 	}
 	else {
 		pos.x = 0;
@@ -176,26 +184,31 @@ void orders_ReaverStop(CUnit* unit) {
 	}
 
 	//65598
-
 	if(unit->mainOrderId != OrderId::Die) {
 
 		bool bNotRemovableOrder = false;
 
 		while(unit->orderQueueTail != NULL && !bNotRemovableOrder) {
 
-			if(!orders_dat::CanBeInterrupted[unit->orderQueueTail->orderId]) {
-				if(unit->orderQueueTail->orderId != OrderId::Reaver)
-					bNotRemovableOrder = true;
-				else
-					removeOrderFromUnitQueue(unit);
-			}
+			if(
+				!orders_dat::CanBeInterrupted[unit->orderQueueTail->orderId] &&
+				unit->orderQueueTail->orderId != OrderId::Reaver
+			)
+				bNotRemovableOrder = true;
 			else
 				removeOrderFromUnitQueue(unit);
 
 		}
 
 		//655C3
-		performAnotherOrder(unit,OrderId::Reaver,&pos,unit->orderTarget.unit,UnitId::None);
+		performAnotherOrder(
+			unit,
+			OrderId::Reaver,
+			pos.x,
+			pos.y,
+			unit->orderTarget.unit,
+			UnitId::None
+		);
 
 	}
 
@@ -208,9 +221,12 @@ void orders_ReaverStop(CUnit* unit) {
 
 void orders_Guard(CUnit* unit) {
 
-	unit->mainOrderTimer = RandBetween(0,15,29);
+	unit->mainOrderTimer = (u8)RandBetween(0,15,29);
 
 	if(playerTable[unit->playerId].type == PlayerType::Computer) {
+
+		//since details about pAI structure are unknown, have to use this
+		static u8* const pAI_subparameter = (u8*)( ( (int)(unit->pAI) ) + 8 );
 
 		unit->mainOrderId = OrderId::ComputerAI;
 
@@ -220,8 +236,8 @@ void orders_Guard(CUnit* unit) {
 				unit->mainOrderId = OrderId::PlayerGuard;
 
 		}
-		else
-		if(((u8*)unit->pAI)[8] == 1)
+		else //75BD6
+		if( *pAI_subparameter == 1 )
 			unit->mainOrderId = OrderId::GuardPost;
 
 	}
@@ -232,9 +248,9 @@ void orders_Guard(CUnit* unit) {
 
 ;
 
-;
-
 //NOT HOOKED (since most of the action happen in another function)
+//Just here to show that the true code is in function_004774A0, though
+//a few things happen before
 void orders_TurretGuard(CUnit* unit) {
 
 	if(
@@ -248,7 +264,7 @@ void orders_TurretGuard(CUnit* unit) {
 
 	function_004774A0(unit);
 
-}
+} //void orders_TurretGuard(CUnit* unit)
 
 ;
 
@@ -286,12 +302,11 @@ void function_004774A0(CUnit* unit) {
 
 			}
 
-
 		}
 
 	}
 
-}
+} //void function_004774A0(CUnit* unit)
 
 ;
 
@@ -332,7 +347,7 @@ CUnit* findBestAttackTarget(CUnit* unit) {
 		PUSHAD
 		MOV EAX, unit
 		CALL Func_Sub443080
-		MOV EAX, result
+		MOV result, EAX
 		POPAD
 	}
 
@@ -367,25 +382,27 @@ void removeOrderFromUnitQueue(CUnit* unit) {
 
 	static COrder* orderQueueHead = unit->orderQueueHead;
 
-  __asm {
-    PUSHAD
-	MOV ECX, unit
-	MOV EAX, orderQueueHead
-	CALL Func_removeOrderFromUnitQueue
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV ECX, unit
+		MOV EAX, orderQueueHead
+		CALL Func_removeOrderFromUnitQueue
+		POPAD
+	}
 
 }
 
 ;
 
 const u32 Func_PerformAnotherOrder = 0x004745F0;
-void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, CUnit* target, u16 targetUnitId) {
+void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId) {
+
+	static Point16 pos = {x,y};
 
 	__asm {
 		PUSHAD
 		PUSH target
-		PUSH [pos]
+		PUSH pos
 		MOV BL, orderId
 		MOVZX EDX, targetUnitId
 		MOV ESI, unit
@@ -443,7 +460,7 @@ Bool32 function_004770E0(CUnit* unit) {
 		POPAD
 	}
 
-	return return_value;
+	return (return_value != 0);
 
 }
 
