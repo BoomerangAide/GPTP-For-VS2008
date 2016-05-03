@@ -15,6 +15,7 @@ Update 3:
 ** Stop/Hold Position orders hooks **
 ** Recall Spell hooks **
 ** Enter Nydus hooks **
+** Weapon/Spell Hit hooks **
 
 *Planned:
     -more hooks for orders
