@@ -6,7 +6,6 @@
 namespace {
 
 	void setUnitPathing(CUnit* unit, u8 unkPathRelated);															//0x00401360
-	u32 getUnitMovableState(CUnit *unit);																			//0x00401DC0
 	bool isUnitPositions2Equal(CUnit* unit);																		//0x00402160
 	CUnit* connectAddonCheck(CUnit* unit);																			//0x004404A0
 	void function_00463470(CUnit* unit);																			//0x00463470
@@ -21,9 +20,8 @@ namespace {
 	void function_0046A5A0(CUnit* unit);																			//0x0046A5A0
 	u32 function_00473FB0(CUnit* unit, u8 playerId, int x, int y, u16 unitId, u8 unk1, u8 unk2, u8 unk3, u8 unk4 );	//0x00473FB0
 	void removeOrderFromUnitQueue(CUnit *unit);																		//0x004742D0
-	void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, CUnit* target, u16 targetUnitId);				//0x004745F0
+	void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId);				//0x004745F0
 	void function_00474760(CUnit* unit, COrder* order, u8 orderId);													//0x00474760
-	void orderComputer_cl(CUnit *unit, u8 orderId); 																//0x00475310
 	void actUnitReturnToIdle(CUnit *unit);																			//0x00475420
 	bool function_0047DF90(CUnit *unit);																			//0x0047DF90
 	void refreshLayer3And4();																						//0x0048D9A0
@@ -72,7 +70,14 @@ void orders_BuildingLand(CUnit* unit) {
 			}
 
 			//643D3:
-			performAnotherOrder(unit, OrderId::BuildingLiftoff, &coords, NULL, 0);
+			performAnotherOrder(
+				unit, 
+				OrderId::BuildingLiftoff, 
+				coords.x,
+				coords.y, 
+				NULL, 
+				0
+			);
 
 		} //if( (unit->mainOrderId != OrderId::Die) )
 
@@ -85,7 +90,14 @@ void orders_BuildingLand(CUnit* unit) {
 				removeOrderFromUnitQueue(unit);
 
 			//6440A:
-			performAnotherOrder(unit,OrderId::BuildingLand,&unitTarget.pt,unitTarget.unit,UnitId::None);
+			performAnotherOrder(
+				unit,
+				OrderId::BuildingLand,
+				unitTarget.pt.x,
+				unitTarget.pt.y,
+				unitTarget.unit,
+				UnitId::None
+			);
 
 		}
 
@@ -105,7 +117,7 @@ void orders_BuildingLand(CUnit* unit) {
 	if(unit->mainOrderState == 1) {
 
 		//6448A
-		if(getUnitMovableState(unit) != 0) {
+		if(unit->getMovableState() != 0) {
 
 			int x,y;
 
@@ -168,7 +180,7 @@ void orders_BuildingLand(CUnit* unit) {
 
 			} //if(return_00473FB0 == 0)
 
-		} //if(getUnitMovableState(unit) != 0)
+		} //if(unit->getMovableState()) != 0)
 
 	} //if(unit->mainOrderState == 1)
 	else
@@ -207,7 +219,7 @@ void orders_BuildingLand(CUnit* unit) {
 
 		//645C7:
 		//orderSignal is set by IScript animation
-		if( (getUnitMovableState(unit) != 0) && (unit->orderSignal & 0x10) ) {
+		if( (unit->getMovableState() != 0) && (unit->orderSignal & 0x10) ) {
 
 			CUnit* addon;
 
@@ -279,7 +291,7 @@ void orders_BuildingLand(CUnit* unit) {
 
 					//646AF
 					if(unit->orderQueueHead == NULL)
-						orderComputer_cl(unit,units_dat::ReturnToIdleOrder[unit->id]);
+						unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
 
 				}
 
@@ -326,7 +338,7 @@ void orders_BuildingLand(CUnit* unit) {
 
 			}
 
-		} //if( (getUnitMovableState(unit) != 0) && (unit->orderSignal & 0x10) )
+		} //if( (unit->getMovableState() != 0) && (unit->orderSignal & 0x10) )
 
 	} //if(unit->mainOrderState == 3)
 
@@ -424,19 +436,6 @@ void setUnitPathing(CUnit* unit, u8 unkPathRelated) {
 		POPAD
 	}
 
-}
-
-;
-
-//Identical to function @ 0x00401DC0;
-u32 getUnitMovableState(CUnit *unit) {
-	if (unit->moveTarget.pt != unit->sprite->position)
-		return 0;
-	else 
-	if (!(unit->status & UnitStatus::Unmovable))
-		return 1;
-	else
-		return 2;
 }
 
 ;
@@ -652,15 +651,15 @@ u32 function_00473FB0(CUnit* unit, u8 playerId, int x, int y, u16 unitId, u8 unk
 ;
 
 const u32 Func_removeOrderFromUnitQueue = 0x004742D0;
-void removeOrderFromUnitQueue(CUnit *unit) {
-	
+void removeOrderFromUnitQueue(CUnit* unit) {
+
 	static COrder* orderQueueHead = unit->orderQueueHead;
 
 	__asm {
 		PUSHAD
 		MOV ECX, unit
 		MOV EAX, orderQueueHead
-		CALL Func_RemoveOrderFromUnitQueue
+		CALL Func_removeOrderFromUnitQueue
 		POPAD
 	}
 
@@ -669,12 +668,14 @@ void removeOrderFromUnitQueue(CUnit *unit) {
 ;
 
 const u32 Func_PerformAnotherOrder = 0x004745F0;
-void performAnotherOrder(CUnit* unit, u8 orderId, Point16* pos, CUnit* target, u16 targetUnitId) {
+void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId) {
+
+	Point16 pos = {x,y};
 
 	__asm {
 		PUSHAD
 		PUSH target
-		PUSH [pos]
+		PUSH pos
 		MOV BL, orderId
 		MOVZX EDX, targetUnitId
 		MOV ESI, unit
@@ -698,21 +699,6 @@ void function_00474760(CUnit* unit, COrder* order, u8 orderId) {
 		CALL Func_Sub474760
 		POPAD
 	}
-
-}
-
-;
-
-const u32 Func_OrderComputer_cl = 0x00475310;
-void orderComputer_cl(CUnit* unit, u8 orderId) {
-
-  __asm {
-    PUSHAD
-    MOV CL, orderId
-    MOV ESI, unit
-    CALL Func_OrderComputer_cl
-    POPAD
-  }
 
 }
 
@@ -882,7 +868,7 @@ void function_004C3B40(CUnit* unit) {
 
 const u32 Func_Sub4EB9C0 = 0x004EB9C0;
 bool function_004EB9C0(CUnit* unit, int x, int y) {
-	
+
 	static Bool32 bPreResult;
 
 	__asm {
@@ -894,7 +880,7 @@ bool function_004EB9C0(CUnit* unit, int x, int y) {
 		MOV bPreResult, EAX
 		POPAD
 	}
-	
+
 	return (bPreResult != 0);
 
 }
