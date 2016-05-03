@@ -200,6 +200,14 @@
 			<File
 				RelativePath=".\hooks\interface\buttonsets_inject.cpp"
 				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\spells\cast_order.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\cast_order_inject.cpp"
+				>
 			</File>			
 			<File
 				RelativePath=".\configure.cpp"
@@ -304,6 +312,14 @@
 			<File
 				RelativePath=".\hooks\orders\base_orders\stopholdpos_orders_inject.cpp"
 				>
+			</File>	
+			<File
+				RelativePath=".\hooks\wpnspellhit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\wpnspellhit_inject.cpp"
+				>
 			</File>			
 			<Filter
 				Name="Subfolders"
@@ -396,14 +412,6 @@
 				</File>
 				<File
 					RelativePath=".\hooks\cloak_tech_inject.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\hooks\consume.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\hooks\consume_inject.cpp"
 					>
 				</File>
 				<File
@@ -738,6 +746,10 @@
 			<File
 				RelativePath=".\hooks\interface\buttonsets.h"
 				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\spells\cast_order.h"
+				>
 			</File>			
 			<File
 				RelativePath=".\definitions.h"
@@ -815,6 +827,10 @@
 				RelativePath=".\types.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\wpnspellhit.h"
+				>
+			</File>			
 			<Filter
 				Name="Subfolders"
 				>
@@ -872,10 +888,6 @@
 				</File>
 				<File
 					RelativePath=".\SCBW\structures\common.h"
-					>
-				</File>
-				<File
-					RelativePath=".\hooks\consume.h"
 					>
 				</File>
 				<File
