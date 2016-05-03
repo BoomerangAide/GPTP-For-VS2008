@@ -95,13 +95,17 @@ struct CUnit: public CUnitLayout {
   /// Checks if the current unit is a subunit (i.e. not NULL and has the
   /// UnitProperty::Subunit flag set).
   bool isSubunit() const;
-  
+
   /// Checks if the current unit is a factory (i.e. not NULL and has the
   /// flag isFactory from GroupFlags set).
   bool isFactory() const;
   
   /// Checks if the unit is a spellcaster (has energy) and not a hallucination.
   bool isValidCaster() const;
+
+  /// Checks if the unit is at move destination (0), or if the unit is
+  /// unmovable (2) or not (1)
+  u32 getMovableState() ;
   
   //////////////////////////////////////////////////////////////// @}
 
@@ -165,6 +169,9 @@ struct CUnit: public CUnitLayout {
   
   /// Removes the Stasis Field effect from the unit.
   void removeStasisField();
+
+  /// Removes the Acid Spores effect from the unit.
+  void removeAcidSpores();
   
   //////////////////////////////////////////////////////////////// @}
 
@@ -176,6 +183,15 @@ struct CUnit: public CUnitLayout {
 
   /// Issue the @p order to the unit, using the given position as the target.
   void orderTo(u8 orderId, u16 x, u16 y);
+
+  //  Issue the @p order to the unit, without a target
+  void orderComputerCL(u8 orderId);
+
+  //  Issue the @p order to the unit and specify if previous orders should be stopped
+  void orderSimple(u8 orderId, bool stopPreviousOrders);
+
+  //  Issue the @p order to the unit, using the given @p target unit and specify if previous orders should be stopped
+  void issueQueuedOrderTarget(u8 orderId, CUnit* target, bool stopPreviousOrders);
 
   /// Causes the unit to become idle.
   void orderToIdle();
