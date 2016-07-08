@@ -20,7 +20,7 @@ void AI_AttackUnit(CUnit* unit);																		//0x0043FFD0
 CUnit* findBestAttackTarget(CUnit* unit);																//0x00443080
 bool function_00462EA0(CUnit* unit, u8 unknownByteValue);												//0x00462EA0
 void function_00465780(CUnit* unit);																	//0x00465780
-void removeOrderFromUnitQueue(CUnit* unit);																//0x004742D0
+void removeOrderFromUnitQueue(CUnit* unit, COrder* order);												//0x004742D0																//0x004742D0
 void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, const CUnit* target, u16 targetUnitId);	//0x004745F0
 void function_00474A70(CUnit* unit, CUnit* target, u8 orderId);											//0x00474A70
 bool isTargetWithinMinMovementRange(CUnit* unit, CUnit* target, u32 range);								//0x004763D0
@@ -270,7 +270,7 @@ void orders_TurretAttack(CUnit* unit) {
 					bStopLoop77A70 = true;
 				else
 					//77A94:
-					removeOrderFromUnitQueue(unit);
+					removeOrderFromUnitQueue(unit,unit->orderQueueTail);
 			}
 			
 			jump_to_77CDA = true;
@@ -1129,17 +1129,15 @@ void function_00465780(CUnit* unit) {
 ;
 
 const u32 Func_removeOrderFromUnitQueue = 0x004742D0;
-void removeOrderFromUnitQueue(CUnit *unit) {
+void removeOrderFromUnitQueue(CUnit* unit, COrder* order) {
 
-	static COrder* orderQueueHead = unit->orderQueueHead;
-
-  __asm {
-    PUSHAD
-	MOV ECX, unit
-	MOV EAX, orderQueueHead
-	CALL Func_removeOrderFromUnitQueue
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV ECX, unit
+		MOV EAX, order
+		CALL Func_removeOrderFromUnitQueue
+		POPAD
+	}
 
 }
 
