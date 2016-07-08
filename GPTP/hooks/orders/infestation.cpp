@@ -8,7 +8,7 @@ namespace {
 void orderReturnToIdle(CUnit* unit);												//0x00463770
 void disconnectFromAddOn(CUnit* unit);												//0x00464930
 void refundAllQueueSlots(CUnit* unit);												//0x00466E80
-void removeOrderFromUnitQueue(CUnit* unit);											//0x004742D0
+void removeOrderFromUnitQueue(CUnit* unit, COrder* order);							//0x004742D0
 void actUnitReturnToIdle(CUnit* unit);												//0x00475420
 void incrementUnitDeathScores(CUnit* unit, u8 player);								//0x00488AF0
 void incrementUnitScores(CUnit* unit, s8 value);									//0x00488BF0, 0x00488D50
@@ -132,9 +132,9 @@ namespace hooks {
 					//refund what the unit was producing
 					refundAllQueueSlots(unitInfested);
 
-					//clear the orders queue of the unit
+					//clear the orders queue of the unit (hardcoding function @ 0x004744D0)
 					while(unitInfested->orderQueueHead != NULL)
-						removeOrderFromUnitQueue(unitInfested);
+						removeOrderFromUnitQueue(unitInfested, unitInfested->orderQueueHead);
 
 					if((unitInfested->status & UnitStatus::GroundedBuilding)) {
 
@@ -347,14 +347,12 @@ void refundAllQueueSlots(CUnit* unit) {
 ;
 
 const u32 Func_removeOrderFromUnitQueue = 0x004742D0;
-void removeOrderFromUnitQueue(CUnit* unit) {
-
-	static COrder* orderQueueHead = unit->orderQueueHead;
+void removeOrderFromUnitQueue(CUnit* unit, COrder* order) {
 
   __asm {
     PUSHAD
 	MOV ECX, unit
-	MOV EAX, orderQueueHead
+	MOV EAX, order
 	CALL Func_removeOrderFromUnitQueue
     POPAD
   }
