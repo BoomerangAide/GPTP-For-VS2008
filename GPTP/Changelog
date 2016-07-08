@@ -12,6 +12,7 @@ Update 3:
 -Fix for drawEllipse graphics function and adding drawDottedEllipse function
 -Fix for CUnit::getColor (so it return the correct value...probably all the time)
 -Fix for units cloaking hook (could cause crashes if used from another hook, or lead to instability)
+-Fix for removeOrderFromUnitQueue helper function (could cause freeze through infinite loops)
 -Changes on buttonsets hook (maybe easier to debug this way)
 -Add StringEmpty variable in scbwdata.h (in case Starcraft would check if a string is empty by comparing
 	the pointer to a char* to that value (could happen since it's the official empty string address))
