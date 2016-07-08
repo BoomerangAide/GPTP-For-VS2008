@@ -8,7 +8,7 @@ namespace {
 CUnit* MedicHeal_TargetAcquire(CUnit* medic);															//0x004422A0
 CUnit* findBestAttackTarget(CUnit* unit);																//0x00443080
 u32 doMedicHeal(CUnit* unit, CUnit* target);															//0x00463C40
-void removeOrderFromUnitQueue(CUnit* unit);																//0x004742D0
+void removeOrderFromUnitQueue(CUnit* unit, COrder* order);												//0x004742D0
 void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId);		//0x004745F0
 void orderImmediate(CUnit* unit, u8 order);																//0x00474B40
 void function_00476FC0(CUnit* unit, CUnit* target, u32 unk1, u32 unk2);									//0x00476FC0
@@ -148,7 +148,7 @@ void orders_ReaverStop(CUnit* unit) {
 				) 
 					bNotRemovableOrder = true;
 				else
-					removeOrderFromUnitQueue(outHangarChild);
+					removeOrderFromUnitQueue(outHangarChild, outHangarChild->orderQueueTail);
 
 			}
 
@@ -196,7 +196,7 @@ void orders_ReaverStop(CUnit* unit) {
 			)
 				bNotRemovableOrder = true;
 			else
-				removeOrderFromUnitQueue(unit);
+				removeOrderFromUnitQueue(unit, unit->orderQueueTail);
 
 		}
 
@@ -378,14 +378,12 @@ u32 doMedicHeal(CUnit* unit, CUnit* target) {
 ;
 
 const u32 Func_removeOrderFromUnitQueue = 0x004742D0;
-void removeOrderFromUnitQueue(CUnit* unit) {
-
-	static COrder* orderQueueHead = unit->orderQueueHead;
+void removeOrderFromUnitQueue(CUnit* unit, COrder* order) {
 
 	__asm {
 		PUSHAD
 		MOV ECX, unit
-		MOV EAX, orderQueueHead
+		MOV EAX, order
 		CALL Func_removeOrderFromUnitQueue
 		POPAD
 	}
