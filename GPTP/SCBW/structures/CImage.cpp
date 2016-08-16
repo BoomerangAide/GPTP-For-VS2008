@@ -4,8 +4,6 @@
 #include <SCBW/scbwdata.h>
 #include <cassert>
 
-//V241 for VS2008
-
 void CImage::playIscriptAnim(IscriptAnimation::Enum animation) {
   assert(this);
   u32 animation_ = (u8)animation;
@@ -20,19 +18,27 @@ void CImage::playIscriptAnim(IscriptAnimation::Enum animation) {
   }
 }
 
-void CImage::free() {
-  assert(this);
-  if (!(screenLayers->game.hasBeenRefreshed))
-    scbw::refreshScreen(this->screenPosition.x,
-                        this->screenPosition.y,
-                        this->screenPosition.x + this->grpSize.right,
-                        this->screenPosition.y + this->grpSize.bottom
-                        );
+//should be equivalent to ImageDestructor @ 0x004D4CE0 with ESI = sprite
+void CImage::free() 
+{
 
-  this->parentSprite->images.unlink<&CImage::link>(this);
-  this->grpOffset = NULL;
+	assert(this);
 
-  unusedImages.insertAfterHead(this);
+	if (!(screenLayers->game.hasBeenRefreshed))
+		scbw::refreshScreen(this->screenPosition.x,
+							this->screenPosition.y,
+							this->screenPosition.x + this->grpSize.right,
+							this->screenPosition.y + this->grpSize.bottom
+							);	//should be equivalent to a call to refreshImage @ 0x004970A0 with EAX = this
+
+	//perform identically to original code
+	this->parentSprite->images.unlink<&CImage::link>(this);
+
+	this->grpOffset = NULL;
+
+	//perform identically to original code
+	unusedImages.insertAfterHead(this);
+
 }
 
 //Loosely based on code at @ 0x004D5A50
