@@ -6,29 +6,62 @@
 
 //Functionally identical to playSpriteIscript() (offset 0x00499D00)
 void CSprite::playIscriptAnim(IscriptAnimation::Enum animation, bool bReplaceCurrentScript) {
-  assert(this);
-  if(bReplaceCurrentScript || !(this->flags & CSprite_Flags::IscriptCode))
-	  for (CImage *img = this->images.head; img; img = img->link.next)
-		img->playIscriptAnim(animation);
+
+	assert(this);
+
+	if(bReplaceCurrentScript || !(this->flags & CSprite_Flags::IscriptCode))
+		for (CImage* img = this->images.head; img != NULL; img = img->link.next)
+			img->playIscriptAnim(animation);
+
 }
 
+//Equivalent to SpriteDestructor @ 0x00497B40
 void CSprite::free() {
-  assert(this);
-  CImage *image = this->images.head;
-  while (image) {
-    CImage *nextImage = image->link.next;
-    image->free();
-    image = nextImage;
-  }
 
-  const int y = CLAMP(this->position.y / 32, 0, mapTileSize->height - 1);
-  const CListExtern<CSprite, &CSprite::link>
-    spritesOnTileRow(spritesOnTileRow->heads[y],
-                     spritesOnTileRow->tails[y]);
+	assert(this);
 
-  spritesOnTileRow.unlink(this);
-  unusedSprites->insertAfterHead<&CSprite::link>(this);
+	CImage* image = this->images.head;
+	s32 sprite_row_position;
+
+	while (image != NULL) {
+		CImage* nextImage = image->link.next;
+		image->free();
+		image = nextImage;
+	}
+
+	if( ((s32)this->position.y) < 0 )
+		sprite_row_position = (this->position.y + 31) / 32;
+	else
+		sprite_row_position = (this->position.y) / 32;
+
+	if(sprite_row_position < 0)
+		sprite_row_position = 0;
+	else
+	if(sprite_row_position >= mapTileSize->height)
+		sprite_row_position = mapTileSize->height - 1;
+
+	//remove the sprite from the spritesOnTileRow list
+	if(spritesOnTileRow->heads[sprite_row_position] == this)
+		spritesOnTileRow->heads[sprite_row_position] = this->link.next;
+
+	if(spritesOnTileRow->tails[sprite_row_position] == this)
+		spritesOnTileRow->tails[sprite_row_position] = this->link.prev;
+
+	//untie the sprite from the previous and next one
+	if(this->link.prev != NULL)
+		(this->link.prev)->link.next = this->link.next;
+
+	if(this->link.next != NULL)
+		(this->link.next)->link.prev = this->link.prev;
+
+	this->link.prev = NULL;
+	this->link.next = NULL;
+
+	//perform identically to original code
+	unusedSprites->insertAfterHead<&CSprite::link>(this);
+
 }
+
 
 void CSprite::setPosition(u16 x, u16 y) {
   assert(this);
@@ -52,7 +85,7 @@ void CSprite::setPosition(u16 x, u16 y) {
   }
 
   for (CImage *i = this->images.head; i; i = i->link.next)
-    i->flags |= CImage_Flags::Redraw;
+	  i->flags |= CImage_Flags::Redraw;
 }
 
 
