@@ -90,7 +90,7 @@ void UnitFinder::search(int left, int top, int right, int bottom) {
       if (!isWidthExtended
           || CUnit::getFromIndex(px->unitIndex)->getLeft() < right)
       {
-        CUnit *unit = CUnit::getFromIndex(px->unitIndex);
+        CUnit* unit = CUnit::getFromIndex(px->unitIndex);
         if (unit)
           this->units[this->unitCount++] = unit;
       }      
@@ -106,14 +106,14 @@ CUnit* UnitFinder::getNearest(int x, int y,
   int boundsLeft, int boundsTop, int boundsRight, int boundsBottom,
   UnitFinderData* left,  UnitFinderData* top,
   UnitFinderData* right, UnitFinderData* bottom,
-  UnitFinderCallbackMatchInterface &match, const CUnit *sourceUnit)
+  UnitFinderCallbackMatchInterface &match, CUnit* sourceUnit)
 {
 
 	int bestDistance = scbw::getDistanceFast(0, 0,
     std::max(x - boundsLeft, boundsRight - x),
     std::max(y - boundsTop, boundsBottom - y));
 
-  CUnit *bestUnit = NULL;
+  CUnit* bestUnit = NULL;
   bool canContinueSearch, hasFoundBestUnit;
 
   do {
@@ -122,7 +122,7 @@ CUnit* UnitFinder::getNearest(int x, int y,
     
     //Search to the left
     if (getStartX() <= left) {
-      CUnit *unit = CUnit::getFromIndex(left->unitIndex);
+      CUnit* unit = CUnit::getFromIndex(left->unitIndex);
       
       if (boundsLeft <= unit->getX()) {
         if (boundsTop <= unit->getY() && unit->getY() < boundsBottom) {
@@ -145,7 +145,7 @@ CUnit* UnitFinder::getNearest(int x, int y,
     
     //Search to the right
     if (right < getEndX()) {
-      CUnit *unit = CUnit::getFromIndex(right->unitIndex);
+      CUnit* unit = CUnit::getFromIndex(right->unitIndex);
       
       if (unit->getX() < boundsRight) {
         if (boundsTop <= unit->getY() && unit->getY() < boundsBottom) {
@@ -168,7 +168,7 @@ CUnit* UnitFinder::getNearest(int x, int y,
     
     //Search upwards
     if (getStartY() <= top) {
-      CUnit *unit = CUnit::getFromIndex(top->unitIndex);
+      CUnit* unit = CUnit::getFromIndex(top->unitIndex);
       
       if (boundsTop <= unit->getY()) {
         if (boundsLeft <= unit->getX() && unit->getX() < boundsRight) {
@@ -191,7 +191,7 @@ CUnit* UnitFinder::getNearest(int x, int y,
     
     //Search downwards
     if (bottom < getEndY()) {
-      CUnit *unit = CUnit::getFromIndex(bottom->unitIndex);
+      CUnit* unit = CUnit::getFromIndex(bottom->unitIndex);
       
       if (unit->getY() < boundsBottom) {
         if (boundsLeft <= unit->getX() && unit->getX() < boundsRight) {
@@ -225,7 +225,7 @@ CUnit* UnitFinder::getNearest(int x, int y,
 }
 
 CUnit* UnitFinder::getNearestTarget(int left, int top, int right, int bottom,
-  const CUnit* sourceUnit, UnitFinderCallbackMatchInterface& match)
+  CUnit* sourceUnit, UnitFinderCallbackMatchInterface& match)
 {
   UnitFinderData *searchLeft, *searchTop, *searchRight, *searchBottom;
 
@@ -252,7 +252,7 @@ CUnit* UnitFinder::getNearestTarget(int left, int top, int right, int bottom,
     match, sourceUnit);
 }
 
-CUnit* UnitFinder::getNearestTarget(const CUnit* sourceUnit, UnitFinderCallbackMatchInterface& match) {
+CUnit* UnitFinder::getNearestTarget(CUnit* sourceUnit, UnitFinderCallbackMatchInterface& match) {
   return getNearestTarget(0, 0, mapTileSize->width * 32, mapTileSize->height * 32,
     sourceUnit, match);
 }
@@ -277,7 +277,7 @@ CUnit* UnitFinder::getFirst(UnitFinderCallbackMatchInterface &callback) const {
 CUnit* UnitFinder::getBest(scbw::UnitFinderCallbackScoreInterface &callback) const {
 
   int bestScore = -1;
-  CUnit *bestUnit = NULL;
+  CUnit* bestUnit = NULL;
 
   for (int i = 0; i < this->getUnitCount(); ++i) {
 
