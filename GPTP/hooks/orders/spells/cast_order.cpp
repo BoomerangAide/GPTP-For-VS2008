@@ -9,7 +9,6 @@ u32 getUpgradedWpnCooldown(CUnit* unit, u8 weaponId);													//0x00475DC0
 bool function_00476640(CUnit* unit, u32 weaponId);														//0x00476640
 void setUnitStatTxtErrorMsg(char* message);																//0x0048CCB0
 u32 get_statTxt_Str_0(CUnit* unit, u32 playerId, char* message);										//0x0048EF30
-void spendUnitEnergy(CUnit* unit, u32 energyToSpend);													//0x00491460
 bool canCastSpell_0(CUnit* unit);																		//0x00492140
 u32 function_00492620(CUnit* unit, Bool32 wasMainOrderStateZero);										//0x00492620
 u32 RandomizeShort(u32 unknown_index);																	//0x004DC4A0
@@ -196,7 +195,7 @@ void orders_Spell(CUnit* unit) {
 							u8 cooldown;
 							u32 random_value;
 
-							spendUnitEnergy(unit,spellCost);
+							unit->spendUnitEnergy(spellCost);
 							cooldown = getUpgradedWpnCooldown(unit,orderWeaponId);
 
 							//a complicated way to add between -1 and 2 to the cooldown
@@ -320,14 +319,6 @@ u32 get_statTxt_Str_0(CUnit* unit, u32 playerId, char* message) {
 
 	return return_value;
 
-}
-
-;
-
-//Identical to Unit__SpendEnergy @ 0x00491460
-void spendUnitEnergy(CUnit* unit, u32 energyToSpend) {
-	if(!(*CHEAT_STATE & CheatFlags::TheGathering))
-		unit->energy -= energyToSpend;
 }
 
 ;
