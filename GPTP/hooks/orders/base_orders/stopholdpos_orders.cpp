@@ -226,7 +226,7 @@ void orders_Guard(CUnit* unit) {
 	if(playerTable[unit->playerId].type == PlayerType::Computer) {
 
 		//since details about pAI structure are unknown, have to use this
-		static u8* const pAI_subparameter = (u8*)( ( (int)(unit->pAI) ) + 8 );
+		u8* const pAI_subparameter = (u8*)( ( (int)(unit->pAI) ) + 8 );
 
 		unit->mainOrderId = OrderId::ComputerAI;
 
@@ -395,7 +395,9 @@ void removeOrderFromUnitQueue(CUnit* unit, COrder* order) {
 const u32 Func_PerformAnotherOrder = 0x004745F0;
 void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId) {
 
-	static Point16 pos = {x,y};
+	static Point16 pos;
+
+	pos.x = x;pos.y = y;
 
 	__asm {
 		PUSHAD
