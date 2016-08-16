@@ -3,8 +3,6 @@
 // The contents of this file are merged from: unit.cpp, triggers.cpp,
 // resources.cpp, player.cpp, locations.cpp, buttons.cpp, and qdp.cpp.
 
-//V241 for VS2008
-
 #pragma once
 #include "../definitions.h"
 #include "structures.h"
@@ -74,6 +72,7 @@ SCBW_DATA(const char*,	  StringEmpty,			0x00501B7D);
 /// Units that are selected by the current player (or the player viewing the replay).
 struct UnitsSel { CUnit* unit[SELECTION_ARRAY_LENGTH]; };
 SCBW_DATA(const UnitsSel*, clientSelectionGroup, 0x00597208);
+SCBW_DATA(CUnit*, clientSelectionGroupEnd, 0x00597238);
 SCBW_DATA(const u8*,    clientSelectionCount,   0x0059723D);
 
 /// Screen position relative to the map
@@ -354,6 +353,12 @@ SCBW_DATA(const u32*,   unitOrderingCount,      0x0066FF74);
 
 SCBW_DATA(const Point32*, angleDistance,        0x00512D28);
 
+//Used internally by Starcraft to manage temporary units lists
+SCBW_DATA(CUnit***,	tempUnitsListsArray,					0x006BB938);
+SCBW_DATA(u32*,		tempUnitsListCurrentArrayCount,			0x006BEE64);
+SCBW_DATA(u32*,		tempUnitsListArraysCountsListLastIndex,	0x006BEE6C);
+SCBW_DATA(u32*,		tempUnitsListArraysCountsList,			0x006BEE70);
+
 // Font & Drawing
 namespace graphics { class Font; class Bitmap; }
 SCBW_DATA(graphics::Font**, fontBase,           0x006CE0F4);
@@ -428,12 +433,12 @@ SCBW_DATA(Bool32*,		  IS_PLACING_BUILDING,  	0x00640880);
 //-------- Tech levels --------//
 
 struct _scTechs {
-  u8 isEnabled[PLAYER_COUNT][24];
-  u8 isResearched[PLAYER_COUNT][24];
+  u8 isEnabled[PLAYER_COUNT][24];		//0x0058CE24
+  u8 isResearched[PLAYER_COUNT][24];	//0x0058CF44
 };
 struct _bwTechs {
-  u8 isEnabled[PLAYER_COUNT][20];
-  u8 isResearched[PLAYER_COUNT][20];
+  u8 isEnabled[PLAYER_COUNT][20];		//0x0058F050
+  u8 isResearched[PLAYER_COUNT][20];	//0x0058F140
 };
 
 // Available and Researched techs are exactly next to each other,
