@@ -44,43 +44,43 @@ struct TEXT {
 };
 
 struct TILE {
-  u16 index;
-  u8 buildability; /**< 8th bit should sign not buildable. */
-  u8 groundHeight; /**< Ground Height(4 lower bits) - Deprecated? Some values are incorrect. */
-  u16 leftEdge;
-  u16 topEdge;
-  u16 rightEdge;
-  u16 buttomEdge;
-  u16 _1;
-  u16 _2; /**<  Unknown - Edge piece has rows above it. (Recently noticed; not fully understood.)
+/*00*/  u16 index;
+/*02*/  u8 buildability; /**< 8th bit should sign not buildable. */
+/*03*/  u8 groundHeight; /**< Ground Height(4 lower bits) - Deprecated? Some values are incorrect. */
+/*04*/  u16 leftEdge;
+/*06*/  u16 topEdge;
+/*08*/  u16 rightEdge;
+/*0A*/  u16 buttomEdge;
+/*0C*/  u16 _1;
+/*0E*/  u16 _2; /**<  Unknown - Edge piece has rows above it. (Recently noticed; not fully understood.)
                 o 1 = Basic edge piece.
                 o 2 = Right edge piece.
                 o 3 = Left edge piece.*/
-  u16 _3;
-  u16 _4;
-  u16 miniTile[16]; /** MegaTile References (VF4/VX4) */
+/*10*/  u16 _3;
+/*12*/  u16 _4;
+/*14*/  u16 miniTile[16]; /** MegaTile References (VF4/VX4) */
 };
 
 struct DOODAD {
-  u16 index;
-  u8 buildability; /**< 8th bit should sign not buildable. */
-  u8 groundHeightAndOverlayFlags; /**< Ground Height(4 lower bits) - Deprecated? Some values are incorrect.
+/*00*/  u16 index;
+/*02*/ u8 buildability; /**< 8th bit should sign not buildable. */
+/*03*/  u8 groundHeightAndOverlayFlags; /**< Ground Height(4 lower bits) - Deprecated? Some values are incorrect.
                    * Overlay Flags:
                    * o 0x0 - None
                    * o 0x1 - Sprites.dat Reference
                    * o 0x2 - Units.dat Reference (unit sprite)
                    * o 0x4 - Overlay is Flipped
                    */
-  u16 overlayID;
-  u16 _1;
-  u16 doodatGrupString;
-  u16 _2;
-  u16 dddataBinIndex;
-  u16 doodatHeight;
-  u16 doodatWidth;
-  u16 _3;
-  u16 miniTile[16]; /** MegaTile References (VF4/VX4) */
-};
+/*04*/  u16 overlayID;
+/*06*/  u16 _1;
+/*08*/  u16 doodatGrupString;
+/*0A*/  u16 _2;
+/*0C*/  u16 dddataBinIndex;
+/*0E*/  u16 doodatHeight;
+/*10*/  u16 doodatWidth;
+/*12*/  u16 _3;
+/*14*/  u16 miniTile[16]; /** MegaTile References (VF4/VX4) */
+};	//size 34
 
 struct CThingy {
 /*00*/  CThingy *prev;
@@ -391,7 +391,7 @@ struct AI_Main {
 /*3A0*/  u32 AI_DefenseUse_GA[10];
 /*3C8*/  u32 AI_DefenseUse_AA[10];
 /*3F0*/  u8  AI_DefineMax[UNIT_TYPE_COUNT];
-/*4D4*/  CUnit *mainMedic;
+/*4D4*/  CUnit* mainMedic;
 /*4D8*/  Box32 genCmdLoc;
 };
 
@@ -419,9 +419,9 @@ struct AiCaptain {
 /*1A*/  u16 unknown_0x1A;
 /*1C*/  u32 unknown_0x1C;
 /*20*/  u32 unknown_0x20;
-/*24*/  CUnit *slowestUnit;
-/*28*/  CUnit *followTarget;
-/*2C*/  CUnit *mainMedic;
+/*24*/  CUnit* slowestUnit;
+/*28*/  CUnit* followTarget;
+/*2C*/  CUnit* mainMedic;
 /*30*/  void  *town;
 };
 
