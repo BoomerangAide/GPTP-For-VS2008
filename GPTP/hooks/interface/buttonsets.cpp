@@ -959,7 +959,9 @@ namespace {
 	u32 fxnInteract(BinDlg* dialog, u32 data_struct_offset) {
 
 		static u32 return_value;
-		static u32 fxnInteract = (u32)dialog->fxnInteract;
+		static u32 fxnInteract;
+
+		fxnInteract = (u32)dialog->fxnInteract;
 
 		__asm {
 			PUSHAD
