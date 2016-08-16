@@ -6,14 +6,14 @@
 
 namespace {
 
-void unitSetRetreatPoint(CUnit *unit, u8 angleValue);								//0x004011A0
-bool getCloserToDestination_sub402BE0(CUnit *unit);									//0x00402BE0
-void orderReturnToIdle(CUnit *unit);												//0x00463770
-bool checkForCloseUnit_sub464290(CUnit *unit);										//0x00464290
-void playSubunitIscript(CUnit *unit, IscriptAnimation::Enum anim);					//0x00474380
-void actUnitReturnToIdle(CUnit *unit);												//0x00475420
-void replaceUnitWithType(CUnit *unit, u16 newUnitId);								//0x0049FED0
-void makeToHoldPosition(CUnit *unit);												//0x004EB5B0
+void unitSetRetreatPoint(CUnit* unit, u8 angleValue);								//0x004011A0
+bool getCloserToDestination_sub402BE0(CUnit* unit);									//0x00402BE0
+void orderReturnToIdle(CUnit* unit);												//0x00463770
+bool checkForCloseUnit_sub464290(CUnit* unit);										//0x00464290
+void playSubunitIscript(CUnit* unit, IscriptAnimation::Enum anim);					//0x00474380
+void actUnitReturnToIdle(CUnit* unit);												//0x00475420
+void replaceUnitWithType(CUnit* unit, u16 newUnitId);								//0x0049FED0
+void makeToHoldPosition(CUnit* unit);												//0x004EB5B0
 
 } //unnamed namespace
 
@@ -200,7 +200,7 @@ namespace {
 
 const u32 Func_UnitSetRetreatPoint = 0x004011A0;
 //angleValue is a guess
-void unitSetRetreatPoint(CUnit *unit, u8 angleValue) {
+void unitSetRetreatPoint(CUnit* unit, u8 angleValue) {
 
 	__asm {
 		PUSHAD
@@ -220,7 +220,7 @@ const u32 Func_Sub402BE0_GetCloserToDestination = 0x00402BE0;
 //At least that's what I think it does (not sure what I called
 //"action inside the function" is, and how it's used to return
 //true
-bool getCloserToDestination_sub402BE0(CUnit *unit) {
+bool getCloserToDestination_sub402BE0(CUnit* unit) {
 
 	static Bool32 bResult;
 
@@ -239,7 +239,7 @@ bool getCloserToDestination_sub402BE0(CUnit *unit) {
 ;
 
 const u32 Func_OrderReturnToIdle = 0x00463770;
-void orderReturnToIdle(CUnit *unit) {
+void orderReturnToIdle(CUnit* unit) {
 
 	__asm {
 		PUSHAD
@@ -253,7 +253,7 @@ void orderReturnToIdle(CUnit *unit) {
 ;
 
 const u32 Func_Sub464290_CheckForCloseUnit = 0x00464290;
-bool checkForCloseUnit_sub464290(CUnit *unit) {
+bool checkForCloseUnit_sub464290(CUnit* unit) {
 
 	static Bool32 bResult;
 
@@ -272,7 +272,7 @@ bool checkForCloseUnit_sub464290(CUnit *unit) {
 ;
 
 const u32 Func_PlaySubunitIscript = 0x00474380;
-void playSubunitIscript(CUnit *unit, IscriptAnimation::Enum anim) {
+void playSubunitIscript(CUnit* unit, IscriptAnimation::Enum anim) {
 
 	u32 anim_ = anim;
 
@@ -291,7 +291,7 @@ void playSubunitIscript(CUnit *unit, IscriptAnimation::Enum anim) {
 ;
 
 const u32 Func_ActUnitReturnToIdle = 0x00475420;
-void actUnitReturnToIdle(CUnit *unit) {
+void actUnitReturnToIdle(CUnit* unit) {
 
 	__asm {
 		PUSHAD
@@ -304,7 +304,7 @@ void actUnitReturnToIdle(CUnit *unit) {
 
 
 const u32 Func_ReplaceUnitWithType = 0x0049FED0;
-void replaceUnitWithType(CUnit *unit, u16 newUnitId) {
+void replaceUnitWithType(CUnit* unit, u16 newUnitId) {
 
 	u32 newUnitId_ = newUnitId;
 
@@ -319,7 +319,7 @@ void replaceUnitWithType(CUnit *unit, u16 newUnitId) {
 }
 
 const u32 Func_OrdersHoldPositionSuicidal = 0x004EB5B0;
-void makeToHoldPosition(CUnit *unit) {
+void makeToHoldPosition(CUnit* unit) {
 
 	__asm {
 		PUSHAD
