@@ -7,7 +7,7 @@ namespace {
 //Inject with jmpPatch()
 void __declspec(naked) unitCanInfestWrapper() {
 
-  static CUnit *unit;
+  static CUnit* unit;
   static u32 result;
 
   __asm {
@@ -31,7 +31,7 @@ void __declspec(naked) unitCanInfestWrapper() {
 //Inject with jmpPatch()
 void __declspec(naked) unitCanBeInfestedWrapper() {
 
-  static CUnit *unit;
+  static CUnit* unit;
   static u32 result;
 
   __asm {
@@ -55,7 +55,7 @@ void __declspec(naked) unitCanBeInfestedWrapper() {
 //Inject with jmpPatch()
 void __declspec(naked) unitMorphIntoInfestedOrder() {
 
-	static CUnit *unitInfested; 
+	static CUnit* unitInfested; 
 
 	__asm {
 		PUSHAD
@@ -77,7 +77,7 @@ void __declspec(naked) unitMorphIntoInfestedOrder() {
 //Inject with jmpPatch()
 void __declspec(naked) unitInfestOrder() {
 
-	static CUnit *unitInfesting;
+	static CUnit* unitInfesting;
 
 	__asm {
 		PUSHAD
