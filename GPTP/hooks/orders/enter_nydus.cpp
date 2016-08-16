@@ -4,7 +4,7 @@
 //helper functions def
 
 namespace {
-	bool orderToMoveToTarget(CUnit *unit, CUnit *target);	//0x004EB980
+	bool orderToMoveToTarget(CUnit* unit, CUnit* target);	//0x004EB980
 } //unnamed namespace
 
 namespace hooks {
@@ -17,7 +17,7 @@ namespace hooks {
 	bool canEnterNydusCanal(CUnit* unit, CUnit* nydusCanal) {
 
 		bool bReturnValue;
-		const CUnit* const nydusExit = nydusCanal->building.nydusExit;
+		CUnit* const nydusExit = nydusCanal->building.nydusExit;
 
 		bReturnValue =
 			(nydusCanal->status & UnitStatus::Completed) &&
@@ -150,7 +150,7 @@ namespace hooks {
 namespace {
 
 	const u32 Func__moveToTarget = 0x004EB980;
-	bool orderToMoveToTarget(CUnit *unit, CUnit *target) {
+	bool orderToMoveToTarget(CUnit* unit, CUnit* target) {
 
 		static Bool32 bPreResult;
 	  
