@@ -12,18 +12,17 @@
 
 namespace {
 
-	bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range);		//0x00430F10
 	bool advanceRemainingBuildTime_Sub466940(CUnit* unit);					//0x00466940
 	u8 function_0046A820(CUnit* unit);										//0x0046A820
 	void orderImmediate(CUnit* unit, u8 order);								//0x00474B40
-	void actUnitReturnToIdle(CUnit *unit);									//0x00475420
+	void actUnitReturnToIdle(CUnit* unit);									//0x00475420
 	void playMorphingCompleteSound(CUnit* unit);							//0x0048F440
 	void mergeStatusIntoUnit_Sub493180(CUnit* unit_dst, CUnit* unit_src);	//0x00493180
 	void function_0049B440(CUnit* unit, u32 soundId);			 			//0x0049B440
-	void replaceUnitWithType(CUnit *unit, u16 newUnitId);					//0x0049FED0
-	void changeUnitButtonSet_Sub4E5D60(CUnit *unit, u16 unitId);			//0x004E5D60
-	void setNextWaypoint_Sub4EB290(CUnit *unit);							//0x004EB290
-	void makeToHoldPosition(CUnit *unit);									//0x004EB5B0
+	void replaceUnitWithType(CUnit* unit, u16 newUnitId);					//0x0049FED0
+	void changeUnitButtonSet_Sub4E5D60(CUnit* unit, u16 unitId);			//0x004E5D60
+	void setNextWaypoint_Sub4EB290(CUnit* unit);							//0x004EB290
+	void makeToHoldPosition(CUnit* unit);									//0x004EB5B0
 	bool delayedSetMoveTarget_xy_Sub4EB960(CUnit* unit, u16 x, u16 y);		//0x004EB960
 
 } //unnamed namespace
@@ -186,7 +185,7 @@ void orders_WarpingDarkArchon(CUnit* unit) {
 		u32 distanceBetweenUnits;
 
 		if(unit->status & UnitStatus::IsNormal) {
-			if(isTargetWithinMinRange(unit,targetUnit,(2*unit->current_speed2)/256)) {
+			if(unit->isTargetWithinMinRange(targetUnit,(2 * unit->current_speed2)/256)) {
 				unit->status &= ~UnitStatus::IsNormal; //unset the flag
 				orderImmediate(unit,OrderId::ResetCollision1);
 			}
@@ -371,7 +370,7 @@ void orders_WarpingArchon(CUnit* unit) {
 		u32 distanceBetweenUnits;
 
 		if(unit->status & UnitStatus::IsNormal) {
-			if(isTargetWithinMinRange(unit,targetUnit,(2 * unit->current_speed2)/256)) {
+			if(unit->isTargetWithinMinRange(targetUnit,(2 * unit->current_speed2)/256)) {
 				unit->status &= ~UnitStatus::IsNormal; //unset the flag
 				orderImmediate(unit,OrderId::ResetCollision1);
 			}
@@ -506,27 +505,6 @@ void orders_WarpingArchon(CUnit* unit) {
 
 namespace {
 
-u32 Func_IsTargetWithinMinRange = 0x00430F10;
-bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range) {
-
-	static Bool32 bPreResult;
-
-	__asm {
-		PUSHAD
-		PUSH target
-		PUSH range
-		MOV ECX, unit
-		CALL Func_IsTargetWithinMinRange
-		MOV bPreResult, EAX
-		POPAD
-	}
-
-	return (bPreResult != 0);
-
-}
-
-;
-
 u32 Func_Sub466940 = 0x00466940;
 //return true if remainingBuildTime was 0 when called,
 //remainingBuildTime change affected by cheating
@@ -584,7 +562,7 @@ void orderImmediate(CUnit* unit, u8 order) {
 ;
 
 const u32 Func_ActUnitReturnToIdle = 0x00475420;
-void actUnitReturnToIdle(CUnit *unit) {
+void actUnitReturnToIdle(CUnit* unit) {
 
   __asm {
     PUSHAD
@@ -644,7 +622,7 @@ void function_0049B440(CUnit* unit, u32 soundId) {
 ;
 
 const u32 Func_ReplaceUnitWithType = 0x0049FED0;
-void replaceUnitWithType(CUnit *unit, u16 newUnitId) {
+void replaceUnitWithType(CUnit* unit, u16 newUnitId) {
 
 	u32 newUnitId_ = newUnitId;
 
@@ -661,7 +639,7 @@ void replaceUnitWithType(CUnit *unit, u16 newUnitId) {
 ;
 
 const u32 Func_Sub4E5D60 = 0x004E5D60;
-void changeUnitButtonSet_Sub4E5D60(CUnit *unit, u16 buttonSetId) {
+void changeUnitButtonSet_Sub4E5D60(CUnit* unit, u16 buttonSetId) {
 
 	__asm {
 		PUSHAD
@@ -677,7 +655,7 @@ void changeUnitButtonSet_Sub4E5D60(CUnit *unit, u16 buttonSetId) {
 
 const u32 Func_Sub4EB290 = 0x004EB290;
 //Related to path/movement decision
-void setNextWaypoint_Sub4EB290(CUnit *unit) {
+void setNextWaypoint_Sub4EB290(CUnit* unit) {
 
   __asm {
     PUSHAD
@@ -691,7 +669,7 @@ void setNextWaypoint_Sub4EB290(CUnit *unit) {
 ;
 
 const u32 Func_OrdersHoldPositionSuicidal = 0x004EB5B0;
-void makeToHoldPosition(CUnit *unit) {
+void makeToHoldPosition(CUnit* unit) {
 
   __asm {
     PUSHAD
