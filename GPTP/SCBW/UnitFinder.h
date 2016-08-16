@@ -9,19 +9,19 @@ namespace scbw {
 /// The callback interface for UnitFinder::forEach().
 class UnitFinderCallbackProcInterface {
   public:
-    virtual void proc(CUnit *unit) = 0;
+    virtual void proc(CUnit* unit) = 0;
 };
 
 /// The callback interface for UnitFinder::getFirst() and UnitFinder::getNearest().
 class UnitFinderCallbackMatchInterface {
   public:
-    virtual bool match(const CUnit *unit) = 0;
+    virtual bool match(CUnit* unit) = 0;
 };
 
 /// The callback interface for UnitFinder::getBest().
 class UnitFinderCallbackScoreInterface {
   public:
-    virtual int score(const CUnit *unit) = 0;
+    virtual int score(CUnit* unit) = 0;
 };
 
 /// The UnitFinder class is used to efficiently search for units in a certain
@@ -67,13 +67,13 @@ class UnitFinder {
     /// evaluates to true. If there are no matches, returns NULL.
     /// This does not use unit collision boxes for calculating distances.
     static CUnit* getNearestTarget(int left, int top, int right, int bottom,
-                                   const CUnit* sourceUnit, UnitFinderCallbackMatchInterface& match);
+                                   CUnit* sourceUnit, UnitFinderCallbackMatchInterface& match);
     
     /// Searches the entire map, returning the nearest unit to @p sourceUnit
     /// for which match(unit) evaluates to true. If there are no matches,
     /// returns NULL.
     /// This does not use unit collision boxes for calculating distances.
-    static CUnit* getNearestTarget(const CUnit* sourceUnit, UnitFinderCallbackMatchInterface& match);
+    static CUnit* getNearestTarget(CUnit* sourceUnit, UnitFinderCallbackMatchInterface& match);
 
   private:
     //This function is meant to be used by other getNearest() functions.
@@ -82,7 +82,7 @@ class UnitFinder {
       int boundsLeft, int boundsTop, int boundsRight, int boundsBottom,
       UnitFinderData* left,  UnitFinderData* top,
       UnitFinderData* right, UnitFinderData* bottom,
-      UnitFinderCallbackMatchInterface &match, const CUnit *sourceUnit);
+      UnitFinderCallbackMatchInterface &match, CUnit* sourceUnit);
     
     static UnitFinderData* getStartX();
     static UnitFinderData* getStartY();
