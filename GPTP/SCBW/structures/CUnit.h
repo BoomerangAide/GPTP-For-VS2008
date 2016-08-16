@@ -78,6 +78,11 @@ struct CUnit: public CUnitLayout {
   /// Returns the sight range of this unit (with upgrades).
   /// If @p isForSpellCasting is true, also factors in status effects.
   u32 getSightRange(bool isForSpellCasting = false) const;
+  
+  ///Return true if:
+  /// * THE GATHERING cheat is enabled or
+  /// * unit has at least @p energy available.
+  bool hasEnergy(u32 energy) const;
 
   /// Returns true if:
   /// * The unit has a weapon, or
@@ -143,14 +148,14 @@ struct CUnit: public CUnitLayout {
   /// Deals damage to this unit, using a specific weapons.dat ID.
   void damageWith(s32 damage,               ///< Amount of damage dealt to this unit.
                   u8 weaponId,              ///< weapons.dat ID to use.
-                  CUnit *attacker = NULL,///< Attacking unit (for increasing kill count)
+                  CUnit* attacker = NULL,///< Attacking unit (for increasing kill count)
                   u8 attackingPlayer = -1,  ///< Attacking player (for increasing kill score)
                   s8 direction = 0,         ///< Attacked direction (for shield flicker overlays)
                   u8 damageDivisor = 1      ///< Damage divisor (for splash damage / glave wurm calculations)
                   );
 
   /// Deals damage directly to unit HP, killing it if possible.
-  void damageHp(s32 damage, CUnit *attacker = NULL,
+  void damageHp(s32 damage, CUnit* attacker = NULL,
                 s32 attackingPlayer = -1, bool notify = true);
 
   /// Reduces Defensive Matrix by @p amount, removing it if possible.
@@ -173,13 +178,16 @@ struct CUnit: public CUnitLayout {
   /// Removes the Acid Spores effect from the unit.
   void removeAcidSpores();
   
+  /// Spend an amount of energy, if no THE GATHERING cheat.
+  void spendUnitEnergy(u32 energy);
+  
   //////////////////////////////////////////////////////////////// @}
 
   /// @name Unit Orders
   //////////////////////////////////////////////////////////////// @{
 
   /// Issue the @p order to the unit, using the given @p target unit.
-  void orderTo(u8 orderId, const CUnit *target = NULL);
+  void orderTo(u8 orderId, const CUnit* target = NULL);
 
   /// Issue the @p order to the unit, using the given position as the target.
   void orderTo(u8 orderId, u16 x, u16 y);
@@ -197,7 +205,7 @@ struct CUnit: public CUnitLayout {
   void orderToIdle();
 
   /// Issues a new order to the unit.
-  void order(u8 orderId, u16 x, u16 y, const CUnit *target, u16 targetUnitId, bool stopPreviousOrders);
+  void order(u8 orderId, u16 x, u16 y, const CUnit* target, u16 targetUnitId, bool stopPreviousOrders);
 
   /// Used by several hooks, details not completely understood.
   void setSecondaryOrder(u8 orderId);
@@ -243,7 +251,7 @@ struct CUnit: public CUnitLayout {
   /// Returns the distance between this unit and the @p target, taking unit
   /// collision size in units.dat into account.
   /// Internally, this function uses scbw::getDistanceFast().
-  u32 getDistanceToTarget(const CUnit *target) const;
+  u32 getDistanceToTarget(const CUnit* target) const;
 
   /// Checks whether this unit can reach the target position. This checks only
   /// for terrain, and does not consider obstacles (units and buildings).
@@ -251,7 +259,10 @@ struct CUnit: public CUnitLayout {
   
   /// Checks whether this unit can reach the @p target unit. This checks only
   /// for terrain, and does not consider obstacles (units and buildings).
-  bool hasPathToUnit(const CUnit *target) const;
+  bool hasPathToUnit(CUnit* target) const;
+
+  ///  Checks whether the @p target unit is within the @p range from the unit.
+  bool isTargetWithinMinRange(CUnit* target, u32 range);
   
   //////////////////////////////////////////////////////////////// @}
 
@@ -292,7 +303,7 @@ struct CUnit: public CUnitLayout {
   /// * Reavers (and Warbringers) return true only if they have a ground path
   ///   to the @p target unit.
   /// * AI-controlled Arbiters (not including Danimoths) always return false.
-  bool canAttackTarget(const CUnit* target, bool checkVisibility = true) const;
+  bool canAttackTarget(CUnit* target, bool checkVisibility = true) const;
   
   /// Makes the unit use the specified weapon to attack its current target unit
   /// stored in the CUnit::orderTarget.unit member. This does not affect the
@@ -336,7 +347,7 @@ struct CUnit: public CUnitLayout {
 
   /// Checks whether the @p target unit is an enemy of this unit.
   /// Internally, this calls scbw::isUnitEnemy().
-  bool isTargetEnemy(const CUnit* target) const;
+  bool isTargetEnemy(CUnit* target) const;
   
   /// Checks whether this unit can be seen by @playerId (i.e. not covered by the
   /// fog-of-war and is detectable).
