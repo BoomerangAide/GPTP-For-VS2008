@@ -1,3 +1,18 @@
+Update 3.999:
+
+-Remove //V241 for VS2008 in several files (was some kind of helper to me, no longer needed)
+-Add some infos or change layout in some files
+-Modify some old code sections to make them closer to original code when there's possibility of difference
+-replaced "const CUnit*" by "CUnit*" (otherwise incompatibilities with new code could happen)
+-removed an unused comment line in CUnitLayout.h
+-add clientSelectionGroupEnd in scbwdata.h
+-added several temporary units array variables because used in hooks in scbwdata.h
+-fixed a bug with some static variables with wrong initialization
+-fixed inject code to be more consistent (and possibly stables too)
+-added constants around some functions to make edit easier
+
+/!\ UPLOAD CURRENTLY INCOMPLETE /!\
+
 Update 3:
 
 -Minor fixes and optimizations
