@@ -7,22 +7,23 @@ namespace {
 
 //Inject with jmpPatch()
 void __declspec(naked) getUnitMaxEnergyWrapper() {
-  static CUnit *unit;
-  static u16 maxEnergy;
 
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, EAX
-  }
+	static CUnit* unit;
+	static u16 maxEnergy;
 
-  maxEnergy = hooks::getUnitMaxEnergyHook(unit);
+	__asm {
+		MOV unit, EAX
+		PUSHAD
+	}
 
-  __asm {
-    POPAD
-    MOVZX EAX, maxEnergy
-    RETN
-  }
+	maxEnergy = hooks::getUnitMaxEnergyHook(unit);
+
+	__asm {
+		POPAD
+		MOVZX EAX, maxEnergy
+		RETN
+	}
+
 }
 
 } //unnamed namespace
@@ -30,7 +31,7 @@ void __declspec(naked) getUnitMaxEnergyWrapper() {
 namespace hooks {
 
 void injectUnitMaxEnergyHook() {
-  jmpPatch(getUnitMaxEnergyWrapper, Func_GetMaxEnergy);
+	jmpPatch(getUnitMaxEnergyWrapper, Func_GetMaxEnergy, 7);
 }
 
 } //hooks
