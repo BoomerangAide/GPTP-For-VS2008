@@ -276,10 +276,6 @@ namespace hooks {
 
 		Bool32* const IS_DOUBLE_CLICKING =	(Bool32*)	0x0066FF58;
 
-		u32* const unknown_value_6BEE64 =		(u32*) 0x006BEE64; //value going in/out 6BEE70 array
-		u32* const unknown_array_size_6BEE6C =	(u32*) 0x006BEE6C; //size of array 006BEE70
-		u32* const unknown_array_006BEE70 =		(u32*) 0x006BEE70; //array of values
-
 		Bool8* const bCanUpdateSelectedUnitData		= (Bool8*)	0x0059723C;
 		Bool8* const bCanUpdateSelectedUnitPortrait	= (Bool8*)	0x0068AC74;
 		Bool32* const bCanUpdateCurrentButtonSet	= (Bool32*)	0x0068C1B0;
@@ -328,9 +324,9 @@ namespace hooks {
 					units_in_bounds = getAllUnitsInBounds(&local_temp_box16_structure);
 					sorted_list_length = SortAllUnits(clicked_unit,local_temp_array_1,units_in_bounds);
 
-					//unkown processing related to SortAllUnits
-					*unknown_array_size_6BEE6C = *unknown_array_size_6BEE6C - 1;
-					*unknown_value_6BEE64 = unknown_array_006BEE70[*unknown_array_size_6BEE6C];
+					//reload the previous temporary unit list from before the call to getAllUnitsInBounds
+					*tempUnitsListArraysCountsListLastIndex = *tempUnitsListArraysCountsListLastIndex - 1;
+					*tempUnitsListCurrentArrayCount = tempUnitsListArraysCountsList[*tempUnitsListArraysCountsListLastIndex];
 
 					if(sorted_list_length != 0) {
 
@@ -380,9 +376,9 @@ namespace hooks {
 					units_in_bounds = getAllUnitsInBounds(&local_temp_box16_structure);
 					sorted_list_length = SortAllUnits(clicked_unit,local_temp_array_1,units_in_bounds);
 
-					//unkown processing related to SortAllUnits
-					*unknown_array_size_6BEE6C = *unknown_array_size_6BEE6C - 1;
-					*unknown_value_6BEE64 = unknown_array_006BEE70[*unknown_array_size_6BEE6C];
+					//reload the previous temporary unit list from before the call to getAllUnitsInBounds
+					*tempUnitsListArraysCountsListLastIndex = *tempUnitsListArraysCountsListLastIndex - 1;
+					*tempUnitsListCurrentArrayCount = tempUnitsListArraysCountsList[*tempUnitsListArraysCountsListLastIndex];
 
 					if(sorted_list_length != 0) {
 
