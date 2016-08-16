@@ -1,8 +1,6 @@
 // Contains wrappers for various SCBW internal functions, to be used in
 // hook functions.
 
-// V241 for VS2008
-
 #pragma once
 #include <SCBW/scbwdata.h>
 #include <SCBW/enumerations.h>
@@ -14,7 +12,7 @@ namespace scbw {
 
 /// Plays the given sound from sfxdata.dat. If @p sourceUnit is provided, it is
 /// used as the source of the sound.
-void playSound(u32 sfxId, const CUnit *sourceUnit = NULL);
+void playSound(u32 sfxId, CUnit* sourceUnit = NULL);
 
 /// Prints text to the screen, optionally using the given text color.
 void printText(const char* text, u32 color = GameTextColor::White);
@@ -40,7 +38,7 @@ void showErrorMessageWithSfx(u32 playerId, u32 statTxtId, u32 sfxId);
 /// status effects. Note that this function is affected by the EXE edits
 /// "change bunker size check to organic flag check" and
 /// "remove bunker size check" in FireGraft.
-bool canBeEnteredBy(const CUnit* transport, const CUnit* unit);
+bool canBeEnteredBy(CUnit* transport, CUnit* unit);
 
 /// Checks weapons.dat targeting flags to see if the @p target can be hit by the
 /// @p weapon.
@@ -49,12 +47,17 @@ bool canBeEnteredBy(const CUnit* transport, const CUnit* unit);
 /// @param  target    If NULL is passed, the function checks whether the
 ///                   weapon can target a position on the ground. If @p target
 ///                   is invincible, the function returns false.
-bool canWeaponTargetUnit(u8 weaponId, const CUnit *target = NULL,
-                         const CUnit *attacker = NULL);
+bool canWeaponTargetUnit(u8 weaponId, CUnit* target = NULL,
+                         CUnit* attacker = NULL);
 
 /// Checks if @p unit is under a Dark Swarm. This does NOT check whether the
 /// unit is a ground unit or a building.
-bool isUnderDarkSwarm(const CUnit *unit);
+bool isUnderDarkSwarm(CUnit* unit);
+
+//Checks if the @p target can be targeted by player @p castingPlayer with
+//tech/spell @p techId
+//If yes, return 0, else return error message id in stat_txt.tbl to use
+u16 getTechUseErrorMessage(CUnit* target, u8 castingPlayer, u16 techId);
 
 //////////////////////////////////////////////////////////////// @}
 
@@ -117,7 +120,7 @@ inline bool isAlliedTo(u8 playerA, u8 playerB) {
 /// Checks whether the @p unit is recognized by @p playerId as an enemy.
 /// This will work even when the owner of the @p unit has left the game.
 /// @see CUnit::isTargetEnemy().
-inline bool isUnitEnemy(u8 playerId, const CUnit* unit) {
+inline bool isUnitEnemy(u8 playerId, CUnit* unit) {
   //Identical to function @ 0x0047B740
   u8 unitOwner = unit->playerId;
     if (unitOwner == 11)
@@ -180,16 +183,16 @@ void prepareUnitMove(CUnit* unit, bool hideUnit = false);
 ///
 /// @return True if the unit does not collide with other units, or can be moved
 ///         to a nearby non-colliding position.
-bool checkUnitCollisionPos(CUnit *unit, const Point16* inPos, Point16* outPos, Box16* moveArea = NULL, bool hideErrorMsg = false, u32 someFlag = 0);
+bool checkUnitCollisionPos(CUnit* unit, const Point16* inPos, Point16* outPos, Box16* moveArea = NULL, bool hideErrorMsg = false, u32 someFlag = 0);
 
 /// Moves the unit's position to @p (x, y). If the unit is a ground unit and the
 /// the target position is on unwalkable terrain, this function moves the unit
 /// to the nearest walkable tile instead.
-void setUnitPosition(CUnit *unit, u16 x, u16 y);
+void setUnitPosition(CUnit* unit, u16 x, u16 y);
 
 /// Updates pathing data and various information related to the @p unit.
 /// Details not understood.  See the source for moveUnit().
-void refreshUnitAfterMove(CUnit *unit);
+void refreshUnitAfterMove(CUnit* unit);
 
 //////////////////////////////////////////////////////////////// @}
 
@@ -207,7 +210,7 @@ CUnit* createUnitAtPos(u16 unitType, u16 playerId, u32 x, u32 y);
 /// Calculates the images.dat overlay adjustment for the given unit.
 /// This piece of code is used throughout StarCraft.exe for various status
 /// effects, such as Ensnare, Plague, and Defensive Matrix.
-u32 getUnitOverlayAdjustment(const CUnit* const unit);
+u32 getUnitOverlayAdjustment(CUnit* const unit);
 
 /// Refreshes the screen position within the given rectangle area in pixels.
 void refreshScreen(int left, int top, int right, int bottom);
@@ -236,7 +239,7 @@ u16 random();
 void refreshConsole();
 
 // Moves the camera/screen to the unit
-void MoveScreenToUnit(CUnit *unit, u32 playerId = 8);
+void MoveScreenToUnit(CUnit* unit, u32 playerId = 8);
 
 // Creates a minimap ping at x,y (relative pos)
 void minimapPing(u32 x, u32 y, s32 color, u32 playerId = 8);
