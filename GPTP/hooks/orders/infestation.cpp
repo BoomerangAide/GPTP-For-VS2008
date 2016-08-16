@@ -25,7 +25,7 @@ void makeToHoldPosition(CUnit* unit);												//0x004EB5B0
 namespace hooks {
 
 	//replace 0x00402750 canInfest
-	bool unitCanInfest(const CUnit* unit) {
+	bool unitCanInfest(CUnit* unit) {
 
 		bool returnValue;
 
@@ -38,7 +38,7 @@ namespace hooks {
 	;
 
 	//replace 0x00402210 CC_CanBeInfested
-	bool isInfestableUnit(const CUnit* unit) {
+	bool isInfestableUnit(CUnit* unit) {
 
 		u32 unitHpTest;
 		u32 unitMaxHp;
@@ -517,8 +517,6 @@ void changeUnitButtonSet_Sub_4E5D60(CUnit* unit, u16 buttonSetId) {
 	}
 
 }
-
-
 
 ;
 
