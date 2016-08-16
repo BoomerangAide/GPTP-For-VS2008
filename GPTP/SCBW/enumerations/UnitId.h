@@ -1,7 +1,5 @@
 #pragma once
 
-//V241 for VS2008
-
 namespace UnitId {
 enum Enum {
   //Short names used in unitdef.txt
