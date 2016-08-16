@@ -15,13 +15,12 @@ namespace {
 bool unitCanSeeCloakedTarget(CUnit* unit, CUnit* target);												//0x00401D60
 bool isInfestableUnit(CUnit* unit);																		//0x00402210
 bool unitCanInfest(CUnit* unit);																		//0x00402750
-bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range);										//0x00430F10
 void AI_AttackUnit(CUnit* unit);																		//0x0043FFD0
 CUnit* findBestAttackTarget(CUnit* unit);																//0x00443080
 bool function_00462EA0(CUnit* unit, u8 unknownByteValue);												//0x00462EA0
 void function_00465780(CUnit* unit);																	//0x00465780
-void removeOrderFromUnitQueue(CUnit* unit, COrder* order);												//0x004742D0																//0x004742D0
-void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, const CUnit* target, u16 targetUnitId);	//0x004745F0
+void removeOrderFromUnitQueue(CUnit* unit, COrder* order);												//0x004742D0
+void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId);		//0x004745F0
 void function_00474A70(CUnit* unit, CUnit* target, u8 orderId);											//0x00474A70
 bool isTargetWithinMinMovementRange(CUnit* unit, CUnit* target, u32 range);								//0x004763D0
 bool function_00476610(CUnit* unit, int x, int y);														//0x00476610
@@ -405,7 +404,7 @@ void orders_TurretAttack(CUnit* unit) {
 								jump_to_77C78 = true;
 							else
 							if(	weapons_dat::MinRange[current_unit_weaponId] != 0 &&
-								isTargetWithinMinRange(current_unit, target, weapons_dat::MinRange[current_unit_weaponId])
+								current_unit->isTargetWithinMinRange(target, weapons_dat::MinRange[current_unit_weaponId])
 							)
 								jump_to_77C78 = true;
 							else {
@@ -681,13 +680,13 @@ void orders_SapUnit(CUnit* unit) {
 				u32 unitMovableState = unit->getMovableState();
 				
 				if(
-					!isTargetWithinMinRange(unit,target,4) &&
+					!unit->isTargetWithinMinRange(target,4) &&
 					unitMovableState != 2
 				)
 				{ //78998
 
 					if(
-						isTargetWithinMinRange(unit,target,256) &&
+						unit->isTargetWithinMinRange(target,256) &&
 						target->movementFlags & MovementFlags::Accelerating
 					)
 						//maybe trigger the acceleration of the infested
@@ -708,9 +707,8 @@ void orders_SapUnit(CUnit* unit) {
 
 					setNextWaypoint_Sub4EB290(unit);
 
-					if(!isTargetWithinMinRange
+					if(!unit->isTargetWithinMinRange
 						(
-							unit,
 							target,
 							weapons_dat::OuterSplashRadius[WeaponId::Suicide_InfestedTerran]
 						)
@@ -1001,7 +999,7 @@ bool unitCanSeeCloakedTarget(CUnit* unit, CUnit* target) {
 ;
 
 const u32 Func_IsInfestable = 0x00402210;
-bool isInfestableUnit(CUnit *unit) {
+bool isInfestableUnit(CUnit* unit) {
 
   static Bool32 bPreResult;
   
@@ -1028,27 +1026,6 @@ bool unitCanInfest(CUnit* unit) {
 		PUSHAD
 		MOV EAX, unit
 		CALL Func_CanInfest
-		MOV bPreResult, EAX
-		POPAD
-	}
-
-	return (bPreResult != 0);
-
-}
-
-;
-
-const u32 Func_IsTargetWithinMinRange = 0x00430F10;
-bool isTargetWithinMinRange(CUnit* unit, CUnit* target, u32 range) {
-
-	static Bool32 bPreResult;
-
-	__asm {
-		PUSHAD
-		PUSH target
-		PUSH range
-		MOV ECX, unit
-		CALL Func_IsTargetWithinMinRange
 		MOV bPreResult, EAX
 		POPAD
 	}
@@ -1096,8 +1073,10 @@ CUnit* findBestAttackTarget(CUnit* unit) {
 const u32 Func_Sub462EA0 = 0x00462EA0;
 bool function_00462EA0(CUnit* unit, u8 unknownByteValue) {
 
-	static u32 _unknownByteValue = unknownByteValue;
+	static u32 _unknownByteValue;
 	static Bool32 bPreResult;
+
+	_unknownByteValue = unknownByteValue;
 
 	__asm {
 		PUSHAD
@@ -1144,9 +1123,10 @@ void removeOrderFromUnitQueue(CUnit* unit, COrder* order) {
 ;
 
 const u32 Func_PerformAnotherOrder = 0x004745F0;
-void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, const CUnit* target, u16 targetUnitId) {
+void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId) {
 
-	static Point16 pos = {x,y};
+	static Point16 pos;
+	pos.x = x;pos.y = y;
 
 	__asm {
 		PUSHAD
@@ -1274,11 +1254,13 @@ void function_00477510(CUnit* unit) {
 const u32 Func_Sub477820 = 0x00477820;
 void function_00477820(CUnit* unit, u8 orderId) {
 
-	static u32 _orderId = orderId;
+	static u32 orderId_;
+
+	orderId_ = orderId;
 
 	__asm {
 		PUSHAD
-		PUSH _orderId
+		PUSH orderId_
 		MOV EAX, unit
 		CALL Func_Sub477820
 		POPAD
@@ -1292,12 +1274,14 @@ const u32 Func_Sub478370 = 0x00478370;
 bool function_00478370(CUnit* unit, u8 orderId) {
 
 	static Bool32 bPreResult;
-	static u32 _orderId = orderId;
+	static u32 orderId_;
+
+	orderId_ = orderId;
 
 	__asm {
 		PUSHAD
 		MOV EAX, unit
-		PUSH _orderId
+		PUSH orderId_
 		CALL Func_Sub478370
 		MOV bPreResult, EAX
 		POPAD
@@ -1522,7 +1506,6 @@ void setNextWaypoint_Sub4EB290(CUnit* unit) {
 		POPAD
 	}
 }
-
 
 ;
 
