@@ -2,26 +2,33 @@
 #include "../hook_tools.h"
 
 void __declspec(naked) transferResourceToWorkerWrapper() {
-  CUnit *worker, *resource;
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV worker, ECX
-    MOV resource, EAX
-  }
 
-  hooks::transferResourceToWorkerHook(worker, resource);
+	static CUnit* worker;
+	static CUnit* resource;
 
-  __asm {
-    POPAD
-    RETN
-  }
+	__asm {
+		PUSH EBP
+		MOV EBP, ESP
+		MOV worker, ECX
+		MOV resource, EAX
+		PUSHAD
+	}
+
+	hooks::transferResourceToWorkerHook(worker, resource);
+
+	__asm {
+		POPAD
+		MOV ESP, EBP
+		POP EBP
+		RETN
+	}
+
 }
 
 namespace hooks {
 
 void injectHarvestResource() {
-  jmpPatch(transferResourceToWorkerWrapper, 0x004696D0);
+	jmpPatch(transferResourceToWorkerWrapper, 0x004696D0, 0);
 }
 
 
