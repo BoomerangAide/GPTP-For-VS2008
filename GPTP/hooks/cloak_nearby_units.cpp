@@ -1,84 +1,79 @@
 #include "cloak_nearby_units.h"
 #include <SCBW/UnitFinder.h>
-#include <SCBW/enumerations.h>
 #include <SCBW/api.h>
 #include <algorithm>
 
-//V241 for VS2008
-
 //Helper functions
 namespace {
-
-void secondaryOrder_Cloak(CUnit *unit);
+void secondaryOrder_Cloak(CUnit* unit);
+CUnit** getAllUnitsInBounds(Box16* coords);		//0x0042FF80
 } //unnamed namespace
-
-class cloakNearbyUnitProc : public scbw::UnitFinderCallbackProcInterface {
-
-	public:
-		cloakNearbyUnitProc(CUnit *cloaker, u32 cloakRadius, bool needsRefresh) : 
-		  cloaker(cloaker), cloakRadius(cloakRadius), needsRefresh(needsRefresh) {}
-
-		  void proc(CUnit *unit) {
-			//Don't cloak fellow Arbiters and Nukes
-			if (unit->id == UnitId::arbiter
-				|| unit->id == UnitId::danimoth
-				|| unit->id == UnitId::nuclear_missile)
-			  return;
-
-			//Don't cloak buildings and doodad units (?)
-			if (units_dat::BaseProperty[unit->id] & (UnitProperty::Building | UnitProperty::NeutralAccessories))
-			  return;
-
-			//Don't cloak hallucinations
-			if (unit->status & UnitStatus::IsHallucination)
-			  return;
-
-			//Not sure. Perhaps to prevent warping-in units and buildings from being cloaked?
-			if (unit->mainOrderId == OrderId::Warpin)
-			  return;
-
-			//Only cloak units owned by the same player
-			if (cloaker->playerId != unit->playerId)
-			  return;
-
-			//Distance check
-			if (cloaker->getDistanceToTarget(unit) <= cloakRadius) {
-			  secondaryOrder_Cloak(unit);
-			  //Remove energy cost for units that use energy to cloak
-			  if (!(unit->status & UnitStatus::CloakingForFree)) {
-				unit->status |= UnitStatus::CloakingForFree;
-				needsRefresh = true;
-			  }
-			}
-		  }
-
-	private:
-		CUnit *cloaker;
-		u32 cloakRadius;
-		bool needsRefresh;
-
-};
 
 namespace hooks {
 
 //Cloak all units near @p cloaker.
-void cloakNearbyUnitsHook(CUnit *cloaker) {
-  //Default StarCraft behavior
+void cloakNearbyUnitsHook(CUnit* cloaker) {
 
-  //Use the unit's air weapon range
-  u32 cloakRadius = cloaker->getMaxWeaponRange(cloaker->getAirWeapon());
+	bool needsRefresh = false;
 
-  //Run the unit finder
-  scbw::UnitFinder unitsToCloak(
-    cloaker->getX() - cloakRadius, cloaker->getY() - cloakRadius,
-    cloaker->getX() + cloakRadius, cloaker->getY() + cloakRadius);
+	static u16* const maxBoxRightValue =			(u16*) 0x00628450;	//should usually be mapTileSize->width * 32
+	static u16* const maxBoxBottomValue =			(u16*) 0x006284B4;	//should usually be mapTileSize->height * 32
 
-  bool needsRefresh = false;
+	Box16 area_of_effect;
 
-  unitsToCloak.forEach(cloakNearbyUnitProc(cloaker,cloakRadius,needsRefresh));
+	CUnit** unitsInAreaOfEffect;
+	CUnit* current_unit;
 
-  if (needsRefresh)
-    scbw::refreshConsole();
+	//Use the unit's air weapon range
+	u32 cloakRadius = cloaker->getMaxWeaponRange(cloaker->getAirWeapon());
+
+	area_of_effect.left = cloaker->sprite->position.x - cloakRadius;
+	area_of_effect.right = cloaker->sprite->position.x + cloakRadius;
+	area_of_effect.top = cloaker->sprite->position.x - cloakRadius;
+	area_of_effect.bottom = cloaker->sprite->position.x - cloakRadius;
+
+	if(area_of_effect.left < 0)
+		area_of_effect.left = 0;
+	if(area_of_effect.top < 0)
+		area_of_effect.top = 0;
+	if(area_of_effect.right > *maxBoxRightValue)
+		area_of_effect.right = *maxBoxRightValue;
+	if(area_of_effect.bottom > *maxBoxBottomValue)
+		area_of_effect.bottom = *maxBoxBottomValue;
+
+	unitsInAreaOfEffect = getAllUnitsInBounds(&area_of_effect);
+
+	current_unit = unitsInAreaOfEffect[0];
+
+	while(current_unit != NULL) {
+
+		if (
+			current_unit->id != UnitId::arbiter &&
+			current_unit->id != UnitId::danimoth &&
+			!(units_dat::BaseProperty[current_unit->id] & UnitProperty::Building) &&	//Don't cloak buildings
+			!(current_unit->status & UnitStatus::IsHallucination) &&					//Don't cloak hallucinations
+			!(current_unit->status & UnitStatus::CloakingForFree) &&					//Don't cloak already cloaking for free units
+			current_unit->id != UnitId::nuclear_missile &&								//Don't cloak nukes
+			current_unit->mainOrderId != OrderId::Warpin &&								//Don't cloak units doing order WarpIn
+			cloaker->playerId == current_unit->playerId	&&								//Unit owner must be Cloaker owner
+			cloaker->isTargetWithinMinRange(current_unit,cloakRadius)					//Check again if unit in range of cloaking
+		)
+		{
+			secondaryOrder_Cloak(current_unit);
+			current_unit->status |= UnitStatus::CloakingForFree;
+			needsRefresh = true;
+		}
+
+		current_unit = current_unit->link.next;
+
+	}
+
+	*tempUnitsListCurrentArrayCount = tempUnitsListArraysCountsListLastIndex[*tempUnitsListArraysCountsListLastIndex];
+	*tempUnitsListArraysCountsListLastIndex = *tempUnitsListArraysCountsListLastIndex - 1;
+
+	if (needsRefresh)
+		scbw::refreshConsole();
+
 }
 
 } //hooks
@@ -87,25 +82,53 @@ void cloakNearbyUnitsHook(CUnit *cloaker) {
 
 namespace {
 
-void secondaryOrder_Cloak(CUnit *unit) {
-  CUnit** const firstBurrowedUnit = (CUnit**) 0x0063FF5C;
+//Identical to secondaryOrd_Cloak @ 0x00491790
+void secondaryOrder_Cloak(CUnit* unit) {
 
-  if (unit->isCloaked++)
-    return;
+	static CUnit** const firstBurrowedUnit = (CUnit**) 0x0063FF5C;
 
-  if (unit->status & UnitStatus::RequiresDetection)
-    return;
+	if (
+		!unit->isCloaked &&
+		!(unit->status & UnitStatus::RequiresDetection) &&
+		unit->burrow_link.next == NULL
+	)
+	{
 
-  if (unit->burrow_link.next)
-    return;
-  
-  unit->burrow_link.next = *firstBurrowedUnit;
-  unit->burrow_link.prev = NULL;
-  if (*firstBurrowedUnit)
-    (*firstBurrowedUnit)->burrow_link.prev = unit;
-  *firstBurrowedUnit = unit;
+		unit->isCloaked = true;
 
-  scbw::refreshConsole();
+		unit->burrow_link.next = *firstBurrowedUnit;
+		unit->burrow_link.prev = NULL;
+
+		if (*firstBurrowedUnit != NULL)
+			(*firstBurrowedUnit)->burrow_link.prev = unit;
+
+		*firstBurrowedUnit = unit;
+
+		scbw::refreshConsole();
+
+	}
+
 }
+
+;
+
+const u32 Func_GetAllUnitsInBounds = 0x0042FF80;
+CUnit** getAllUnitsInBounds(Box16* coords) {
+
+	static CUnit** units_in_bounds;
+
+	__asm {
+		PUSHAD
+		MOV EAX, coords
+		CALL Func_GetAllUnitsInBounds
+		MOV units_in_bounds, EAX
+		POPAD
+	}
+
+	return units_in_bounds;
+
+}
+
+;
 
 } //unnamed namespace
