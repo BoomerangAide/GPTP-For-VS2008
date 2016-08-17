@@ -3,161 +3,227 @@
 
 namespace {
 
-const u32 Hook_SetRallyGenericJmpBack1 = 0x00456384;
-const u32 Hook_SetRallyGenericJmpBack2 = 0x0049AD77;
+///
+/// Main functions wrappers
+///
 
-//Inject with jmpPatch()
-const u32 Hook_OrderNewUnitToRally = 0x00466F62;
-const u32 Hook_OrderNewUnitToRallyBack = 0x00466FA3;
 void __declspec(naked) orderNewUnitToRallyWrapper() {
-  static CUnit *unit, *factory;
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, ESI
-    MOV factory, ECX
-  }
 
-  hooks::orderNewUnitToRally(unit, factory);
+	static CUnit* unit;
+	static CUnit* factory;
 
-  __asm {
-    POPAD
-    JMP Hook_OrderNewUnitToRallyBack
-  }
+	__asm {
+		MOV unit, EAX
+		MOV factory, ECX
+		PUSHAD
+	}
+
+	hooks::orderNewUnitToRally(unit, factory);
+
+	__asm {
+		POPAD
+		RETN
+	}
+
 }
 
-//Inject with callPatch()
-const u32 Hook_SetRallyPosition_Call      = 0x00456083;
-void __declspec(naked) setRallyPositionWrapper_Call() {
-  static CUnit *unit;
-  static u16 x, y;
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, EAX
-    MOV y, DI
-    MOV x, DX
-  }
+;
 
-  hooks::setRallyPosition(unit, x, y);
+void __declspec(naked) setRallyPositionWrapper() {
 
-  __asm {
-    POPAD
-    RETN 8
-  }
+	static CUnit* unit;
+	static u16 x;
+	static u16 y;
+
+	__asm {
+
+		PUSH EBP
+		MOV EBP, ESP
+
+		MOV unit, EAX
+
+		MOV CX, [EBP+0x08]
+		MOV x, CX
+
+		MOV DX, [EBP+0x0C]
+		MOV y, DX
+
+		PUSHAD
+
+	}
+
+	hooks::setRallyPosition(unit, x, y);
+
+	__asm {
+		POPAD
+		POP EBP
+		RETN 0x08
+	}
+
 }
 
-//Inject with jmpPatch()
-const u32 Hook_SetRallyPosition_Jmp1      = 0x00456256;
+;
+
+void __declspec(naked) setRallyUnitWrapper() {
+
+	static CUnit* unit;
+	static CUnit* target;
+
+	__asm {
+		MOV unit, ECX
+		MOV target, EAX
+		PUSHAD
+	}
+
+	hooks::setRallyUnit(unit, target);
+
+	__asm {
+		POPAD
+		RETN
+	}
+}
+
+;
+
+///
+/// Additional wrappers for uses of the logic that
+/// would be hardcoded instead of using the functions
+///
+
+//Replace hardcoded execution at 0x00456256
+//Jump to 0x00456384 because the code equivalent
+//to the function is followed by a jmp to that
+//position
+
 void __declspec(naked) setRallyPositionWrapper_Jmp1() {
-  static CUnit *unit;
-  static u16 x, y;
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, EDI
-    MOV x, BX
-    MOV y, SI
-  }
 
-  hooks::setRallyPosition(unit, x, y);
+	static const u32 Hook_SetRallyGenericJmpBack1 = 0x00456384;
 
-  __asm {
-    POPAD
-    JMP Hook_SetRallyGenericJmpBack1
-  }
+	static CUnit* unit;
+	static u16 x;
+	static u16 y;
+
+	__asm {
+		MOV unit, EDI
+		MOV x, BX
+		MOV y, SI
+		PUSHAD
+	}
+
+	hooks::setRallyPosition(unit, x, y);
+
+	__asm {
+		POPAD
+		JMP Hook_SetRallyGenericJmpBack1
+	}
 }
 
-//Inject with jmpPatch()
-const u32 Hook_SetRallyPosition_Jmp2      = 0x0049ACEF;
+;
+
+//Replace hardcoded execution at 0x0049ACEF
+//Jump to 0x0049AD77 because the code equivalent
+//to the function is followed by a jmp to that
+//position
+
 void __declspec(naked) setRallyPositionWrapper_Jmp2() {
-  static CUnit *unit;
-  static u16 x, y;
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, ESI
-    MOV x, CX
-    MOV y, DX
-  }
 
-  hooks::setRallyPosition(unit, x, y);
+	static const u32 Hook_SetRallyGenericJmpBack2 = 0x0049AD77;
 
-  __asm {
-    POPAD
-    JMP Hook_SetRallyGenericJmpBack2
-  }
+	static CUnit* unit;
+	static u16 x;
+	static u16 y;
+
+	__asm {
+		MOV unit, ESI
+		MOV x, CX
+		MOV y, DX
+		PUSHAD
+	}
+
+	hooks::setRallyPosition(unit, x, y);
+
+	__asm {
+		POPAD
+		JMP Hook_SetRallyGenericJmpBack2
+	}
+
 }
 
-//Inject with callPatch()
-const u32 Hook_SetRallyUnit_Call          = 0x0045605F;
-void __declspec(naked) setRallyUnitWrapper_Call() {
-  static CUnit *unit, *target;
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, ECX
-    MOV target, EAX
-  }
+;
 
-  hooks::setRallyUnit(unit, target);
+//Replace hardcoded execution at 0x0045620D
+//Jump to 0x00456384 because the code equivalent
+//to the function is followed by a jmp to that
+//position
 
-  __asm {
-    POPAD
-    RETN
-  }
-}
-
-//Inject with jmpPatch()
-const u32 Hook_SetRallyUnit_Jmp1          = 0x0045620D;
 void __declspec(naked) setRallyUnitWrapper_Jmp1() {
-  static CUnit *unit, *target;
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, EDI
-    MOV target, EAX
-  }
 
-  hooks::setRallyUnit(unit, target);
+	static const u32 Hook_SetRallyGenericJmpBack1 =	0x00456384;
 
-  __asm {
-    POPAD
-    JMP Hook_SetRallyGenericJmpBack1
-  }
+	static CUnit* unit;
+	static CUnit* target;
+
+	__asm {
+		MOV unit, EDI
+		MOV target, EAX
+		PUSHAD
+	}
+
+	hooks::setRallyUnit(unit, target);
+
+	__asm {
+		POPAD
+		JMP Hook_SetRallyGenericJmpBack1
+	}
+
 }
 
-//Inject with jmpPatch()
-const u32 Hook_SetRallyUnit_Jmp2          = 0x0049ACB0;
+;
+
+//Replace hardcoded execution at 0x0049ACB0
+//Jump to 0x0049AD77 because the code equivalent
+//to the function is followed by a jmp to that
+//position
+
 void __declspec(naked) setRallyUnitWrapper_Jmp2() {
-  static CUnit *unit, *target;
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, ESI
-    MOV target, EBX
-  }
 
-  hooks::setRallyUnit(unit, target);
+	static const u32 Hook_SetRallyGenericJmpBack2 =	0x0049AD77;
 
-  __asm {
-    POPAD
-    JMP Hook_SetRallyGenericJmpBack2
-  }
+	static CUnit* unit;
+	static CUnit* target;
+
+	__asm {
+		MOV unit, ESI
+		MOV target, EBX
+		PUSHAD
+	}
+
+	hooks::setRallyUnit(unit, target);
+
+	__asm {
+		POPAD
+		JMP Hook_SetRallyGenericJmpBack2
+	}
 }
+
+;
 
 } //unnamed namespace
 
 namespace hooks {
 
 void injectRallyHooks() {
-  jmpPatch(orderNewUnitToRallyWrapper,    Hook_OrderNewUnitToRally);
-  callPatch(setRallyPositionWrapper_Call, Hook_SetRallyPosition_Call);
-  jmpPatch(setRallyPositionWrapper_Jmp1,  Hook_SetRallyPosition_Jmp1);
-  jmpPatch(setRallyPositionWrapper_Jmp2,  Hook_SetRallyPosition_Jmp2);
-  callPatch(setRallyUnitWrapper_Call,     Hook_SetRallyUnit_Call);
-  jmpPatch(setRallyUnitWrapper_Jmp1,      Hook_SetRallyUnit_Jmp1);
-  jmpPatch(setRallyUnitWrapper_Jmp2,      Hook_SetRallyUnit_Jmp2);
+	
+	jmpPatch(setRallyPositionWrapper,		0x00466910, 2);
+	jmpPatch(setRallyUnitWrapper,			0x00466B40, 1);
+	jmpPatch(orderNewUnitToRallyWrapper,	0x00466F50, 0);
+ 
+	jmpPatch(setRallyPositionWrapper_Jmp1,	0x00456256, 19);	//24 - 5 of jump
+	jmpPatch(setRallyPositionWrapper_Jmp2,	0x0049ACEF, 19);	//24 - 5 of jump
+
+	jmpPatch(setRallyUnitWrapper_Jmp1,		0x0045620D, 35);	//40 - 5 of jump
+	jmpPatch(setRallyUnitWrapper_Jmp2,		0x0049ACB0, 37);	//42 - 5 of jump
+
 }
 
 } //hooks
