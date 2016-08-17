@@ -1,49 +1,57 @@
 #include "spider_mine.h"
 #include "../hook_tools.h"
 
-//V241 for VS2008
-
 namespace {
 
-void __declspec(naked) getSpiderMineBurrowTimeWrapper() {
-  static CUnit *mine;
-  __asm {
-    PUSHAD
-    MOV mine, EDI
-  }
-
-  mine->groundWeaponCooldown = hooks::getSpiderMineBurrowTimeHook(mine);
-  mine->mainOrderState = 1;
-
-  __asm {
-    POPAD
-    RETN
-  }
-}
-
 void __declspec(naked) findBestSpiderMineTargetWrapper() {
-  static CUnit *spiderMine, *target;
-  __asm {
-    PUSHAD
-    MOV spiderMine, ESI
-  }
 
-  target = hooks::findBestSpiderMineTargetHook(spiderMine);
+	static CUnit* spiderMine;
+	static CUnit* target;
 
-  __asm {
-    POPAD
-    MOV EAX, target
-    RETN
-  }
+	__asm {
+		MOV spiderMine, ESI
+		PUSHAD
+	}
+
+	target = hooks::findBestSpiderMineTargetHook(spiderMine);
+
+	__asm {
+		POPAD
+		MOV EAX, target
+		RETN
+	}
+
 }
+
+;
+
+void __declspec(naked) orders_VultureMineWrapper() {
+
+	static CUnit* unit;
+
+	__asm {
+		MOV unit, EAX
+		PUSHAD
+	}
+
+	hooks::orders_VultureMine(unit);
+
+	__asm {
+		POPAD
+		RETN
+	}
+
+}
+
+;
 
 } //unnamed namespace
 
 namespace hooks {
 
 void injectSpiderMineHooks() {
-  callPatch(getSpiderMineBurrowTimeWrapper,   0x00463E08, 3);
-  callPatch(findBestSpiderMineTargetWrapper,  0x00463E63);
+	jmpPatch(findBestSpiderMineTargetWrapper,	0x00441270, 1);
+	jmpPatch(orders_VultureMineWrapper,			0x00463DF0, 2);
 }
 
 } //hooks
