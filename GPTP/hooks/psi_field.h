@@ -4,15 +4,15 @@
 ///   hooks/unit_destructor_special.cpp
 ///   hooks/unit_selection_graphics.cpp
 
+//NOT FULLY REVALIDATED BY UNDEADSTAR
+
 #pragma once
 #include "../SCBW/structures/CUnit.h"
-
-//V241 for VS2008
 
 namespace hooks {
 
 /// Edit these functions in psi_field.cpp.
-bool isReadyToMakePsiField(CUnit *unit);
+bool isReadyToMakePsiField(CUnit* unit);
 bool canMakePsiField(u16 unitId);
 
 /// This function must be called once per frame in nextFrame().
