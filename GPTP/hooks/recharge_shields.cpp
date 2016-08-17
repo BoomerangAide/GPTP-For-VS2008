@@ -5,20 +5,18 @@
 
 //-------- Helper function declarations. Do NOT modify! --------//
 namespace {
-bool orderToMoveToTarget(CUnit *unit, const CUnit *target);
-void orderToHoldPosition(CUnit *unit);
-void insertFirstOrder(CUnit *unit, u8 orderId);
-
-//Returns:  0 - Unit has not reached destination
-//          1 - Unit cannot move
-//          2 - Unit has reached destination
-int getUnitMovementState(const CUnit *unit);
+	void insertFirstOrder(CUnit* unit, u8 orderId);			//0x004749D0
+	u8 hasOverlay(CUnit* unit);								//0x0047B720
+	void function_004934B0(CUnit* unit, CUnit* battery);	//0x004934B0
+	void makeToHoldPosition(CUnit* unit);					//0x004EB5B0
+	bool orderToMoveToTarget(CUnit* unit, CUnit* target);	//0x004EB980
+	bool isHangarUnit(CUnit* unit);
 } //unnamed namespace
 
 //-------- Actual hook functions --------//
 
 //This function is called every frame when a unit recharges shields.
-void rechargeShieldsProc(CUnit *target, CUnit *battery) {
+void rechargeShieldsProc(CUnit* target, CUnit* battery) {
   //Default StarCraft behavior
 
   s32 shieldGain = 1280, energySpent = 640;
@@ -42,103 +40,136 @@ void rechargeShieldsProc(CUnit *target, CUnit *battery) {
     battery->energy -= energySpent;
 }
 
+;
+
 namespace hooks {
 
 /// Decides whether the @p target can recharge shields from the @p battery.
-bool unitCanRechargeShieldsHook(const CUnit *target, const CUnit *battery) {
-  //Default StarCraft behavior
+Bool32 unitCanRechargeShieldsHook(CUnit* target, CUnit* battery) {
 
-  //Check target conditions
-  if (target->playerId != battery->playerId   //Is not owned by the player
-      || !(units_dat::ShieldsEnabled[target->id])  //Does not have shields
-      || !(target->status & (UnitStatus::Completed | UnitStatus::IsBuilding)) //Is incomplete?
-      || target->status & UnitStatus::GroundedBuilding)                       //Is a building
-    return false;
+	Bool32 result;
 
-  //Check target race
-  if (target->getRace() != RaceId::Protoss)
-    return false;
+	//Check target conditions
+	if (	target->playerId != battery->playerId ||								//Is not owned by the player
+			!(units_dat::ShieldsEnabled[target->id]) ||								//Does not have shields
+			!(target->status & UnitStatus::Completed) ||							//Is incomplete?
+			!(target->status & UnitStatus::IsBuilding) ||							//Is building (like archon build self)
+			target->status & UnitStatus::GroundedBuilding ||						//Is a building
+			target->getRace() != RaceId::Protoss ||									//Check target race
+			target->shields >= (units_dat::MaxShieldPoints[target->id] / 256) ||	//Already has max shields
+			!(battery->status & UnitStatus::Completed) ||
+			battery->energy == 0 ||
+			battery->isFrozen() ||
+			isHangarUnit(target)
+	  )                       
+		result = 0;
+	else
+	if(target->pAI == NULL)
+		result = 1;
+	else { //Separate check for AI-controlled units
+		if (target->mainOrderId == OrderId::RechargeShields1 || target->mainOrderId == OrderId::Pickup4)
+			result = 0;
+		if (target->orderQueueHead != NULL && target->orderQueueHead->orderId == OrderId::RechargeShields1)
+			result = 0;
+		else
+			result = 1;
+	}
 
-  //Check target shield amount
-  if (target->shields >= (units_dat::MaxShieldPoints[target->id] << 8)) //Already has max shields
-    return false;
+	return result;
 
-  //Check battery conditions
-  if (!(battery->status & UnitStatus::Completed)  //Is being warped in
-      || !battery->energy                         //Does not have energy
-      || battery->isFrozen())                     //Is frozen
-    return false; //Cannot recharge from this battery
-
-  if (target->pAI) { //Separate check for AI-controlled units
-    if (target->mainOrderId == OrderId::RechargeShields1 || target->mainOrderId == OrderId::Pickup4)
-      return false;
-    if (target->orderQueueHead && target->orderQueueHead->orderId == OrderId::RechargeShields1)
-      return false;
-  }
-
-  return true;
 }
+
+;
 
 //The order process run by a unit when recharging shields
-void orderRechargeShieldsHook(CUnit *unit) {
-  //Default StarCraft behavior
+//Identical to orders_RechargeShields1 @ 00493DD0
+void orderRechargeShieldsHook(CUnit* unit) {
 
-  CUnit *battery = unit->orderTarget.unit;
+	const int BATTERY_RANGE = 0x80; //(128)
 
-  //Skip if the Shield Battery does not exist, has no energy, or is disabled
-  if (!battery || battery->energy == 0 || battery->isFrozen()) {
-    unit->orderToIdle();
-    return;
-  }
+	CUnit* battery = unit->orderTarget.unit;
 
-  switch (unit->mainOrderState) {
-    //State 0: Order the unit to move towards the Shield Battery
-    case 0:
-      if (orderToMoveToTarget(unit, battery))
-        unit->mainOrderState = 1;
-      break;
+	//Skip if the Shield Battery does not exist, has no energy, or is disabled
+	//isFrozen code was hardcoded rather than function call in original code
+	if (battery == NULL || battery->energy == 0 || battery->isFrozen()) {
+		unit->orderToIdle();
+	}
+	else 
+	if(unit->mainOrderState <= 3)
+	{
 
-    //State 1: Make the unit move until it is close enough and then stop.
-    case 1:
-      switch (getUnitMovementState(unit)) {
-        case 0: //Unit has not reached target yet
-          if (unit->getDistanceToTarget(battery) > 128)
-            return;
-        case 1: //Unit cannot move
-          orderToHoldPosition(unit);
-          unit->mainOrderState = 2;
-          break;
+		bool bStopThere = false;
 
-        default:
-          unit->orderToIdle();
-          return;
-      }
+		if(unit->mainOrderState == 0) {
+			if(!orderToMoveToTarget(unit,battery))
+				unit->mainOrderState = 1;
+		}
+		else
+		if(unit->mainOrderState == 1) {
 
-    //State 2: Prepare to recharge shields
-    case 2:
-      battery->setSecondaryOrder(OrderId::ShieldBattery);
-      unit->sprite->createOverlay(ImageId::RechargeShields_Small + scbw::getUnitOverlayAdjustment(unit));
-      insertFirstOrder(unit, OrderId::Harvest5);  //Stop workers harvesting
-      unit->mainOrderState = 3;
+			u32 movableState = unit->getMovableState();
 
-    //State 3: Recharge unit shields
-    case 3:
-      if (!battery->orderTarget.unit)
-        battery->orderTarget.unit = unit;
-      
-      rechargeShieldsProc(unit, battery);
+			if(movableState == 2) {
+				unit->orderToIdle();
+				bStopThere = true;
+			}
+			else
+			if(movableState == 0) {
+				if(!unit->isTargetWithinMinRange(battery, BATTERY_RANGE))
+					bStopThere = true;
 
-      //Stop recharge condition: Unit is at full shields or Shield Battery has no energy
-      if (unit->shields >= units_dat::MaxShieldPoints[unit->id] * 256
-          || battery->energy == 0)
-      {
-        if (battery->orderTarget.unit == unit)
-          battery->orderTarget.unit = NULL;
-        unit->orderToIdle();
-      }
-      break;      
-  }
-}
+			}
+
+			if(!bStopThere) {
+				makeToHoldPosition(unit);
+				unit->mainOrderState = 2;
+			}
+
+		}
+
+		if(!bStopThere && unit->mainOrderState == 2) {
+
+			u8 overlaysCounter;
+
+			if(battery->secondaryOrderId != OrderId::ShieldBattery)
+				battery->setSecondaryOrder(OrderId::ShieldBattery);
+
+			overlaysCounter = hasOverlay(unit);
+			unit->sprite->createOverlay(ImageId::RechargeShields_Small + overlaysCounter,0,0,0);
+
+			//the order is correct, see OrderId.h description
+			insertFirstOrder(unit,OrderId::Harvest5);
+
+			unit->mainOrderState = 3;
+
+		}
+
+		if(!bStopThere && unit->mainOrderState == 3) {
+
+			if(battery->orderTarget.unit == NULL)
+				battery->orderTarget.unit = unit;
+
+			//do 1 recharge action? (increase unit shield, decrease battery energy)
+			function_004934B0(unit,battery);
+
+			if(
+				unit->shields >= units_dat::MaxShieldPoints[unit->id] * 256 ||
+				battery->energy != 0
+			)
+			{
+
+				if(battery->orderTarget.unit != NULL)
+					battery->orderTarget.unit = NULL;
+
+				unit->orderToIdle();
+
+			}
+
+		} //if(!bStopThere && unit->mainOrderState == 3)
+
+	} //if(unit->mainOrderState <= 3)
+
+} //void orderRechargeShieldsHook(CUnit* unit)
 
 } //hooks
 
@@ -147,55 +178,98 @@ void orderRechargeShieldsHook(CUnit *unit) {
 
 namespace {
 
-const u32 Helper_OrderToMoveToTarget = 0x004EB980;
-bool orderToMoveToTarget(CUnit *unit, const CUnit *target) {
+const u32 Helper_InsertFirstOrder = 0x004749D0;
+void insertFirstOrder(CUnit* unit, u8 orderId) {
 
-	static Bool32 result;
+	__asm {
+		PUSHAD
+		MOV AL, orderId
+		MOV ECX, unit
+		CALL Helper_InsertFirstOrder
+		POPAD
+	}
+
+}
+
+;
+
+const u32 Func_hasOverlay = 0x0047B720;
+/// Return the count of overlays
+u8 hasOverlay(CUnit* unit) {
+
+	static u8 result;
+
+	__asm {
+		PUSHAD
+		MOV EAX, unit
+		CALL Func_hasOverlay
+		MOV result, AL
+		POPAD
+	}
+
+	return result;
+
+}
+
+;
+
+const u32 Func_Sub4934B0 = 0x004934B0;
+void function_004934B0(CUnit* unit, CUnit* battery) {
+
+	__asm {
+		PUSHAD
+		MOV ECX, unit
+		MOV EBX, battery
+		CALL Func_Sub4934B0
+		POPAD
+	}
+
+}
+
+;
+
+const u32 Func__moveToTarget = 0x004EB980;
+bool orderToMoveToTarget(CUnit* unit, CUnit* target) {
+
+	static Bool32 bPreResult;
   
 	__asm {
 		PUSHAD
 		MOV EAX, target
 		MOV ECX, unit
-		CALL Helper_OrderToMoveToTarget
-		MOV result, EAX
+		CALL Func__moveToTarget
+		MOV bPreResult, EAX
 		POPAD
 	}
 
-	return result != 0;
+	return bPreResult != 0;
 
 }
 
-//Identical to function @ 0x00401DC0;
-int getUnitMovementState(const CUnit *unit) {
-  if (unit->moveTarget.pt != unit->sprite->position)
-    return 0;
-  else if (!(unit->status & UnitStatus::Unmovable))
-    return 1;
-  else
-    return 2;
-}
+;
 
-const u32 Helper_OrderToHoldPosition = 0x004EB5B0;
-void orderToHoldPosition(CUnit *unit) {
+const u32 Func_OrdersHoldPositionSuicidal = 0x004EB5B0;
+void makeToHoldPosition(CUnit* unit) {
 
   __asm {
     PUSHAD
     MOV ESI, unit
-    CALL Helper_OrderToHoldPosition
+    CALL Func_OrdersHoldPositionSuicidal
     POPAD
   }
 }
 
-const u32 Helper_InsertFirstOrder = 0x004749D0;
-void insertFirstOrder(CUnit *unit, u8 orderId) {
+;
 
-  __asm {
-    PUSHAD
-    MOV AL, orderId
-    MOV ECX, unit
-    CALL Helper_InsertFirstOrder
-    POPAD
-  }
+//Identical to unitIsHangerUnit @ 0x00401450
+bool isHangarUnit(CUnit* unit) {
+	if(
+		unit->id == UnitId::ProtossInterceptor ||
+		unit->id == UnitId::ProtossScarab
+	)
+		return true;
+	else
+		return false;
 }
 
 } //unnamed namespace
