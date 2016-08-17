@@ -12,7 +12,7 @@ bool canMakePsiField(u16 unitId) {
 }
 
 //Actual state check whether a unit can generate a psi field
-bool isReadyToMakePsiField(CUnit *unit) {
+bool isReadyToMakePsiField(CUnit* unit) {
   //Default StarCraft behavior
 
   if (unit->id == UnitId::pylon)
