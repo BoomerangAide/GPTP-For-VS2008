@@ -5,7 +5,7 @@ namespace hooks {
 
 //Returns the tech ID used by this unit for the cloaking spell.
 //For the cloaking energy consumption, see energy_regeneration.cpp
-u8 getCloakingTech(const CUnit *unit) {
+u8 getCloakingTech(CUnit* unit) {
   //Default StarCraft behavior
 
   if (unit->id == UnitId::ghost
