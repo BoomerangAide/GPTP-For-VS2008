@@ -1,12 +1,17 @@
 #pragma once
 #include "../SCBW/structures/CUnit.h"
 
-// V241 for VS2008
+struct DetectorCheckParam {
+  u32 visionFlags;
+  CUnit* target;
+};
+
+C_ASSERT(sizeof(DetectorCheckParam) == 8);
 
 namespace hooks {
 
-bool unitCanDetectHook(const CUnit *unit);
-u32 getCloakedTargetVisibility(const CUnit *unit, const CUnit* target);
+bool unitCanDetectHook(CUnit* unit);
+void getCloakedTargetVisibility(CUnit* detector, DetectorCheckParam* param);
 
 void injectDetectorHooks();
 
