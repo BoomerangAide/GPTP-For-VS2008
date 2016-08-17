@@ -2,42 +2,68 @@
 #include "../SCBW/scbwdata.h"
 #include "../SCBW/enumerations.h"
 
-// V241 for VS2008
-
 namespace hooks {
 
 /// Determines whether this unit can detect cloaked/burrowed units.
 /// This affects CUnit::canDetect().
 /// This overrides the EXE edit settings for Detectors in FireGraft.
-bool unitCanDetectHook(const CUnit *unit) {
-  //Default StarCraft behavior
-  return units_dat::BaseProperty[unit->id] & UnitProperty::Detector
-         && unit->status & UnitStatus::Completed    // Is completed
-         && !unit->isFrozen()
-         && !unit->isBlind;
+bool unitCanDetectHook(CUnit* unit) {
+
+	return (
+		units_dat::BaseProperty[unit->id] & UnitProperty::Detector &&
+		unit->status & UnitStatus::Completed &&
+		!(unit->status & UnitStatus::DoodadStatesThing) &&
+		unit->lockdownTimer == 0 &&
+		unit->stasisTimer == 0 &&
+		unit->maelstromTimer == 0 &&
+		unit->isBlind == 0
+	);
+
 }
 
-//Check if the @p unit can see the @p target (assuming target is cloaked).
-u32 getCloakedTargetVisibility(const CUnit *unit, const CUnit* target) {
-  //Default StarCraft behavior
-  if (target->status & UnitStatus::IsHallucination)
-    return 0;
+//Check related to the question of the @p detector being able to see the @p param->target 
+//(assuming target is cloaked).
+//Used in a IterateUnitsAtLocation function (thus the special structure)
+//Part of a bigger logic, probably should not be touched
+void getCloakedTargetVisibility(CUnit* detector, DetectorCheckParam* param) {
 
-  if (unit->canDetect() && unit != target) {
-    if (target->sprite->isVisibleTo(unit->playerId)) {
-      u32 detectionRange;
+	CUnit* target = param->target;
 
-      if (unit->status & UnitStatus::GroundedBuilding)
-        detectionRange = 224;
-      else
-        detectionRange = 32 * unit->getSightRange();
+	if(
+		!(detector->status & UnitStatus::IsHallucination) &&	//hallucinations cannot detect
+		detector->canDetect() &&								//detector must be in a state to detect
+		detector != target										//detector don't try to detect itself
+	) 
+	{
 
-      if (unit->getDistanceToTarget(target) <= detectionRange)
-        return ((1 << unit->playerId) | playerVision->flags[unit->playerId] | unit->parasiteFlags);
-    }
-  }
+		u8 visibilityFlags = (1 << detector->playerId);
 
-  return 0;
+		//only continue if the target sprite is visible (else it's
+		//not a cloaking issue that hide the unit)
+		if(target->sprite->visibilityFlags & visibilityFlags) {
+
+			u32 detectionRange;
+
+			if(detector->status & UnitStatus::GroundedBuilding)
+				detectionRange = 224; //0xE0, 32 * 7
+			else
+				detectionRange = 32 * detector->getSightRange(false);
+
+			if(detector->isTargetWithinMinRange(target,detectionRange)) {
+
+				//update visionFlags for current target eval
+				param->visionFlags |= 
+					detector->parasiteFlags |					//detector's parasites player owner flags (8 bits)
+					playerVision->flags[detector->playerId] |	//default visibility (32 bits)
+					visibilityFlags								//detector's player flag (8 bits)
+				;
+
+			}
+
+		}
+
+	}
+
 }
 
 } //hooks
