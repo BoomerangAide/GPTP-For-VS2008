@@ -1,43 +1,54 @@
 #include "detector.h"
 #include "../hook_tools.h"
 
-// V241 for VS2008
-
 extern const u32 Func_CanDetect;  //Defined in CUnit.cpp
 
 namespace {
 
 //Inject with jmpPatch()
 void __declspec(naked) unitCanDetectWrapper() {
-  static CUnit *unit;
-  static u32 result;
 
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, EAX
-  }
+	static CUnit* unit;
+	static u32 result;
 
-  result = hooks::unitCanDetectHook(unit) ? 1 : 0;
+	__asm {
+		MOV unit, EAX
+		PUSHAD
+	}
 
-  __asm {
-    POPAD
-    MOV EAX, result
-    RETN
-  }
+	result = hooks::unitCanDetectHook(unit) ? 1 : 0;
+
+	__asm {
+		POPAD
+		MOV EAX, result
+		RETN
+	}
+
 }
 
-struct DetectorCheckParam {
-  u32 visionFlags;
-  CUnit *target;
-};
+void __declspec(naked) getCloakedTargetVisibilityWrapper() {
 
-C_ASSERT(sizeof(DetectorCheckParam) == 8);
-//static_assert(sizeof(DetectorCheckParam) == 8, "The size of the DetectorCheckParam structure is invalid");
+	static DetectorCheckParam* param;
+	static CUnit* detector;
 
-u32 __fastcall getCloakedTargetVisibilityWrapper(CUnit *unit, DetectorCheckParam *p) {
-  p->visionFlags |= hooks::getCloakedTargetVisibility(unit, p->target);
-  return 0;
+	__asm {
+		MOV detector, ECX
+		MOV param, EDX
+		PUSHAD
+	}
+
+	hooks::getCloakedTargetVisibility(detector,param);
+
+	__asm {
+		POPAD
+		XOR EAX, EAX
+		RETN
+	}
+
+	//changes of param are not moved in something in
+	//this asm bloc because it was a pointer directly
+	//on Starcraft data from the start
+
 }
 
 } //unnamed namespace
@@ -46,8 +57,7 @@ namespace hooks {
 
 void injectDetectorHooks() {
   jmpPatch(unitCanDetectWrapper, Func_CanDetect);
-  memoryPatch(0x0044118E, &getCloakedTargetVisibilityWrapper);
-  memoryPatch(0x004411A6, &getCloakedTargetVisibilityWrapper);
+  jmpPatch(getCloakedTargetVisibilityWrapper, 0x004408A0, 9);
 }
 
 } //hooks
