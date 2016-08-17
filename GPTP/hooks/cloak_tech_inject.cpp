@@ -3,8 +3,6 @@
 #include "../SCBW/api.h"
 #include "../hook_tools.h"
 
-//V241 for VS2008
-
 /*
 
 There are 9 places where StarCraft checks unit ID for cloaking.
@@ -43,7 +41,7 @@ void __declspec(naked) cloakingTechWrapper_IsCloaked() {
 		MOV playerId, EDX
 		MOV EBX, [EBP+0x08]
 		MOV unit, EBX
-		MOV CX, reqVar
+		MOV reqVar, CX 
 		PUSHAD
 	}
 
@@ -59,6 +57,7 @@ void __declspec(naked) cloakingTechWrapper_IsCloaked() {
 
 }
 
+;
 
 //0x004292C0
 void __declspec(naked) cloakingTechWrapper_CanCloak() {
@@ -74,7 +73,7 @@ void __declspec(naked) cloakingTechWrapper_CanCloak() {
 		MOV playerId, EDX
 		MOV EBX, [EBP+0x08]
 		MOV unit, EBX
-		MOV CX, reqVar
+		MOV reqVar, CX 
 		PUSHAD
 	}
 
@@ -90,10 +89,12 @@ void __declspec(naked) cloakingTechWrapper_CanCloak() {
 
 }
 
+;
+
 //-------- Actual cloak orders --------//
 
 //equivalent to 00491B30 ApplyCloakingOrder, not injected
-void applyCloakingOrderHook(CUnit *unit) {
+void applyCloakingOrderHook(CUnit* unit) {
 
 	if (unit->status & UnitStatus::RequiresDetection)
 		return;
@@ -113,20 +114,24 @@ void applyCloakingOrderHook(CUnit *unit) {
 
 }
 
+;
+
 void __cdecl cloakingTechWrapper_CMDRECV_Cloak() {
 
 	*selectionIndexStart = 0;  
 
-	while (CUnit *unit = getActivePlayerNextSelection()) {
+	while (CUnit* unit = getActivePlayerNextSelection()) {
 		if (unit->canUseTech(hooks::getCloakingTech(unit), *ACTIVE_NATION_ID) == 1)
 			applyCloakingOrderHook(unit);
 	}
 
 }
 
+;
+
 void __declspec(naked) cloakingTechWrapper_AI_cloakUnit() {
 
-	static CUnit *unit;
+	static CUnit* unit;
 
 	__asm {
 		MOV unit, ESI
@@ -144,22 +149,26 @@ void __declspec(naked) cloakingTechWrapper_AI_cloakUnit() {
 	}
 }
 
+;
+
 void __cdecl cloakingTechWrapper_CMDRECV_Decloak() {
 	
 	*selectionIndexStart = 0;
 	
-	while (CUnit *unit = getActivePlayerNextSelection()) {
+	while (CUnit* unit = getActivePlayerNextSelection()) {
 		if (unit->canUseTech(hooks::getCloakingTech(unit), *ACTIVE_NATION_ID) == 1)
 			unit->setSecondaryOrder(OrderId::Decloak);
 	}
 
 }
 
+;
+
 //-------- Other wrappers --------//
 
 void __declspec(naked) getCloakingTechWrapper() {
 
-	static CUnit *unit;
+	static CUnit* unit;
 	static u8 result;
 
 	__asm {
@@ -176,11 +185,15 @@ void __declspec(naked) getCloakingTechWrapper() {
 	}
 }
 
+;
+
 Bool32 __cdecl currentUnitSelectionCanCloakWrapper() {
+
+	RaceId::Enum race;
 
 	for (int i = 0; i < SELECTION_ARRAY_LENGTH; ++i) {
 
-		CUnit *unit = clientSelectionGroup->unit[i];
+		CUnit* unit = clientSelectionGroup->unit[i];
 
 		if (unit != NULL) {
 			if (
@@ -192,13 +205,15 @@ Bool32 __cdecl currentUnitSelectionCanCloakWrapper() {
 
 	}
 
-	const RaceId::Enum race = (*activePortraitUnit)->getRace();
+	race = (*activePortraitUnit)->getRace();
 
 	scbw::showErrorMessageWithSfx((*activePortraitUnit)->playerId, 864 + race, 156 + race);
 
 	return false;
 
 }
+
+;
 
 } //unnamed namespace
 
