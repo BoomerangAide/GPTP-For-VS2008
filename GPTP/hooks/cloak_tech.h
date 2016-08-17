@@ -3,7 +3,7 @@
 
 namespace hooks {
 
-u8 getCloakingTech(const CUnit *unit);
+u8 getCloakingTech(CUnit* unit);
 
 Bool32 BTNSCOND_IsCloaked(CUnit* unit, u32 playerId, u16 reqVar);	//0x00429210
 Bool32 BTNSCOND_CanCloak(CUnit* unit, u32 playerId, u16 reqVar);	//0x004292C0
