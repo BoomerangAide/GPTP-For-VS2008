@@ -3,23 +3,41 @@
 
 namespace {
 
-//Inject with jmpPatch()
-const u32 Hook_UpdateUnitState = 0x004EC290;
+void __declspec(naked) updateUnitEnergyWrapper() {
+
+	static CUnit* unit;
+
+	__asm {
+		MOV unit, ESI
+		PUSHAD
+	}
+
+	hooks::updateUnitEnergy(unit);
+
+	__asm {
+		POPAD
+		RETN
+	}
+
+}
+
+
 void __declspec(naked) updateUnitStateWrapper() {
-  CUnit *unit;
 
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, EAX
-  }
+	static CUnit* unit;
 
-  hooks::updateUnitStateHook(unit);
+	__asm {
+		MOV unit, EAX
+		PUSHAD
+	}
 
-  __asm {
-    POPAD
-    RETN
-  }
+	hooks::updateUnitStateHook(unit);
+
+	__asm {
+		POPAD
+		RETN
+	}
+
 }
 
 } //unnamed namespace
@@ -27,7 +45,8 @@ void __declspec(naked) updateUnitStateWrapper() {
 namespace hooks {
 
 void injectUpdateUnitState() {
-  jmpPatch(updateUnitStateWrapper, Hook_UpdateUnitState);
+	jmpPatch(updateUnitEnergy,			0x004EB4B0, 0);
+	jmpPatch(updateUnitStateWrapper,	0x004EC290, 1);
 }
 
 } //hooks
