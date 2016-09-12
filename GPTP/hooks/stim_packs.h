@@ -5,8 +5,9 @@
 
 namespace hooks {
 
-void useStimPacksHook(CUnit *unit);
-bool canUseStimPacksHook(const CUnit *unit);
+void CMDACT_Stimpack();					//004234D0
+void useStimPacksAIHook(CUnit* unit);	//004554A0
+void CMDRECV_StimPack();				//004C2F30
 
 void injectStimPacksHooks();
 
