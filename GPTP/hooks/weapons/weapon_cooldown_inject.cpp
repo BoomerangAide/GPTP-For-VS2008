@@ -1,10 +1,10 @@
 #include "weapon_cooldown.h"
-#include "../hook_tools.h"
+#include "../../hook_tools.h"
 
 namespace {
 
 //Inject with jmpPatch()
-const u32 Hook_GetModifiedWeaponCooldown  = 0x00475DC0;
+const u32 Hook_GetModifiedWeaponCooldown = 0x00475DC0;
 void __declspec(naked) getModifiedWeaponCooldownWrapper() {
 
 	static CUnit* unit;
@@ -17,7 +17,7 @@ void __declspec(naked) getModifiedWeaponCooldownWrapper() {
 		PUSHAD
 	}
 
-  cooldown = hooks::getModifiedWeaponCooldownHook(unit, weaponId);
+	cooldown = hooks::getModifiedWeaponCooldownHook(unit, weaponId);
 
 	__asm {
 		POPAD
@@ -31,7 +31,7 @@ void __declspec(naked) getModifiedWeaponCooldownWrapper() {
 namespace hooks {
 
 void injectWeaponCooldownHook() {
-  jmpPatch(getModifiedWeaponCooldownWrapper, Hook_GetModifiedWeaponCooldown, 2);
+	jmpPatch(getModifiedWeaponCooldownWrapper, Hook_GetModifiedWeaponCooldown, 2);
 }
 
 } //hooks
