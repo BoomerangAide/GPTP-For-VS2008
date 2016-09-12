@@ -8,7 +8,7 @@ const u32 Func_GetTechUseErrorMessage = 0x00491E80;
 
 void __declspec(naked) getTechUseErrorMessageWrapper() {
 
-	static CUnit *target;
+	static CUnit* target;
 	static u8 castingPlayer;
 	static u16 techId;
 	static u32 errorMessage;
@@ -39,24 +39,7 @@ void __declspec(naked) getTechUseErrorMessageWrapper() {
 namespace hooks {
 
 void injectTechTargetCheckHooks() {
-  jmpPatch(getTechUseErrorMessageWrapper, Func_GetTechUseErrorMessage, 4);
-}
-
-u16 getTechUseErrorMessage(const CUnit *target, u8 castingPlayer, u16 techId) {
-  u32 techId_ = techId;
-  static u16 errorMessage;
-
-  __asm {
-    PUSHAD
-    PUSH techId_
-    MOV BL, castingPlayer
-    MOV EAX, target
-    CALL Func_GetTechUseErrorMessage
-    MOV errorMessage, AX
-    POPAD
-  }
-
-  return errorMessage;
+	jmpPatch(getTechUseErrorMessageWrapper, Func_GetTechUseErrorMessage, 4);
 }
 
 } //hooks
