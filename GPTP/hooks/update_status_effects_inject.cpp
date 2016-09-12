@@ -1,28 +1,28 @@
 #include "update_status_effects.h"
 #include "../hook_tools.h"
 
-//V241 for VS2008
-
 namespace {
 
-const u32 Hook_UpdateStatusEffects = 0x00492F70;
+//note: acid spores management is normally done in
+//function @ 004F42C0, jumped in at the end of this
+//one, but the hook merge both
 
 //Inject with jmpPatch()
 void __declspec(naked) updateStatusEffectsWrapper() {
-  CUnit *unit;
 
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, EAX
-  }
+	static CUnit* unit;
 
-  hooks::updateStatusEffectsHook(unit);
+	__asm {
+		MOV unit, EAX
+		PUSHAD
+	}
 
-  __asm {
-    POPAD
-    RETN
-  }
+	hooks::updateStatusEffects(unit);
+
+	__asm {
+		POPAD
+		RETN
+	}
 }
 
 } //unnamed namespace
@@ -30,16 +30,7 @@ void __declspec(naked) updateStatusEffectsWrapper() {
 namespace hooks {
 
 void injectUpdateStatusEffects() {
-  jmpPatch(updateStatusEffectsWrapper, Hook_UpdateStatusEffects);
-}
-
-void updateStatusEffects(CUnit *unit) {
-  __asm {
-    PUSHAD
-    MOV EAX, unit
-    CALL Hook_UpdateStatusEffects
-    POPAD
-  }
+	jmpPatch(updateStatusEffectsWrapper, 0x00492F70, 5);
 }
 
 } //hooks
