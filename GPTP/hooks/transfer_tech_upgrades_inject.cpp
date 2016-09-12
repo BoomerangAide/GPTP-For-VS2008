@@ -4,58 +4,72 @@
 
 namespace {
 
-void __declspec(naked) transferUnitTechToPlayerWrapper() {
-  static const CUnit *source;
-  static u8 targetPlayerId;
-  __asm {
-    PUSHAD
-    MOV source, EBX
-    MOV AL, [ESP + 40]   ;// (PUSHAD saves 32) + (CALL saves 4) + 4 == 40
-    MOV targetPlayerId, AL
-    MOV EBP, ESP
-  }
-
-  hooks::transferUnitTechToPlayerHook(source, targetPlayerId);
-
-  __asm {
-    POPAD
-    RETN 8
-  }
-}
-
 void __declspec(naked) transferUnitUpgradesToPlayerWrapper() {
-  static const CUnit *source;
-  static u8 targetPlayerId;
-  __asm {
-    PUSHAD
-    MOV source, EBX
-    MOV AL, [ESP + 40]   ;// (PUSHAD saves 32) + (CALL saves 4) + 4 == 40
-    MOV targetPlayerId, AL
-    MOV EBP, ESP
-  }
 
-  hooks::transferUnitUpgradesToPlayerHook(source, targetPlayerId);
+	static CUnit* sourceUnit;
+	static u8 targetPlayerId;
+	static u32 researchUpgradeFunc;
 
-  __asm {
-    POPAD
-    RETN 8
-  }
+	__asm {
+
+		PUSH EBP
+		MOV EBP, ESP
+
+		MOV EAX, [EBP+0x08]
+		MOV researchUpgradeFunc, EAX	//2 possibilities, see header file with default values
+
+		MOV sourceUnit, EBX
+
+		MOV EAX, [EBP+0x0C]
+		MOV targetPlayerId, AL
+		
+		PUSHAD
+
+	}
+
+	hooks::transferUnitTechToPlayerHook(sourceUnit, targetPlayerId, researchUpgradeFunc);
+
+	__asm {
+		POPAD
+		MOV ESP, EBP
+		POP EBP
+		RETN 0x08
+	}
+
 }
 
-void __declspec(naked) applyUnitUpgradeFlagsToAllFriendlyUnitsWrapper() {
-  static CUnit *unit;
-  __asm {
-    PUSHAD
-    MOV unit, EBX
-    MOV EBP, ESP
-  }
+void __declspec(naked) transferUnitTechToPlayerWrapper() {
 
-  hooks::applyUnitUpgradeFlagsToAllFriendlyUnitsHook(unit);
+	static CUnit* sourceUnit;
+	static u8 targetPlayerId;
+	static u32 researchTechFunc;
 
-  __asm {
-    POPAD
-    RETN 8
-  }
+	__asm {
+
+		PUSH EBP
+		MOV EBP, ESP
+
+		MOV EAX, [EBP+0x08]
+		MOV researchTechFunc, EAX		//usually researchTech @ 0047B3C0
+
+		MOV sourceUnit, EBX
+
+		MOV EAX, [EBP+0x0C]
+		MOV targetPlayerId, AL
+		
+		PUSHAD
+
+	}
+
+	hooks::transferUnitTechToPlayerHook(sourceUnit, targetPlayerId, researchTechFunc);
+
+	__asm {
+		POPAD
+		MOV ESP, EBP
+		POP EBP
+		RETN 0x08
+	}
+
 }
 
 } //Unnamed namespace
@@ -63,9 +77,8 @@ void __declspec(naked) applyUnitUpgradeFlagsToAllFriendlyUnitsWrapper() {
 namespace hooks {
 
 void injectTransferTechAndUpgradesHooks() {
-  callPatch(transferUnitTechToPlayerWrapper, 0x0047CA04);
-  callPatch(transferUnitUpgradesToPlayerWrapper, 0x0047CA0F);
-  callPatch(applyUnitUpgradeFlagsToAllFriendlyUnitsWrapper, 0x0047CABD);
+  jmpPatch(transferUnitUpgradesToPlayerWrapper,	0x004E2B50, 1);
+  jmpPatch(transferUnitTechToPlayerWrapper,		0x004E2C00, 1);
 }
 
 } //hooks
