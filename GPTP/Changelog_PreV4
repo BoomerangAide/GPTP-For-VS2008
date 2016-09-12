@@ -10,8 +10,8 @@ Update 3.999:
 -fixed a bug with some static variables with wrong initialization
 -fixed inject code to be more consistent (and possibly stables too)
 -added constants around some functions to make edit easier
-
-/!\ UPLOAD CURRENTLY INCOMPLETE /!\
+-started changing build unit/building code
+-other changes around (future versions changelog will be more referenced regarding details)
 
 Update 3:
 
