@@ -9,7 +9,7 @@ namespace hooks {
 	void OpticalFlareHit(CUnit* target, u32 attackingPlayerId, CBullet* bullet);	//00455170
 	void RestoreHit(CUnit* target, CBullet* bullet);								//00455230
 	void LockdownHit(CUnit* target, u8 previousLockdownTimer, CBullet* bullet);		//00455380
-	void WeaponBulletHit(CBullet* bullet, CUnit* target, u32 hitFlags);				//00479AE0
+	void WeaponBulletHit(CBullet* bullet, CUnit* target, u32 damageDivisor);		//00479AE0
 	void MeleeAttackHit(CUnit* attacker);											//00479B40
 	void EMPShockwaveHit(CUnit* attacker, int x, int y, CBullet* bullet);			//00492BA0
 	void CorrosiveAcidHit(u32 attackingPlayerId, int x, int y, CBullet* bullet);	//004F4770
