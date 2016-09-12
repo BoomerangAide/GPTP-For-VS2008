@@ -87,81 +87,152 @@ const UpgradeTransferData upgradeTransferData[] = {
 
 namespace hooks {
 
+//summon a function passed as parameter, having the same variables layout for both upgrade and tech related functions.
+bool researchHelper(u32 researchTechFunc, CUnit* sourceUnit, u32 techId, u32 relativeVariable,u32 destPlayerId) {
+
+	static u32 bPreResult;
+
+	__asm {
+		PUSHAD
+		PUSH destPlayerId		//[EBP+0x14]
+		PUSH relativeVariable	//[EBP+0x10] //this variable has different meaning depending on the caller (boolean or number) 
+		PUSH techId				//[EBP+0x0C]
+		PUSH sourceUnit			//[EBP+0x08]
+		CALL researchTechFunc
+		MOV bPreResult, EAX
+		POPAD
+	}
+
+	return (bPreResult != 0);
+
+} //bool researchHelper(u32 researchTechFunc, CUnit* sourceUnit, u32 techId, u32 relativeVariable, u32 destPlayerId)
+
+;
+
 //Transfers all tech related to the @p source unit to @p targetPlayerId.
-void transferUnitTechToPlayerHook(const CUnit *source, u8 targetPlayerId) {
-  //Default StarCraft behavior
+//Originally researchAllTechsFromUnit @ 004E2C00
+void transferUnitTechToPlayerHook(CUnit* sourceUnit, u8 targetPlayerId, u32 researchTechFunc) {
 
-  //Stop if the source unit does not exist
-  if (!source) {
-    SErrSetLastError(87);
-    return;
-  }
+	const TechTransferData* techDataArrayPosBegin	= &techTransferData[0];								//original was (TechTransferData*) 0x005011CA;
+	const TechTransferData* techDataArrayPosEnd		= &techTransferData[ARRAY_SIZE(techTransferData)];	//original was (TechTransferData*) 0x005012DE;
+	const int relatedTechArraySize					= 5;
 
-  for (int i = 0; i < ARRAY_SIZE(techTransferData); ++i) {
-    const TechTransferData *data = &techTransferData[i];
+	//Stop if the source unit does not exist
+	if (researchTechFunc == NULL || sourceUnit == NULL)
+		SErrSetLastError(87);
+	else {
 
-    if (source->id == data->unitId) {
-      for (int techIndex = 0; techIndex < ARRAY_SIZE(data->relatedTech); ++techIndex) {
-        u16 techId = data->relatedTech[techIndex];
-        if (techId == TechId::None) break;
+		bool bBreakMainLoop = false;
+		bool bBreakSubLoop;
 
-        if (scbw::hasTechResearched(source->playerId, techId)
-            && !scbw::hasTechResearched(targetPlayerId, techId))
-          scbw::setTechResearchState(targetPlayerId, techId, true);
-      }
-    }
-  }
-}
+		//Browse through TechTransferData structures
+		for (TechTransferData* data = (TechTransferData*)techDataArrayPosBegin; !bBreakMainLoop && (data != techDataArrayPosEnd); data++) {
+
+			if (sourceUnit->id == data->unitId) {
+
+				bBreakSubLoop = false;
+
+				//Browse through techs for current unit
+				for (int techIndex = 0; !bBreakSubLoop && techIndex < relatedTechArraySize; techIndex++) {
+
+					u16 techId = data->relatedTech[techIndex];
+
+					//forced end of array, stop checking techs, but still check others TechTransferData
+					//(in case the unit is represented several times?)
+					if (techId == TechId::None)
+						bBreakSubLoop = true;
+					else {
+
+						Bool8 bIsResearched;
+
+						//check if tech is researched by unit for transfer
+						if(techId >= TechId::Restoration)
+							bIsResearched = TechBw->isResearched[sourceUnit->playerId][techId - TechId::Restoration];
+						else
+							bIsResearched = TechSc->isResearched[sourceUnit->playerId][techId];
+
+						//probably research the tech of unit if not already researched by player
+						//if return false, stop checking techs and TechTransferData
+						if(!researchHelper(researchTechFunc,sourceUnit,techId,bIsResearched,targetPlayerId)) {
+							bBreakSubLoop = true;
+							bBreakMainLoop = true;			
+						}
+
+					}
+
+				}
+
+			} //if (sourceUnit->id == data->unitId)
+
+		} //for (TechTransferData* data = (TechTransferData*)techDataArrayPosBegin; !bBreakMainLoop && (data != techDataArrayPosEnd); data++)
+
+	} //if (researchTechFunc != NULL && sourceUnit != NULL)
+
+} //void transferUnitTechToPlayerHook(CUnit* sourceUnit, u8 targetPlayerId, u32 researchTechFunc)
+
+;
 
 //Transfers all upgrades related to the @p source unit to @p targetPlayerId.
-void transferUnitUpgradesToPlayerHook(const CUnit *source, u8 targetPlayerId) {
-  //Default StarCraft behavior
+//Originally upgradeAllUpgradesFromUnit @ 004E2B50
+void transferUnitUpgradesToPlayerHook(CUnit* sourceUnit, u8 targetPlayerId, u32 researchUpgradesFunc) {
 
-  //Stop if the source unit does not exist
-  if (!source) {
-    SErrSetLastError(87);
-    return;
-  }
+	const UpgradeTransferData* upgradeDataArrayPosBegin	= &upgradeTransferData[0];									//original was (UpgradeTransferData*) 0x005012E2;
+	const UpgradeTransferData* upgradeDataArrayPosEnd	= &upgradeTransferData[ARRAY_SIZE(upgradeTransferData)];	//original was (UpgradeTransferData*) 0x005013DC;
+	const int relatedUpgradeArraySize					= 4;
 
-  for (int i = 0; i < ARRAY_SIZE(upgradeTransferData); ++i) {
-    const UpgradeTransferData *data = &upgradeTransferData[i];
+	//Stop if the source unit does not exist
+	if (researchUpgradesFunc == NULL || sourceUnit == NULL)
+		SErrSetLastError(87);	//0x57
+	else {
 
-    if (source->id == data->unitId) {
-      for (int upgIndex = 0; upgIndex < ARRAY_SIZE(data->relatedUpgrades); ++upgIndex) {
-        u8 upgradeId = data->relatedUpgrades[upgIndex];
-        if (upgradeId == UpgradeId::None) break;
+		bool bBreakMainLoop = false;
+		bool bBreakSubLoop;
 
-        u8 sourceUpgradeLevel = scbw::getUpgradeLevel(source->playerId, upgradeId);
-        if (sourceUpgradeLevel > scbw::getUpgradeLevel(targetPlayerId, upgradeId))
-          scbw::setUpgradeLevel(targetPlayerId, upgradeId, sourceUpgradeLevel);
-      }
-    }
-  }
+		//Browse through UpgradeTransferData structures
+		for (UpgradeTransferData* data = (UpgradeTransferData*)upgradeDataArrayPosBegin; !bBreakMainLoop && (data != upgradeDataArrayPosEnd); data++) {
+
+			if (sourceUnit->id == data->unitId) {
+
+				bBreakSubLoop = false;
+
+				//Browse through upgrades for current unit
+				for (int upgradeIndex = 0; !bBreakSubLoop && upgradeIndex < relatedUpgradeArraySize; upgradeIndex++) {
+
+					u16 upgradeId = data->relatedUpgrades[upgradeIndex];
+
+					//forced end of array, stop checking upgrades, but still check others UpgradeTransferData
+					//(in case the unit is represented several times?)
+					if (upgradeId == UpgradeId::None)
+						bBreakSubLoop = true;
+					else {
+
+						u8 sourceUpgradeLevel;
+
+						//check level of upgrade of by unit for transfer
+						if(upgradeId >= UpgradeId::UnusedUpgrade46)
+							sourceUpgradeLevel = UpgradesBw->currentLevel[sourceUnit->playerId][upgradeId - UpgradeId::UnusedUpgrade46];
+						else
+							sourceUpgradeLevel = UpgradesSc->currentLevel[sourceUnit->playerId][upgradeId];
+
+						//probably increase the upgrade level of player until reaching same point as sourceUnit
+						//if return false, stop checking upgrades and UpgradeTransferData
+						if(!researchHelper(researchUpgradesFunc,sourceUnit,upgradeId,sourceUpgradeLevel,targetPlayerId)) {
+							bBreakSubLoop = true;
+							bBreakMainLoop = true;			
+						}
+
+					}
+
+				}
+
+			} //if (sourceUnit->id == data->unitId)
+
+		} //for (upgradeTransferData* data = (upgradeTransferData*)upgradeDataArrayPosBegin; !bBreakMainLoop && (data != upgradeDataArrayPosEnd); data++)
+
+	} //if (researchupgradeFunc != NULL && sourceUnit != NULL)
+
 }
 
-//Transfers all upgrade flags related to the @p unit to the unit's owner.
-void applyUnitUpgradeFlagsToAllFriendlyUnitsHook(CUnit *unit) {
-  //Default StarCraft behavior
-
-  //Stop if the source unit does not exist
-  if (!unit) {
-    SErrSetLastError(87);
-    return;
-  }
-
-  for (int i = 0; i < ARRAY_SIZE(upgradeTransferData); ++i) {
-    const UpgradeTransferData *data = &upgradeTransferData[i];
-
-    if (unit->id == data->unitId) {
-      for (int upgIndex = 0; upgIndex < ARRAY_SIZE(data->relatedUpgrades); ++upgIndex) {
-        u8 upgradeId = data->relatedUpgrades[upgIndex];
-        if (upgradeId == UpgradeId::None) break;
-
-        if (scbw::getUpgradeLevel(unit->playerId, upgradeId))
-          hooks::applyUpgradeFlagsToExistingUnits(unit, upgradeId);
-      }
-    }
-  }
-}
+;
 
 } //hooks
