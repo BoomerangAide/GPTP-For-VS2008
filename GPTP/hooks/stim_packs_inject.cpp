@@ -3,81 +3,71 @@
 
 namespace {
 
-//Inject with callPatch
-const u32 Hook_UseStimPacksAi         = 0x00440148;
-void __declspec(naked) useStimPacksAiWrapper() {
-  CUnit *unit;
+void __declspec(naked) CMDACT_StimpackWrapper() {
 
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, EAX
-  }
+	__asm {
+		PUSH EBP
+		MOV EBP, ESP
+		PUSHAD
+	}
 
-  hooks::useStimPacksHook(unit);
 
-  __asm {
-    POPAD
-    RETN
-  }
+	hooks::CMDACT_Stimpack();
+
+	__asm {
+		POPAD
+		MOV ESP, EBP
+		POP EBP
+		RETN
+	}
+
 }
 
-//Inject with jmpPatch
-const u32 Hook_UseStimPacksPlayer     = 0x004C2F68;
-const u32 Hook_UseStimPacksPlayerBack = 0x004C2FF9;
-void __declspec(naked) useStimPacksPlayerWrapper() {
-  CUnit *unit;
+;
 
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, ESI
-  }
+void __declspec(naked) useStimPacksAIWrapper() {
 
-  hooks::useStimPacksHook(unit);
+	static CUnit* unit;
 
-  __asm {
-    POPAD
-    JMP Hook_UseStimPacksPlayerBack
-  }
+	__asm {
+		MOV unit, EAX
+		PUSHAD
+	}
+
+	hooks::useStimPacksAIHook(unit);
+
+	__asm {
+		POPAD
+		RETN
+	}
+
 }
 
-//Inject with jmpPatch
-const u32 Hook_CanUseStimPacks        = 0x004234E6;
-const u32 Hook_CanUseStimPacksYes     = 0x00423528;
-const u32 Hook_CanUseStimPacksNo      = 0x004234EB;
-void __declspec(naked) canUseStimPacksWrapper() {
-  CUnit *unit;
+;
 
-  __asm {
-    PUSHAD
-    MOV EBP, ESP
-    MOV unit, EAX
-  }
+void __declspec(naked) CMDRECV_StimPackWrapper() {
 
-  if (hooks::canUseStimPacksHook(unit)) {
-    __asm {
-      POPAD
-      JMP Hook_CanUseStimPacksYes
-    }
-  }
-  else {
-    __asm {
-      POPAD
-      JMP Hook_CanUseStimPacksNo
-    }
+	__asm PUSHAD
 
-  }
+	hooks::CMDRECV_StimPack();
+
+	__asm {
+		POPAD
+		RETN
+	}
+
 }
+
+;
 
 } //unnamed namespace
 
 namespace hooks {
 
 void injectStimPacksHooks() {
-  callPatch(useStimPacksAiWrapper,    Hook_UseStimPacksAi);
-  jmpPatch(useStimPacksPlayerWrapper, Hook_UseStimPacksPlayer);
-  jmpPatch(canUseStimPacksWrapper,    Hook_CanUseStimPacks);
+	jmpPatch(CMDACT_StimpackWrapper,	0x004234D0, 4);
+	jmpPatch(useStimPacksAIWrapper,		0x004554A0, 5);
+	jmpPatch(CMDRECV_StimPackWrapper,	0x004C2F30, 3);
 }
 
 } //hooks
