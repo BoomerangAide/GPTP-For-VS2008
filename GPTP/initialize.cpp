@@ -43,6 +43,7 @@
 #include "hooks/orders/base_orders/attack_orders.h"
 #include "hooks/interface/buttonsets.h"
 #include "hooks/orders/spells/cast_order.h"
+#include "hooks/orders/base_orders/die_order.h"
 #include "hooks/orders/enter_nydus.h"
 #include "hooks/orders/infestation.h"
 #include "hooks/orders/larva_creep_spawn.h"
@@ -91,11 +92,11 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectEnterNydusHooks();
 	hooks::injectCastOrderHooks();
 	hooks::injectWpnSpellHitHooks();
-
 	hooks::injectBuildingMorphHooks();
 	hooks::injectMakeNydusExitHook();
 	hooks::injectUnitMorphHooks();
 	hooks::injectWireframeHook();
+	hooks::injectDieOrderHook();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
