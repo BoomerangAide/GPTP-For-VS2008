@@ -222,6 +222,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\orders\base_orders\die_order.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\base_orders\die_order_inject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\hooks\orders\enter_nydus.cpp"
 				>
 			</File>
@@ -789,6 +797,10 @@
 			</File>			
 			<File
 				RelativePath=".\definitions.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\base_orders\die_order.h"
 				>
 			</File>
 			<File
