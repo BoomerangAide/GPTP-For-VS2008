@@ -200,6 +200,14 @@
 			<File
 				RelativePath=".\hooks\orders\building_making\building_morph_inject.cpp"
 				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\building_making\building_terran.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\building_making\building_terran_inject.cpp"
+				>
 			</File>			
 			<File
 				RelativePath=".\hooks\interface\buttonsets.cpp"
@@ -785,6 +793,10 @@
 			</File>	
 			<File
 				RelativePath=".\hooks\orders\building_making\building_morph.h"
+				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\building_making\building_terran.h"
 				>
 			</File>			
 			<File
