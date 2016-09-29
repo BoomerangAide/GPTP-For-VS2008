@@ -187,7 +187,7 @@ struct CUnit: public CUnitLayout {
   //////////////////////////////////////////////////////////////// @{
 
   /// Issue the @p order to the unit, using the given @p target unit.
-  void orderTo(u8 orderId, const CUnit* target = NULL);
+  void orderTo(u8 orderId, CUnit* target = NULL);
 
   /// Issue the @p order to the unit, using the given position as the target.
   void orderTo(u8 orderId, u16 x, u16 y);
@@ -205,7 +205,7 @@ struct CUnit: public CUnitLayout {
   void orderToIdle();
 
   /// Issues a new order to the unit.
-  void order(u8 orderId, u16 x, u16 y, const CUnit* target, u16 targetUnitId, bool stopPreviousOrders);
+  void order(u8 orderId, u16 x, u16 y, CUnit* target, u16 targetUnitId, bool stopPreviousOrders);
 
   /// Used by several hooks, details not completely understood.
   void setSecondaryOrder(u8 orderId);
@@ -251,7 +251,7 @@ struct CUnit: public CUnitLayout {
   /// Returns the distance between this unit and the @p target, taking unit
   /// collision size in units.dat into account.
   /// Internally, this function uses scbw::getDistanceFast().
-  u32 getDistanceToTarget(const CUnit* target) const;
+  u32 getDistanceToTarget(CUnit* target) const;
 
   /// Checks whether this unit can reach the target position. This checks only
   /// for terrain, and does not consider obstacles (units and buildings).
