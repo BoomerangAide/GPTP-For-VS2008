@@ -1,3 +1,13 @@
+
+----------------------------------------
+
+Version 4.001:
+
+-fix a bug where some const CUnit* survived their removal
+-adding Building_Terran hooks
+
+----------------------------------------
+
 Version 4.000:
 
 Adding Die_Order hook
