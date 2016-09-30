@@ -755,7 +755,7 @@ u32 CUnit::getDistanceToTarget(CUnit* target) const {
 	assert(this);
 	assert(target);
 
-	CUnit* unit = this;
+	CUnit* unit = (CUnit*) this;
 
 	if (this->isSubunit())
 		unit = this->subunit; // Current unit is a turret, so use it's base instead
