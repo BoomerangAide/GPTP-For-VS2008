@@ -11,6 +11,7 @@ Update 3.999:
 -fixed inject code to be more consistent (and possibly stables too)
 -added constants around some functions to make edit easier
 -started changing build unit/building code
+-fix on the code in the AI folder (even unused, it cause trouble otherwise)
 -other changes around (future versions changelog will be more referenced regarding details)
 
 Update 3:
