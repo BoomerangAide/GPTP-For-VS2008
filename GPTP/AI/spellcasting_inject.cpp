@@ -4,23 +4,29 @@
 namespace {
 
 void __declspec(naked) AI_spellcasterWrapper() {
-  static CUnit *unit;
-  static u32 isUnderAttack;
-  static bool result;
+
+  static CUnit* unit;
+  static Bool32 isUnderAttack;
+  static Bool32 result;
 
   __asm {
-    PUSHAD
+    PUSH EBP
     MOV EBP, ESP
     MOV unit, EAX
-    MOV EBX, [ESP + 36]   ;// (PUSHAD saves 32) + (CALL saves 4) == 36
-    MOV isUnderAttack, EBX
+	MOV EAX, [EBP+0x08]
+    MOV isUnderAttack, EAX
+	PUSHAD
   }
 
-  result = AI::AI_spellcasterHook(unit, isUnderAttack != 0);
+  if(AI::AI_spellcasterHook(unit, isUnderAttack != 0))
+	  result = 1;
+  else
+	  result = 0;
 
   __asm {
     POPAD
-    MOVZX EAX, result
+    MOV EAX, result
+	POP EBP
     RETN 4
   }
 }
@@ -30,7 +36,7 @@ void __declspec(naked) AI_spellcasterWrapper() {
 namespace hooks {
 
 void injectSpellcasterAI() {
-  jmpPatch(AI_spellcasterWrapper, 0x004A13C0);
+  jmpPatch(AI_spellcasterWrapper, 0x004A13C0, 2);
 }
 
 } //AI
