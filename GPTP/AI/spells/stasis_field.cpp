@@ -7,13 +7,13 @@ namespace AI {
 
 	class StasisFieldTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 		bool isUnderAttack;
 	  public:
-		StasisFieldTargetFinderProc(const CUnit *caster, bool isUnderAttack)
+		StasisFieldTargetFinderProc(CUnit* caster, bool isUnderAttack)
 		  : caster(caster), isUnderAttack(isUnderAttack) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 
 			if (!isTargetWorthHitting(target, caster))
 			  return false;
@@ -24,7 +24,7 @@ namespace AI {
 			if (units_dat::BaseProperty[target->id] & UnitProperty::Building)
 			  return false;
 
-			CUnit *targetOfTarget = target->orderTarget.unit;
+			CUnit* targetOfTarget = target->orderTarget.unit;
 			if (!targetOfTarget)
 			  return false;
 
@@ -47,7 +47,7 @@ namespace AI {
 		}
 	};
 
-	CUnit* findBestStasisFieldTarget(const CUnit *caster, bool isUnderAttack) {
+	CUnit* findBestStasisFieldTarget(CUnit* caster, bool isUnderAttack) {
 	  int bounds;
 	  if (isUnderAttack)
 		bounds = 32 * 9;

@@ -8,18 +8,18 @@ namespace AI {
 class DisruptionWebTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
   private:
-    const CUnit *caster;
+    CUnit* caster;
 
   public:
-    DisruptionWebTargetFinderProc(const CUnit *caster)
+    DisruptionWebTargetFinderProc(CUnit* caster)
       : caster(caster) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 
 		if (!isTargetWorthHitting(target, caster))
 		  return false;
 
-		CUnit *targetOfTarget;
+		CUnit* targetOfTarget;
 		if (target->id == UnitId::bunker && target->hasLoadedUnit()) {
 		  targetOfTarget = target->getFirstLoadedUnit()->orderTarget.unit;
 		}
@@ -53,7 +53,7 @@ class DisruptionWebTargetFinderProc: public scbw::UnitFinderCallbackMatchInterfa
     }
 };
 
-CUnit* findBestDisruptionWebTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestDisruptionWebTarget(CUnit* caster, bool isUnderAttack) {
   int bounds;
   if (isUnderAttack)
     bounds = 32 * 9;

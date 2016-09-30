@@ -8,13 +8,13 @@ namespace AI {
 	class ParasiteTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 
 	  public:
-		ParasiteTargetFinderProc(const CUnit *caster)
+		ParasiteTargetFinderProc(CUnit* caster)
 		  : caster(caster) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 
 			if (!isTargetWorthHitting(target, caster))
 			  return false;
@@ -50,7 +50,7 @@ namespace AI {
 		}
 	};
 
-	CUnit* findBestParasiteTarget(const CUnit *caster, bool isUnderAttack) {
+	CUnit* findBestParasiteTarget(CUnit* caster, bool isUnderAttack) {
 
 	  int bounds;
 

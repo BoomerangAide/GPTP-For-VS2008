@@ -8,14 +8,14 @@ namespace AI {
 	class MaelstromTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 		bool isUnderAttack;
 
 	  public:
-		MaelstromTargetFinderProc(const CUnit *caster, bool isUnderAttack)
+		MaelstromTargetFinderProc(CUnit* caster, bool isUnderAttack)
 		  : caster(caster), isUnderAttack(isUnderAttack) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 
 			if (!isTargetWorthHitting(target, caster))
 			  return false;
@@ -59,7 +59,7 @@ namespace AI {
 	};
 
 
-	CUnit* findBestMaelstromTarget(const CUnit *caster, bool isUnderAttack) {
+	CUnit* findBestMaelstromTarget(CUnit* caster, bool isUnderAttack) {
 	  int bounds;
 	  if (isUnderAttack)
 		bounds = 32 * 9;

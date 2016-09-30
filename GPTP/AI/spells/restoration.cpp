@@ -8,13 +8,13 @@ namespace AI {
 class RestorationTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
   private:
-    const CUnit *caster;
+    CUnit* caster;
 
   public:
-    RestorationTargetFinderProc(const CUnit *caster)
+    RestorationTargetFinderProc(CUnit* caster)
       : caster(caster) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 
 		if (target->playerId != caster->playerId)
 		  return false;
@@ -38,7 +38,7 @@ class RestorationTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface
     }
 };
 
-CUnit* findBestRestorationTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestRestorationTarget(CUnit* caster, bool isUnderAttack) {
 
   int bounds = 32 * 32;
 
@@ -51,13 +51,13 @@ CUnit* findBestRestorationTarget(const CUnit *caster, bool isUnderAttack) {
 class RestorationTargetFinderProcSituational: public scbw::UnitFinderCallbackMatchInterface {
 
   private:
-    const CUnit *caster;
+    CUnit* caster;
 
   public:
-    RestorationTargetFinderProcSituational(const CUnit *caster)
+    RestorationTargetFinderProcSituational(CUnit* caster)
       : caster(caster) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 
 		if (target->playerId != caster->playerId)
 		  return false;
@@ -74,7 +74,7 @@ class RestorationTargetFinderProcSituational: public scbw::UnitFinderCallbackMat
 };
 
 
-CUnit* findBestRestorationTargetSituational(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestRestorationTargetSituational(CUnit* caster, bool isUnderAttack) {
 
   if (isUnderAttack)
     return NULL;

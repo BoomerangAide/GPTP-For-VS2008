@@ -8,13 +8,13 @@ namespace AI {
 	class OpticalFlareTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 
 	  public:
-		OpticalFlareTargetFinderProc(const CUnit *caster)
+		OpticalFlareTargetFinderProc(CUnit* caster)
 		  : caster(caster) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 
 			if (!isTargetWorthHitting(target, caster))
 			  return false;
@@ -36,7 +36,7 @@ namespace AI {
 		}
 	};
 
-	CUnit* findBestOpticalFlareTarget(const CUnit *caster, bool isUnderAttack) {
+	CUnit* findBestOpticalFlareTarget(CUnit* caster, bool isUnderAttack) {
 
 	  int bounds;
 

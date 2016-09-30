@@ -1,6 +1,5 @@
 #include "spells.h"
 #include <AI/ai_common.h>
-#include <hooks/tech_target_check.h>
 
 // V241 for VS2008
 
@@ -8,13 +7,13 @@ namespace AI {
 
 class DefensiveMatrixTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
   private:
-    const CUnit *caster;
+    CUnit* caster;
     bool isUnderAttack;
   public:
-    DefensiveMatrixTargetFinderProc(const CUnit *caster, bool isUnderAttack)
+    DefensiveMatrixTargetFinderProc(CUnit* caster, bool isUnderAttack)
       : caster(caster), isUnderAttack(isUnderAttack) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 
 		if (target->defensiveMatrixHp)
 		  return false;
@@ -34,7 +33,7 @@ class DefensiveMatrixTargetFinderProc: public scbw::UnitFinderCallbackMatchInter
 		if (target->status & UnitStatus::Invincible)
 		  return false;
 
-		if (hooks::getTechUseErrorMessage(target, caster->playerId, TechId::DefensiveMatrix) != 0)
+		if (scbw::getTechUseErrorMessage((CUnit*)target, caster->playerId, TechId::DefensiveMatrix) != 0)
 		  return false;
 
 		return true;
@@ -42,7 +41,7 @@ class DefensiveMatrixTargetFinderProc: public scbw::UnitFinderCallbackMatchInter
     }
 };
 
-CUnit* findBestDefensiveMatrixTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestDefensiveMatrixTarget(CUnit* caster, bool isUnderAttack) {
 
   int bounds;
 

@@ -8,13 +8,13 @@ namespace AI {
 class RecallTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
   private:
-    const CUnit *caster;
+    CUnit* caster;
 
   public:
-    RecallTargetFinderProc(const CUnit *caster)
+    RecallTargetFinderProc(CUnit* caster)
       : caster(caster) {}
 
-	bool match(const CUnit *target) {
+	bool match(CUnit* target) {
 
 		if (target->playerId != caster->playerId)
 		  return false;
@@ -35,7 +35,7 @@ class RecallTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
     }
 };
 
-CUnit* findBestRecallTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestRecallTarget(CUnit* caster, bool isUnderAttack) {
 
   if (isUnitInUnsafeRegion(caster))
     return NULL;

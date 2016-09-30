@@ -8,13 +8,13 @@ namespace AI {
 	class YamatoGunTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 
 	  public:
-		YamatoGunTargetFinderProc(const CUnit *caster)
+		YamatoGunTargetFinderProc(CUnit* caster)
 		  : caster(caster) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 			if (!isTargetWorthHitting(target, caster))
 			  return false;
 
@@ -36,7 +36,7 @@ namespace AI {
 		}
 	};
 
-	CUnit* findBestYamatoGunTarget(const CUnit *caster, bool isUnderAttack) {
+	CUnit* findBestYamatoGunTarget(CUnit* caster, bool isUnderAttack) {
 
 	  if (isUnderAttack) {
 		int bounds = 32 * 16;

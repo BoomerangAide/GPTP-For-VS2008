@@ -7,13 +7,13 @@ namespace AI {
 
 class FeedbackTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
   private:
-    const CUnit *caster;
+    CUnit* caster;
 
   public:
-    FeedbackTargetFinderProc(const CUnit *caster)
+    FeedbackTargetFinderProc(CUnit* caster)
       : caster(caster) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 
 		if (!isTargetWorthHitting(target, caster))
 		  return false;
@@ -35,7 +35,7 @@ class FeedbackTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
     }
 };
 
-CUnit* findBestFeedbackTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestFeedbackTarget(CUnit* caster, bool isUnderAttack) {
 
   int bounds;
 

@@ -8,13 +8,13 @@ namespace AI {
 	class NukeLaunchTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 
 	  public:
-		NukeLaunchTargetFinderProc(const CUnit *caster)
+		NukeLaunchTargetFinderProc(CUnit* caster)
 		  : caster(caster) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 
 			if ((target->status & (UnitStatus::Cloaked | UnitStatus::RequiresDetection))
 				&& !target->isVisibleTo(caster->playerId))
@@ -32,7 +32,7 @@ namespace AI {
 		}
 	};
 
-	CUnit* findBestNukeLaunchTarget(const CUnit *caster, bool isUnderAttack) {
+	CUnit* findBestNukeLaunchTarget(CUnit* caster, bool isUnderAttack) {
 	  return scbw::UnitFinder::getNearestTarget(caster, NukeLaunchTargetFinderProc(caster));
 	}
 

@@ -8,14 +8,14 @@ namespace AI {
 class IrradiateTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
   private:
-    const CUnit *caster;
+    CUnit* caster;
     bool isUnderAttack;
 
   public:
-    IrradiateTargetFinderProc(const CUnit *caster, bool isUnderAttack)
+    IrradiateTargetFinderProc(CUnit* caster, bool isUnderAttack)
       : caster(caster), isUnderAttack(isUnderAttack) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 
 		if (!isTargetWorthHitting(target, caster))
 		  return false;
@@ -51,7 +51,7 @@ class IrradiateTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
     }
 };
 
-CUnit* findBestIrradiateTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestIrradiateTarget(CUnit* caster, bool isUnderAttack) {
 
   int bounds;
 

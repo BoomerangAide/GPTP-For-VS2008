@@ -7,13 +7,13 @@ namespace AI {
 
 	class MindControlTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 
 	  public:
-		MindControlTargetFinderProc(const CUnit *caster)
+		MindControlTargetFinderProc(CUnit* caster)
 		  : caster(caster) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 
 			if (!isTargetWorthHitting(target, caster))
 			  return false;
@@ -62,7 +62,7 @@ namespace AI {
 	};
 
 
-CUnit* findBestMindControlTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestMindControlTarget(CUnit* caster, bool isUnderAttack) {
 
   int bounds = 32 * 32;
 

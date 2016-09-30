@@ -1,6 +1,5 @@
 #include "spells.h"
 #include <AI/ai_common.h>
-#include <hooks/tech_target_check.h>
 
 //V241 for VS2008
 
@@ -9,13 +8,13 @@ namespace AI {
 class HallucinationTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
   private:
-    const CUnit *caster;
+    CUnit* caster;
 
   public:
-    HallucinationTargetFinderProc(const CUnit *caster)
+    HallucinationTargetFinderProc(CUnit* caster)
       : caster(caster) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 
 		if (target->playerId != caster->playerId)
 		  return false;
@@ -23,7 +22,7 @@ class HallucinationTargetFinderProc: public scbw::UnitFinderCallbackMatchInterfa
 		if (target->status & UnitStatus::Invincible)
 		  return false;
 
-		if (hooks::getTechUseErrorMessage(target, caster->playerId, TechId::Hallucination) != 0)
+		if (scbw::getTechUseErrorMessage((CUnit*)target, caster->playerId, TechId::Hallucination) != 0)
 		  return false;
 
 		if (target->id == UnitId::carrier
@@ -37,7 +36,7 @@ class HallucinationTargetFinderProc: public scbw::UnitFinderCallbackMatchInterfa
     }
 };
 
-CUnit* findBestHallucinationTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestHallucinationTarget(CUnit* caster, bool isUnderAttack) {
 
   if (isUnderAttack)
     return NULL;

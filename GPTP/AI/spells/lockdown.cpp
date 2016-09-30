@@ -7,13 +7,13 @@ namespace AI {
 
 	class LockdownFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 
 	  public:
-		LockdownFinderProc(const CUnit *caster)
+		LockdownFinderProc(CUnit* caster)
 		  : caster(caster) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 
 			if (!isTargetWorthHitting(target, caster))
 			  return false;
@@ -25,7 +25,7 @@ namespace AI {
 			  return false;
 
 			if (target->id == UnitId::dropship || target->id == UnitId::shuttle) {
-			  if (target->movementFlags & MovementFlags::Accelerating && target->hasLoadedUnit())
+				if (target->movementFlags & MovementFlags::Accelerating && target->hasLoadedUnit())
 				return true;
 			}
 
@@ -40,7 +40,7 @@ namespace AI {
 		}
 	};
 
-	CUnit* findBestLockdownTarget(const CUnit *caster, bool isUnderAttack) {
+	CUnit* findBestLockdownTarget(CUnit* caster, bool isUnderAttack) {
 
 	  int bounds;
 

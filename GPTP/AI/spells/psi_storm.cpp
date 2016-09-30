@@ -8,14 +8,14 @@ namespace AI {
 	class PsiStormTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 		bool isUnderAttack;
 
 	  public:
-		PsiStormTargetFinderProc(const CUnit *caster, bool isUnderAttack)
+		PsiStormTargetFinderProc(CUnit* caster, bool isUnderAttack)
 		  : caster(caster), isUnderAttack(isUnderAttack) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 
 			if (!isTargetWorthHitting(target, caster))
 			  return false;
@@ -36,7 +36,7 @@ namespace AI {
 		}
 	};
 
-	CUnit* findBestPsiStormTarget(const CUnit *caster, bool isUnderAttack) {
+	CUnit* findBestPsiStormTarget(CUnit* caster, bool isUnderAttack) {
 
 	  int bounds;
 

@@ -8,14 +8,14 @@ namespace AI {
 class EnsnareTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
   private:
-    const CUnit *caster;
+    CUnit* caster;
     bool isUnderAttack;
 
   public:
-    EnsnareTargetFinderProc(const CUnit *caster, bool isUnderAttack)
+    EnsnareTargetFinderProc(CUnit* caster, bool isUnderAttack)
       : caster(caster), isUnderAttack(isUnderAttack) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 		if (!isTargetWorthHitting(target, caster))
 		  return false;
 
@@ -43,7 +43,7 @@ class EnsnareTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
     }
 };
 
-CUnit* findBestEnsnareTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestEnsnareTarget(CUnit* caster, bool isUnderAttack) {
 
   int bounds;
 

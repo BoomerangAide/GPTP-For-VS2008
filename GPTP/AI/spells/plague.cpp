@@ -8,14 +8,14 @@ namespace AI {
 	class PlagueTargetFinderProc: public scbw::UnitFinderCallbackMatchInterface {
 
 	  private:
-		const CUnit *caster;
+		CUnit* caster;
 		bool isUnderAttack;
 
 	  public:
-		PlagueTargetFinderProc(const CUnit *caster, bool isUnderAttack)
+		PlagueTargetFinderProc(CUnit* caster, bool isUnderAttack)
 		  : caster(caster), isUnderAttack(isUnderAttack) {}
 
-		bool match(const CUnit *target) {
+		bool match(CUnit* target) {
 			if (!isTargetWorthHitting(target, caster))
 			  return false;
 
@@ -40,7 +40,7 @@ namespace AI {
 		}
 	};
 
-	CUnit* findBestPlagueTarget(const CUnit *caster, bool isUnderAttack) {
+	CUnit* findBestPlagueTarget(CUnit* caster, bool isUnderAttack) {
 
 	  int bounds;
 

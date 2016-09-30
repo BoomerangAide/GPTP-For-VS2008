@@ -8,13 +8,13 @@ namespace AI {
 class EmpShockwaveTargetFinderShieldProc: public scbw::UnitFinderCallbackMatchInterface {
 
   private:
-    const CUnit *caster;
+    CUnit* caster;
 
   public:
-    EmpShockwaveTargetFinderShieldProc(const CUnit *caster)
+    EmpShockwaveTargetFinderShieldProc(CUnit* caster)
       : caster(caster) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 		if (!isTargetWorthHitting(target, caster))
 		  return false;
 
@@ -35,13 +35,13 @@ class EmpShockwaveTargetFinderShieldProc: public scbw::UnitFinderCallbackMatchIn
 class EmpShockwaveTargetFinderEnergyProc: public scbw::UnitFinderCallbackMatchInterface {
 
   private:
-    const CUnit *caster;
+    CUnit* caster;
 
   public:
-    EmpShockwaveTargetFinderEnergyProc(const CUnit *caster)
+    EmpShockwaveTargetFinderEnergyProc(CUnit* caster)
       : caster(caster) {}
 
-    bool match(const CUnit *target) {
+    bool match(CUnit* target) {
 		if (!isTargetWorthHitting(target, caster))
 		  return false;
 
@@ -59,7 +59,7 @@ class EmpShockwaveTargetFinderEnergyProc: public scbw::UnitFinderCallbackMatchIn
     }
 };
 
-CUnit* findBestEmpShockwaveTarget(const CUnit *caster, bool isUnderAttack) {
+CUnit* findBestEmpShockwaveTarget(CUnit* caster, bool isUnderAttack) {
 
   int bounds;
 
@@ -68,7 +68,7 @@ CUnit* findBestEmpShockwaveTarget(const CUnit *caster, bool isUnderAttack) {
   else
     bounds = 32 * 64;
 
-  CUnit *result = scbw::UnitFinder::getNearestTarget(
+  CUnit* result = scbw::UnitFinder::getNearestTarget(
     caster->getX() - bounds, caster->getY() - bounds,
     caster->getX() + bounds, caster->getY() + bounds,
     caster, EmpShockwaveTargetFinderShieldProc(caster));
