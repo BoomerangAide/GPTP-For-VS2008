@@ -10,7 +10,7 @@ void fixTargetLocation(Point16* coords, u32 unitId);								//01FA0
 bool isUnitPositions2Equal(CUnit* unit);											//02160
 void AI_TrainingOverlord(CUnit* main_unit, CUnit* created_unit);					//35770
 bool function_00467030(CUnit* unit);												//67030
-CUnit* function_004678A0(CUnit* unit, u16 unitId);									//678A0
+CUnit* function_004678A0(CUnit* unit, u32 unitId);									//678A0
 Bool32 buildingAddon(CUnit* unit, u32 hpGain, u32 someFlag);						//679A0
 void function_00474760(CUnit* unit, COrder* order, u8 orderId);						//74760
 void function_004749A0(CUnit* unit, COrder* order, u8 orderId);						//749A0
@@ -715,7 +715,7 @@ bool function_00467030(CUnit* unit) {
 ;
 
 const u32 Func_Sub4678A0 = 0x004678A0;
-CUnit* function_004678A0(CUnit* unit, u16 unitId) {
+CUnit* function_004678A0(CUnit* unit, u32 unitId) {
 
 	static CUnit* newUnit;
 
