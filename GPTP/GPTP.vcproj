@@ -202,6 +202,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\orders\building_making\building_protoss.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\building_making\building_protoss_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hooks\orders\building_making\building_terran.cpp"
 				>
 			</File>
@@ -795,6 +803,10 @@
 				RelativePath=".\hooks\orders\building_making\building_morph.h"
 				>
 			</File>	
+			<File
+				RelativePath=".\hooks\orders\building_making\building_protoss.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\orders\building_making\building_terran.h"
 				>
