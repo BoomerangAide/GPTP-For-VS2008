@@ -100,7 +100,7 @@ struct CImage {
 /*0x0F*/  u8						verticalOffset;
 /*0x10*/  u16						iscriptHeaderOffset;
 /*0x12*/  u16						iscriptOffset;
-/*0x14*/  UNK						unknown2[2];
+/*0x14*/  u16						unknown14;
 /*0x16*/  u8						animation; //Use IscriptAnimation::Enum
 /*0x17*/  u8						wait;		// iscript sleep time
 /*0x18*/  u16						frameSet;
