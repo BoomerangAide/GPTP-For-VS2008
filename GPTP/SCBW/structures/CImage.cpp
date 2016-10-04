@@ -65,8 +65,7 @@ void CImage::initializeData(CSprite *parent, u16 imageId, s8 x, s8 y) {
   //Initialize iscript data
   this->iscriptHeaderOffset = 0;
   this->iscriptOffset = 0;
-  this->unknown2[0] = 0;
-  this->unknown2[1] = 0;
+  this->unknown14 = 0;
   this->animation = IscriptAnimation::Init;
   this->wait = 0;
 
