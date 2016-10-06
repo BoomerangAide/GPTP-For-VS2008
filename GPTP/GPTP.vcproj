@@ -362,6 +362,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\orders\unit_making\unit_train.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\unit_making\unit_train_inject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\hooks\interface\wireframe.cpp"
 				>
 			</File>
@@ -907,6 +915,10 @@
 				RelativePath=".\hooks\orders\unit_making\unit_morph.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\orders\unit_making\unit_train.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\interface\wireframe.h"
 				>
