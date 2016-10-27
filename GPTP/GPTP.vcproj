@@ -284,6 +284,22 @@
 			<File
 				RelativePath=".\hooks\orders\liftland_inject.cpp"
 				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\load_unload_orders.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\load_unload_orders_inject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\load_unload_proc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\load_unload_proc_inject.cpp"
+				>
 			</File>			
 			<File
 				RelativePath=".\logger.cpp"
@@ -861,6 +877,14 @@
 			</File>	
 			<File
 				RelativePath=".\hooks\orders\liftland.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\load_unload_orders.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\load_unload_proc.h"
 				>
 			</File>			
 			<File
