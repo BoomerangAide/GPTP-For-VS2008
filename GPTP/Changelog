@@ -1,3 +1,9 @@
+Version 4.004
+-adding Load/Unload orders hooks
+-adding Load/Unload proc hooks
+
+----------------------------------------
+
 Version 4.003:
 adding Unit_train hooks
 
