@@ -320,6 +320,14 @@
 			<File
 				RelativePath=".\hooks\orders\merge_units_inject.cpp"
 				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\spells\nuke_orders.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\nuke_orders_inject.cpp"
+				>
 			</File>			
 			<File
 				RelativePath=".\SCBW\structures\Player.cpp"
@@ -903,6 +911,10 @@
 				RelativePath=".\MPQDraftPlugin.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\nuke_orders.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\SCBW\structures\Player.h"
 				>
