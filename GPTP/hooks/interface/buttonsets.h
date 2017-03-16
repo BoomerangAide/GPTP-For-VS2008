@@ -1,6 +1,4 @@
 #pragma once
-#include <SCBW/scbwdata.h>
-#include <SCBW/enumerations.h>
 #include <SCBW/api.h>
 
 namespace hooks {
