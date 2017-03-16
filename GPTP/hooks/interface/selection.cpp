@@ -1,5 +1,4 @@
 #include "selection.h"
-#include <SCBW/scbwdata.h>
 #include <SCBW/api.h>
 
 //Helper functions declaration
