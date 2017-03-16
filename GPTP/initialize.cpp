@@ -35,30 +35,32 @@
 #include "hooks/unit_stats/weapon_range.h"
 #include "hooks/interface/weapon_armor_tooltip.h"
 
-#include "hooks/orders/building_making/building_morph.h"
-#include "hooks/orders/building_making/make_nydus_exit.h"
-#include "hooks/orders/unit_making/unit_morph.h"
-#include "hooks/interface/wireframe.h"
-#include "hooks/orders/building_making/building_terran.h"
-#include "hooks/orders/building_making/building_protoss.h"
-#include "hooks/orders/unit_making/unit_train.h"
-#include "hooks/load_unload_proc.h"
-#include "hooks/orders/load_unload_orders.h"
-#include "hooks/orders/spells/nuke_orders.h"
-
+//in alphabetical order
 #include "hooks/orders/base_orders/attack_orders.h"
+#include "hooks/orders/building_making/building_morph.h"
 #include "hooks/interface/buttonsets.h"
+#include "hooks/orders/building_making/building_protoss.h"
+#include "hooks/orders/building_making/building_terran.h"
+#include "hooks/burrow_tech.h"
 #include "hooks/orders/spells/cast_order.h"
 #include "hooks/orders/base_orders/die_order.h"
 #include "hooks/orders/enter_nydus.h"
 #include "hooks/orders/infestation.h"
 #include "hooks/orders/larva_creep_spawn.h"
 #include "hooks/orders/liftland.h"
+#include "hooks/orders/load_unload_orders.h"
+#include "hooks/load_unload_proc.h"
+#include "hooks/orders/building_making/make_nydus_exit.h"
 #include "hooks/orders/merge_units.h"
+#include "hooks/orders/spells/nuke_orders.h"
 #include "hooks/orders/spells/recall_spell.h"
+#include "hooks/orders/research_upgrade_orders.h"
 #include "hooks/interface/selection.h"
 #include "hooks/orders/siege_transform.h"
 #include "hooks/orders/base_orders/stopholdpos_orders.h"
+#include "hooks/orders/unit_making/unit_morph.h"
+#include "hooks/orders/unit_making/unit_train.h"
+#include "hooks/interface/wireframe.h"
 #include "hooks/weapons/wpnspellhit.h"
 
 //#include "AI/spellcasting.h"
@@ -85,6 +87,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectGameHooks();
 	hooks::injectDrawHook();
 
+	//in order of creation
 	hooks::injectInfestationHooks();
 	hooks::injectSiegeTransformHooks();
 	hooks::injectButtonSetHooks();
@@ -109,6 +112,8 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectLoadUnloadProcHooks();
 	hooks::injectLoadUnloadOrdersHooks();
 	hooks::injectNukeOrdersHooks();
+	hooks::injectBurrowTechHooks();
+	hooks::injectResearchUpgradeOrdersHooks();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
