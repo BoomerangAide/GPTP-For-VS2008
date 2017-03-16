@@ -216,6 +216,14 @@
 			<File
 				RelativePath=".\hooks\orders\building_making\building_terran_inject.cpp"
 				>
+			</File>	
+			<File
+				RelativePath=".\hooks\burrow_tech.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\burrow_tech_inject.cpp"
+				>
 			</File>			
 			<File
 				RelativePath=".\hooks\interface\buttonsets.cpp"
@@ -351,6 +359,14 @@
 			</File>
 			<File
 				RelativePath=".\hooks\orders\spells\recall_spell_inject.cpp"
+				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\research_upgrade_orders.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\research_upgrade_orders_inject.cpp"
 				>
 			</File>			
 			<File
@@ -842,6 +858,10 @@
 			<File
 				RelativePath=".\hooks\orders\building_making\building_terran.h"
 				>
+			</File>	
+			<File
+				RelativePath=".\hooks\burrow_tech.h"
+				>
 			</File>			
 			<File
 				RelativePath=".\hooks\interface\buttonsets.h"
@@ -923,6 +943,10 @@
 				RelativePath=".\Plugin.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\orders\research_upgrade_orders.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\interface\selection.h"
 				>
