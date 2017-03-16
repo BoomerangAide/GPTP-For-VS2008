@@ -1,3 +1,10 @@
+Version 4.006
+-adding Burrow tech hooks
+-adding Research/Upgrade orders hooks
+-removed some useless include
+
+----------------------------------------
+
 Version 4.005
 adding Nuke Orders hooks
 
