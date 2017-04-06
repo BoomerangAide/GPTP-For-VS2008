@@ -1,3 +1,10 @@
+Version 4.007
+-Add performAnotherOrder() to CUnit functions
+-Add Medic hooks
+-minor fixes
+
+----------------------------------------
+
 Version 4.006
 -adding Burrow tech hooks
 -adding Research/Upgrade orders hooks
