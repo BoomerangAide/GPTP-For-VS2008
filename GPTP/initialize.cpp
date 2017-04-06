@@ -51,6 +51,7 @@
 #include "hooks/orders/load_unload_orders.h"
 #include "hooks/load_unload_proc.h"
 #include "hooks/orders/building_making/make_nydus_exit.h"
+#include "hooks/orders/medic_orders.h"
 #include "hooks/orders/merge_units.h"
 #include "hooks/orders/spells/nuke_orders.h"
 #include "hooks/orders/spells/recall_spell.h"
@@ -114,6 +115,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectNukeOrdersHooks();
 	hooks::injectBurrowTechHooks();
 	hooks::injectResearchUpgradeOrdersHooks();
+	hooks::injectMedicOrdersHooks();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
