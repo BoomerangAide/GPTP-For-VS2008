@@ -20,7 +20,6 @@ namespace {
 	void function_0046A5A0(CUnit* unit);																			//0x0046A5A0
 	u32 function_00473FB0(CUnit* unit, u8 playerId, int x, int y, u16 unitId, u8 unk1, u8 unk2, u8 unk3, u8 unk4 );	//0x00473FB0
 	void removeOrderFromUnitQueue(CUnit* unit, COrder* order);														//0x004742D0
-	void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId);				//0x004745F0
 	void function_00474760(CUnit* unit, COrder* order, u8 orderId);													//0x00474760
 	void actUnitReturnToIdle(CUnit* unit);																			//0x00475420
 	bool function_0047DF90(CUnit* unit);																			//0x0047DF90
@@ -70,8 +69,7 @@ void orders_BuildingLand(CUnit* unit) {
 			}
 
 			//643D3:
-			performAnotherOrder(
-				unit, 
+			unit->performAnotherOrder(
 				OrderId::BuildingLiftoff, 
 				coords.x,
 				coords.y, 
@@ -90,8 +88,7 @@ void orders_BuildingLand(CUnit* unit) {
 				removeOrderFromUnitQueue(unit, unit->orderQueueTail);
 
 			//6440A:
-			performAnotherOrder(
-				unit,
+			unit->performAnotherOrder(
 				OrderId::BuildingLand,
 				unitTarget.pt.x,
 				unitTarget.pt.y,
@@ -658,27 +655,6 @@ void removeOrderFromUnitQueue(CUnit* unit, COrder* order) {
 		MOV ECX, unit
 		MOV EAX, order
 		CALL Func_removeOrderFromUnitQueue
-		POPAD
-	}
-
-}
-
-;
-
-const u32 Func_PerformAnotherOrder = 0x004745F0;
-void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId) {
-
-	Point16 pos = {x,y};
-
-	__asm {
-		PUSHAD
-		PUSH target
-		PUSH pos
-		MOV BL, orderId
-		MOVZX EDX, targetUnitId
-		MOV ESI, unit
-		XOR EDI, EDI
-		CALL Func_PerformAnotherOrder
 		POPAD
 	}
 
