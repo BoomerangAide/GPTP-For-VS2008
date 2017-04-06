@@ -20,7 +20,6 @@ CUnit* findBestAttackTarget(CUnit* unit);																//0x00443080
 bool function_00462EA0(CUnit* unit, u8 unknownByteValue);												//0x00462EA0
 void function_00465780(CUnit* unit);																	//0x00465780
 void removeOrderFromUnitQueue(CUnit* unit, COrder* order);												//0x004742D0
-void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId);		//0x004745F0
 void function_00474A70(CUnit* unit, CUnit* target, u8 orderId);											//0x00474A70
 bool isTargetWithinMinMovementRange(CUnit* unit, CUnit* target, u32 range);								//0x004763D0
 bool function_00476610(CUnit* unit, int x, int y);														//0x00476610
@@ -474,8 +473,7 @@ void orders_TurretAttack(CUnit* unit) {
 		
 		if(jump_to_77CDA) {
 
-			performAnotherOrder(
-				unit,
+			unit->performAnotherOrder(
 				OrderId::TurretGuard,
 				0,
 				0,
@@ -1122,28 +1120,6 @@ void removeOrderFromUnitQueue(CUnit* unit, COrder* order) {
 
 ;
 
-const u32 Func_PerformAnotherOrder = 0x004745F0;
-void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId) {
-
-	static Point16 pos;
-	pos.x = x;pos.y = y;
-
-	__asm {
-		PUSHAD
-		PUSH target
-		PUSH pos
-		MOV BL, orderId
-		MOVZX EDX, targetUnitId
-		MOV ESI, unit
-		XOR EDI, EDI
-		CALL Func_PerformAnotherOrder
-		POPAD
-	}
-
-}
-
-;
-
 const u32 Func_Sub474A70 = 0x00474A70;
 void function_00474A70(CUnit* unit, CUnit* target, u8 orderId) {
 
@@ -1453,7 +1429,7 @@ void makeToHoldPosition(CUnit* unit) {
 
 ;
 
-u32 Func_moveToTarget = 0x004EB720;
+const u32 Func_moveToTarget = 0x004EB720;
 bool moveToTarget(CUnit* unit, CUnit* target) {
 
 	static Bool32 bPreResult;
@@ -1470,7 +1446,6 @@ bool moveToTarget(CUnit* unit, CUnit* target) {
 	return (bPreResult != 0);
 
 }
-
 
 ;
 
@@ -1526,7 +1501,6 @@ bool function_004EB900(CUnit* unit, CUnit* target) {
 	return (bPreResult != 0);
 
 }
-
 
 ;
 
