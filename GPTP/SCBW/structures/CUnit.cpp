@@ -605,6 +605,26 @@ void CUnit::order(u8 orderId, u16 x, u16 y, CUnit* target, u16 targetUnitId, boo
 	}
 }
 
+const u32 Func_PerformAnotherOrder = 0x004745F0;
+void CUnit::performAnotherOrder(u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId, u32 unk) {
+
+	static Point16 pos;
+	pos.x = x;pos.y = y;
+
+	__asm {
+		PUSHAD
+		PUSH target
+		PUSH pos
+		MOV BL, orderId
+		MOVZX EDX, targetUnitId
+		MOV ESI, this
+		MOV EDI, unk
+		CALL Func_PerformAnotherOrder
+		POPAD
+	}
+
+}
+
 //Identical to @ 0x004743D0
 void CUnit::setSecondaryOrder(u8 orderId) {
 	assert(this);
