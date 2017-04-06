@@ -322,6 +322,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\orders\medic_orders.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\medic_orders_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hooks\orders\merge_units.cpp"
 				>
 			</File>
@@ -923,6 +931,10 @@
 				RelativePath=".\hooks\orders\building_making\make_nydus_exit.h"
 				>
 			</File>			
+			<File
+				RelativePath=".\hooks\orders\medic_orders.h"
+				>
+			</File>
 			<File
 				RelativePath=".\hooks\orders\merge_units.h"
 			>
