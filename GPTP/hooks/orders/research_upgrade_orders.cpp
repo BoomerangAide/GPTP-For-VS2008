@@ -8,7 +8,6 @@ namespace {
 	bool isUnitUpgradeAvailable(CUnit* unit);															//033D0
 	void ApplySpeedUpgradeFromUpgradeType(CUnit* unit, u8 upgradeType);									//54540
 	void removeOrderFromUnitQueue(CUnit* unit, COrder* order);											//742D0
-	void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId);	//745F0
 	void playUpgradeCompleteSound();																	//8F070
 	void playResearchCompleteSound();																	//8F150
 	void setUpgradeLevel(u32 playerId, u32 upgradeType, u8 upgradeLevel);								//CE770
@@ -135,7 +134,7 @@ namespace hooks {
 
 					}
 
-					performAnotherOrder(unit,OrderId::ComputerAI,0,0,NULL,UnitId::None);
+					unit->performAnotherOrder(OrderId::ComputerAI,0,0,NULL,UnitId::None);
 
 				}
 
@@ -261,7 +260,7 @@ namespace hooks {
 							removeOrderFromUnitQueue(unit,unit->orderQueueTail);
 					}
 
-					performAnotherOrder(unit,OrderId::ComputerAI,0,0,NULL,UnitId::None);
+					unit->performAnotherOrder(OrderId::ComputerAI,0,0,NULL,UnitId::None);
 					
 				}
 
@@ -335,28 +334,6 @@ namespace {
 			MOV ECX, unit
 			MOV EAX, order
 			CALL Func_removeOrderFromUnitQueue
-			POPAD
-		}
-
-	}
-
-	;
-
-	const u32 Func_PerformAnotherOrder = 0x004745F0;
-	void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId) {
-
-		static Point16 pos;
-		pos.x = x;pos.y = y;
-
-		__asm {
-			PUSHAD
-			PUSH target
-			PUSH pos
-			MOV BL, orderId
-			MOVZX EDX, targetUnitId
-			MOV ESI, unit
-			XOR EDI, EDI
-			CALL Func_PerformAnotherOrder
 			POPAD
 		}
 
