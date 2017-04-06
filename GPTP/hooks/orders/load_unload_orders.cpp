@@ -13,7 +13,6 @@ Bool32 function_00438E70(CUnit* unit, int x, int y);																//38E70
 void function_0043DF30(CUnit* unit);																				//3DF30
 void removeOrderFromUnitQueue(CUnit* unit, COrder* order);															//742D0
 void unknownSpecialOrder(CUnit* unit, COrder* order, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId);	//74540
-void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId);					//745F0
 void function_00474A70(CUnit* unit, CUnit* target, u8 orderId);														//74A70
 void orderImmediate(CUnit* unit, u8 order);																			//74B40
 void _doOrder(CUnit* unit, u32 orderId, int x, int y, bool stopPreviousOrders);										//74C70
@@ -76,7 +75,7 @@ namespace hooks {
 
 				}
 
-				performAnotherOrder(unit,OrderId::ComputerAI,0,0,NULL,UnitId::None);
+				unit->performAnotherOrder(OrderId::ComputerAI,0,0,NULL,UnitId::None);
 
 			}
 
@@ -232,7 +231,7 @@ namespace hooks {
 				prepareForNextOrder(unit);
 			}
 			else {
-				performAnotherOrder(unit,OrderId::Unload,0,0,NULL,UnitId::None);
+				unit->performAnotherOrder(OrderId::Unload,0,0,NULL,UnitId::None);
 				prepareForNextOrder(unit);
 			}
 
@@ -632,7 +631,7 @@ namespace hooks {
 
 						}
 
-						performAnotherOrder(unit,OrderId::ComputerAI,0,0,NULL,UnitId::None);
+						unit->performAnotherOrder(OrderId::ComputerAI,0,0,NULL,UnitId::None);
 						prepareForNextOrder(unit);
 
 					}
@@ -754,29 +753,6 @@ void unknownSpecialOrder(CUnit* unit, COrder* order, u8 orderId, s16 x, s16 y, C
 		MOV ESI, unit
 		MOV EDI, order
 		CALL Func_unknownSpecialOrder
-		POPAD
-	}
-
-}
-
-;
-
-
-const u32 Func_PerformAnotherOrder = 0x004745F0;
-void performAnotherOrder(CUnit* unit, u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId) {
-
-	static Point16 pos;
-	pos.x = x;pos.y = y;
-
-	__asm {
-		PUSHAD
-		PUSH target
-		PUSH pos
-		MOV BL, orderId
-		MOVZX EDX, targetUnitId
-		MOV ESI, unit
-		XOR EDI, EDI
-		CALL Func_PerformAnotherOrder
 		POPAD
 	}
 
