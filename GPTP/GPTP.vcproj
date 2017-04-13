@@ -262,6 +262,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\orders\spells\feedback_spell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\feedback_spell_inject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\hallucination_spell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\hallucination_spell_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hook_tools.cpp"
 				>
 			</File>
@@ -890,9 +906,17 @@
 			<File
 				RelativePath=".\hooks\orders\enter_nydus.h"
 				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\feedback_spell.h"
+				>
 			</File>			
 			<File
 				RelativePath=".\SCBW\enumerations\FlingyId.h"
+				>
+			</File>	
+			<File
+				RelativePath=".\hooks\orders\spells\hallucination_spell.h"
 				>
 			</File>			
 			<File
