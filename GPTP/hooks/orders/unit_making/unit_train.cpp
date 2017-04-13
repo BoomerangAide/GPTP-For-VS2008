@@ -240,6 +240,8 @@ void function_00468420(CUnit* unit) {
 				}
 
 			}
+			else
+				jump_to_685D8 = true;			
 
 			if(jump_to_685D8) {
 				scbw::refreshConsole();
