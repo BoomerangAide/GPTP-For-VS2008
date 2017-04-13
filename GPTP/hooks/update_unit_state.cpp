@@ -6,7 +6,6 @@
 namespace {
 //Helper function: Returns true if the unit's HP <= 33%.
 bool unitHpIsInRedZone(CUnit* unit);					//0x004022C0
-void spendUnitEnergy(CUnit* unit, u32 energyToSpend);	//0x00491460
 void RestoreAllUnitStats(CUnit* unit);					//0x00492F70 (hooked by hooks\update_status_effects.cpp)
 void setAllImageGroupFlagsPal11(CSprite* sprite);		//0x00497430
 } //unnamed namespace
@@ -433,14 +432,6 @@ bool unitHpIsInRedZone(CUnit* unit) {
 	}
 
 	return result != 0;
-}
-
-;
-
-//Identical to Unit__SpendEnergy @ 0x00491460
-void spendUnitEnergy(CUnit* unit, u32 energyToSpend) {
-	if(!(*CHEAT_STATE & CheatFlags::TheGathering))
-		unit->energy -= energyToSpend;
 }
 
 ;
