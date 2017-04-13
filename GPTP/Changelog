@@ -1,3 +1,13 @@
+Version 4.008
+-add Hallucination spell hook
+-add Feedback spell hook
+-unit_train.cpp: added a missing code part, may fix a bug
+-wpnspellhit.cpp: fix an error that could crash the game when hallucinated units attack
+-update_unit_state.cpp: removed useless helper
+-minor fixes
+
+----------------------------------------
+
 Version 4.007
 -Add performAnotherOrder() to CUnit functions
 -Add Medic hooks
