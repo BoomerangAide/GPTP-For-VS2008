@@ -341,6 +341,8 @@ namespace {
 		}
 
 	}
+	
+	;
 
 	const u32 Func_RandomizeShort = 0x004DC4A0;
 	u32 RandomizeShort(u32 unknown_index) {
