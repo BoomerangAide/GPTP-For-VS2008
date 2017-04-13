@@ -233,7 +233,7 @@ namespace hooks {
 	void WeaponBulletHit(CBullet* bullet, CUnit* target, u32 hitFlags) {
 
 		if(bullet->hitFlags & 2)	//bullet doing no damage
-			attackOverlayAndNotify(bullet->sourceUnit,target,0,0);
+			attackOverlayAndNotify(bullet->sourceUnit,target,bullet->weaponType,bullet->direction1); //no damage, but still ask for retaliation
 		else {
 
 			u32 base_damage = GetUnitBulletDamage(bullet,target);
@@ -839,9 +839,8 @@ namespace {
 			PUSH direction
 			MOV EAX, target
 			PUSH weaponType
-			CALL attackOverlayAndNotify
+			CALL Func_attackOverlayAndNotify
 			POPAD
-
 		}
 
 	}
