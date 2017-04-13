@@ -45,6 +45,8 @@
 #include "hooks/orders/spells/cast_order.h"
 #include "hooks/orders/base_orders/die_order.h"
 #include "hooks/orders/enter_nydus.h"
+#include "hooks/orders/spells/feedback_spell.h"
+#include "hooks/orders/spells/hallucination_spell.h"
 #include "hooks/orders/infestation.h"
 #include "hooks/orders/larva_creep_spawn.h"
 #include "hooks/orders/liftland.h"
@@ -116,6 +118,8 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectBurrowTechHooks();
 	hooks::injectResearchUpgradeOrdersHooks();
 	hooks::injectMedicOrdersHooks();
+	hooks::injectHallucinationSpellHook();
+	hooks::injectFeedbackSpellHook();	
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
