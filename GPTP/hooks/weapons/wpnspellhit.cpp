@@ -412,7 +412,7 @@ namespace hooks {
 
 				u16 energyMax = attacker->getMaxEnergy();
 
-				if((energyMax - attacker->energy) > 12800) //12800 is 50 energy ingame
+				if((energyMax - attacker->energy) < 12800) //12800 is 50 energy ingame
 					attacker->energy = energyMax;
 				else
 					attacker->energy += 12800;
