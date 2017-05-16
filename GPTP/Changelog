@@ -1,3 +1,8 @@
+Version 4.009
+-fix a mistake in Consume hit in wpnspellhit.cpp
+
+----------------------------------------
+
 Version 4.008
 -add Hallucination spell hook
 -add Feedback spell hook
