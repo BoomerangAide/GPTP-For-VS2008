@@ -160,7 +160,7 @@ namespace hooks {
 
 			if(
 				!scbw::isCheatEnabled(CheatFlags::TheGathering) &&
-				unit->energy < techdata_dat::EnergyCost[TechId::Recall]
+				unit->energy < techdata_dat::EnergyCost[TechId::Recall] * 256
 			) 
 			{
 
@@ -196,7 +196,7 @@ namespace hooks {
 				u32 random_value;
 
 				if(!scbw::isCheatEnabled(CheatFlags::TheGathering))
-					unit->energy -= techdata_dat::EnergyCost[TechId::Recall];
+					unit->energy -= techdata_dat::EnergyCost[TechId::Recall] * 256;
 
 				if(unit->orderTarget.unit != NULL) {
 					unit->orderTarget.pt.x = unit->orderTarget.unit->sprite->position.x;
