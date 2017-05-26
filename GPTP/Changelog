@@ -1,3 +1,9 @@
+Version 4.010
+-fix a mistake in hallucination spell hook
+-fix energy cost in recall spell hook
+
+----------------------------------------
+
 Version 4.009
 -fix a mistake in Consume hit in wpnspellhit.cpp
 
