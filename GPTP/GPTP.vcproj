@@ -194,6 +194,14 @@
 				>
 			</File>	
 			<File
+				RelativePath=".\hooks\interface\btns_cond.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\interface\btns_cond_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hooks\orders\building_making\building_morph.cpp"
 				>
 			</File>
@@ -871,6 +879,10 @@
 				RelativePath=".\hooks\orders\base_orders\attack_orders.h"
 				>
 			</File>	
+			<File
+				RelativePath=".\hooks\interface\btns_cond.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\orders\building_making\building_morph.h"
 				>
