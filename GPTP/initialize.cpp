@@ -37,6 +37,7 @@
 
 //in alphabetical order
 #include "hooks/orders/base_orders/attack_orders.h"
+#include "hooks/interface/btns_cond.h"
 #include "hooks/orders/building_making/building_morph.h"
 #include "hooks/interface/buttonsets.h"
 #include "hooks/orders/building_making/building_protoss.h"
@@ -120,6 +121,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectMedicOrdersHooks();
 	hooks::injectHallucinationSpellHook();
 	hooks::injectFeedbackSpellHook();	
+	hooks::injectBtnsCondHook();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
