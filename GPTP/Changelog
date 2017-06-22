@@ -1,3 +1,10 @@
+Version 4.011
+-minor fix in hallucination spell hook
+-major fixing in burrow tech hooks (weren't working at all)
+-add Buttons Conditions hooks
+
+----------------------------------------
+
 Version 4.010
 -fix a mistake in hallucination spell hook
 -fix energy cost in recall spell hook
