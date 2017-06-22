@@ -7,7 +7,7 @@ namespace {
 
 	void removeOrderFromUnitQueue(CUnit* unit, COrder* order);													//742D0
 	void actUnitReturnToIdle(CUnit* unit);																		//75420
-	void function_004754F0(CUnit* unit,u32 unitId,u32 unk1,u32 unk2,u32 orderId,u32 unk4,u32 unk5,u32 unk6);	//754F0
+	void function_004754F0(CUnit* unit,u32 unitId,u32 unk1,u32 unk2,u32 orderId,u32 unk3,u32 unk4,u32 unk5);	//754F0
 	void function_004E97C0(CUnit* unit);																		//E97C0
 
 } //unnamed namespace
@@ -56,15 +56,21 @@ namespace hooks {
 
 				u8 unknown_from_params = *(u8*)(unk+1);
 				
+
+				if(unknown_from_params != 0)
+					unknown_from_params = 1;
+				else
+					unknown_from_params = 0;				
+				
 				function_004754F0(
 					selected_unit,
 					UnitId::None,
-					1,
-					unknown_from_params,
+					*(u32*)(0x006D5C24),
+					*(u32*)(0x006D5C20),
 					OrderId::Burrow,
 					0,
-					*(u32*)(0x006D5C20),
-					*(u32*)(0x006D5C24)
+					unknown_from_params,
+					1
 				);
 
 			}
@@ -173,7 +179,7 @@ namespace {
 	//not.
 	//Basically, used elsewhere, the function would be implemented differently
 	const u32 Func_Sub_4754F0 = 0x004754F0;
-	void function_004754F0(CUnit* unit,u32 unitId,u32 unk1,u32 unk2,u32 orderId,u32 unk4,u32 unk5,u32 unk6) {
+	void function_004754F0(CUnit* unit,u32 unitId,u32 unk1,u32 unk2,u32 orderId,u32 unk3,u32 unk4,u32 unk5) {
 
 		__asm {
 			PUSHAD
@@ -184,10 +190,10 @@ namespace {
 			MOV ESI, unit
 			PUSH unk1
 			PUSH unk2
+			PUSH unk3
 			PUSH orderId
 			PUSH unk4
 			PUSH unk5
-			PUSH unk6
 			CALL Func_Sub_4754F0
 			POPAD
 		}
