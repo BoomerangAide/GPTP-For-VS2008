@@ -49,7 +49,7 @@ namespace hooks {
 
 			}
 
-			if(!*CHEAT_STATE & CheatFlags::TheGathering)
+			if(!(*CHEAT_STATE & CheatFlags::TheGathering))
 				unit->energy -= techCost;
 
 			scbw::playSound(SoundId::Protoss_TEMPLAR_PTeHal00_WAV,unit->orderTarget.unit);
