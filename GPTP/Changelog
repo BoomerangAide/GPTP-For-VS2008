@@ -1,3 +1,8 @@
+Version 4.012
+-fix in Medic Orders hook
+
+---------------------------------------
+
 Version 4.011
 -minor fix in hallucination spell hook
 -major fixing in burrow tech hooks (weren't working at all)
