@@ -37,6 +37,7 @@ namespace hooks {
 	//no bullet because this function can be called in another context without bullet
 	void IrradiateHit(CUnit* attacker, CUnit* target, u8 attackingPlayerId) {
 
+		//if not already irradiated and not burrowed, add the irradiate overlay
 		if(target->irradiateTimer == 0 && !(target->status & UnitStatus::Burrowed)) {
 
 			u32 irradiateImageId;
@@ -71,13 +72,8 @@ namespace hooks {
 	//in an unexpected way, it may not contain the correct value.
 	void OpticalFlareHit(CUnit* target, u32 attackingPlayerId, CBullet* bullet) {
 
-		static Bool32*	const bool32_0051CE98 =					(Bool32*)	0x0051CE98;
-		
-		static Bool8*	const bCanUpdateSelectedUnitPortrait =	(Bool8*)	0x0068AC74;
-		static u32*		const bCanUpdateCurrentButtonSet =		(u32*)		0x0068C1B0;
-		static BinDlg** const someDialogUnknown	=				(BinDlg**)	0x0068C1E8;
-		static BinDlg**	const someDialogUnknownUser =			(BinDlg**)	0x0068C1EC;
-		static Bool8*	const bCanUpdateStatDataDialog =		(Bool8*)	0x0068C1F8;
+		//can take the value 100 (0x64), thus not Bool32
+		static u32*		const u32_0051CE98 =					(u32*)		0x0051CE98;
 
 		if(target->status & UnitStatus::IsHallucination)
 			target->remove();
@@ -86,9 +82,15 @@ namespace hooks {
 			u32 overlayImageId;
 			CUnit* overlayTargetUnit;
 
+			//blindness is applied for a specific player
+			//just like parasite, but due to how it's used,
+			//a blind unit is still blind for all players
 			target->isBlind |= (u8)(1 << attackingPlayerId);
 
+			//playing the impact sound
 			scbw::playSound(SoundId::Terran_Medic_Miopia1_wav,target);
+
+			//create impact overlay
 
 			if(units_dat::BaseProperty[target->id] & UnitProperty::MediumOverlay)
 				overlayImageId = ImageId::OpticalFlareHit_Medium;
@@ -105,13 +107,13 @@ namespace hooks {
 
 			(overlayTargetUnit->sprite)->createTopOverlay(overlayImageId,0,0,0);
 
-			*bCanUpdateCurrentButtonSet = 1;
-			*bCanUpdateSelectedUnitPortrait = 1;
-			*bCanUpdateStatDataDialog = 1;
-			*bool32_0051CE98 = 1;
+			//was hardcoded in original code
+			scbw::refreshConsole();
 
-			*someDialogUnknown = NULL;
-			*someDialogUnknownUser = NULL;
+			//cause some functions to be skipped in Game Loop
+			//possibly delay fog of war reappearance following
+			//loss of sight, or cause it?
+			*u32_0051CE98 = 1;
 
 		}
 
@@ -126,6 +128,8 @@ namespace hooks {
 		if(target->status & UnitStatus::IsHallucination)
 			target->remove();
 		else {
+
+			//create impact overlay
 
 			u32 overlayImageId;
 			CUnit* overlayTargetUnit;
@@ -145,14 +149,21 @@ namespace hooks {
 
 			(overlayTargetUnit->sprite)->createTopOverlay(overlayImageId,0,0,0);
 
+			//remove status effects and corresponding overlays
+			//timers set to 0 twice reflect the original code
+
 			target->parasiteFlags = 0;
 			target->isBlind = 0;
 
 			if(target->ensnareTimer != 0) {
+
 				target->ensnareTimer = 0;
 				target->removeOverlay(ImageId::EnsnareOverlay_Small,ImageId::EnsnareOverlay_Large);
 				target->ensnareTimer = 0;
+
+				//specific update following ensnare removal
 				target->updateSpeed();
+
 			}
 
 			if(target->plagueTimer != 0) {
@@ -165,14 +176,19 @@ namespace hooks {
 				target->irradiateTimer = 0;
 				target->removeOverlay(ImageId::Irradiate_Small,ImageId::Irradiate_Large);
 				target->irradiateTimer = 0;
+
+				//specific updates following irradiate removal
 				target->irradiatedBy = NULL;
 				target->irradiatePlayerId = 8;
+
 			}
 
 			if(target->lockdownTimer != 0)
 				target->removeLockdown();
+
 			if(target->maelstromTimer != 0)
 				target->removeMaelstrom();
+
 			if(target->acidSporeCount != 0)
 				target->removeAcidSpores();
 
@@ -193,6 +209,7 @@ namespace hooks {
 	//the 3rd case, previousLockdownTimer is set to 131 (0x83)
 	void LockdownHit(CUnit* target, u8 previousLockdownTimer, CBullet* bullet) {
 
+		//add lockdown overlay if no ongoing lockdown already
 		if(target->lockdownTimer == 0) {
 
 			u32 overlayImageId;
@@ -216,11 +233,12 @@ namespace hooks {
 		}
 
 		//this added to the fact that target->lockdownTimer is set to 0 before
-		//call prevent lockdown to reset the duration of a previous lock maybe
+		//this function probably prevent lockdown to reset the duration of a 
+		//previous lock
 		if(previousLockdownTimer > target->lockdownTimer)
 			target->lockdownTimer = previousLockdownTimer;
 
-		//usually stop movements/orders/scripts of the unit, give it the status 
+		//should stop movements/orders/scripts of the unit, give it the status 
 		//DoodadStatesThing, may have an effect on selection, and perform
 		//scbw::refreshConsole() code at the end
 		function_492CC0(target);
@@ -230,9 +248,9 @@ namespace hooks {
 	;
 
 	//was called "Shot" instead of "Hit", changed due to the context
-	void WeaponBulletHit(CBullet* bullet, CUnit* target, u32 hitFlags) {
+	void WeaponBulletHit(CBullet* bullet, CUnit* target, u32 damageDivisor) {
 
-		if(bullet->hitFlags & 2)	//bullet doing no damage
+		if(bullet->hitFlags & 2)	//bullet doing no damage (shot from hallucination)
 			attackOverlayAndNotify(bullet->sourceUnit,target,bullet->weaponType,bullet->direction1); //no damage, but still ask for retaliation
 		else {
 
@@ -244,7 +262,7 @@ namespace hooks {
 				bullet->sourceUnit,
 				bullet->srcPlayer,
 				bullet->direction1,
-				hitFlags
+				damageDivisor
 			);
 
 		}
@@ -263,6 +281,8 @@ namespace hooks {
 
 			u8 weaponId;
 
+			//Lurker can only attack while burrowed even if
+			//given a melee attack according to this code
 			if(
 				attacker->id != UnitId::ZergLurker ||
 				attacker->status & UnitStatus::Burrowed
@@ -272,7 +292,7 @@ namespace hooks {
 				weaponId = WeaponId::None;
 
 			if(attacker->status & UnitStatus::IsHallucination)
-				attackOverlayAndNotify(attacker,target,weaponId,attacker->currentDirection1);
+				attackOverlayAndNotify(attacker,target,weaponId,attacker->currentDirection1); //no damage, but still ask for retaliation
 			else {
 
 				u32 damage = getUnitDamageBonus(attacker,weaponId);
@@ -304,44 +324,45 @@ namespace hooks {
 	//x and y from bullet->sprite->position
 	void EMPShockwaveHit(CUnit* attacker, int x, int y, CBullet* bullet) {
 
-		static u32* const unknown_value_6BEE64	=		(u32*) 0x006BEE64;
-		static u32* const unknown_array_size_6BEE6C =	(u32*) 0x006BEE6C; //array with 1st elem being size of array
-
-		static u16* const maxBoxRightValue =			(u16*) 0x00628450;
-		static u16* const maxBoxBottomValue =			(u16*) 0x006284B4;
+		static u16* const maxBoxRightValue =			(u16*) 0x00628450;	//should usually be mapTileSize->width * 32
+		static u16* const maxBoxBottomValue =			(u16*) 0x006284B4;	//should usually be mapTileSize->height * 32
 
 		Box16 area_of_effect;
 
 		CUnit** unitsInAreaOfEffect;
 		CUnit* current_unit;
 
-
+		//define the base area of effect
 		area_of_effect.left = (u16)x -  weapons_dat::InnerSplashRadius[WeaponId::EMP_Shockwave];
 		area_of_effect.right = (u16)x +  weapons_dat::InnerSplashRadius[WeaponId::EMP_Shockwave];
 		area_of_effect.top = (u16)y -  weapons_dat::InnerSplashRadius[WeaponId::EMP_Shockwave];
 		area_of_effect.bottom = (u16)y +  weapons_dat::InnerSplashRadius[WeaponId::EMP_Shockwave];
 
+		//check and fix effect if beyond width of map
 		if(area_of_effect.left < 0)
 			area_of_effect.left = 0;
 		else
 		if(area_of_effect.right > *maxBoxRightValue)
 			area_of_effect.right = *maxBoxRightValue;
 
+		//check and fix effect if beyond height of map
 		if(area_of_effect.top < 0)
 			area_of_effect.top = 0;
 		else
 		if(area_of_effect.bottom > *maxBoxBottomValue)
 			area_of_effect.bottom = *maxBoxBottomValue;
 
+		//find all units in area of effect and pick the first
 		unitsInAreaOfEffect = getAllUnitsInBounds(&area_of_effect);
 		current_unit = *unitsInAreaOfEffect;
 
 		while(current_unit != NULL) {
 
 			if(
-				current_unit != attacker &&
-				(	attacker == NULL ||
-					current_unit == attacker->subunit
+				current_unit != attacker &&				//EMP doesn't affect the attacker
+				(
+					attacker == NULL ||					//EMP doesn't affect the attacker
+					current_unit == attacker->subunit	//subunit
 				)
 			)
 			{
@@ -349,16 +370,16 @@ namespace hooks {
 				if(current_unit->status & UnitStatus::IsHallucination)
 					current_unit->remove();
 				else
-				if(current_unit->stasisTimer == 0) {
+				if(current_unit->stasisTimer == 0) { //don't work against units in stasis
 
 					current_unit->energy = 0;
 					current_unit->shields = 0;
 
 					if(
 						current_unit->sprite->flags & CSprite_Flags::Selected &&
-						current_unit->sprite != NULL /*I'm following original code, though this order of tests don't make sense*/
+						current_unit->sprite != NULL /*I'm following original code, though this order of tests doesn't make sense*/
 					) 
-						setAllImageGroupFlagsPal11(current_unit->sprite);
+						setAllImageGroupFlagsPal11(current_unit->sprite); //redraw the unit
 
 				}
 
@@ -369,9 +390,9 @@ namespace hooks {
 
 		} //while(current_unit != NULL)
 
-		//code probably related to the use of getAllUnitsInBounds
-		*unknown_value_6BEE64 = unknown_array_size_6BEE6C[unknown_array_size_6BEE6C[0]];
-		unknown_array_size_6BEE6C[0] = unknown_array_size_6BEE6C[0] - 1;
+		//reload the previous temporary unit list from before the call to getAllUnitsInBounds
+		*tempUnitsListArraysCountsListLastIndex = *tempUnitsListArraysCountsListLastIndex - 1;
+		*tempUnitsListCurrentArrayCount = tempUnitsListArraysCountsList[*tempUnitsListArraysCountsListLastIndex];
 
 	} //void EMPShockwaveHit(CUnit* attacker, int x, int y)
 
@@ -395,7 +416,7 @@ namespace hooks {
 	;
 
 	//no bullet because the code normally calling this function lose the 
-	//easily available information
+	//easily available information (and getting it the hard way seems overkill)
 	void ConsumeHit(CUnit* attacker, CUnit* target) {
 
 		if(
@@ -472,18 +493,17 @@ namespace hooks {
 		else {
 
 			dark_swarm_unit->status |= UnitStatus::NoCollide;
-			dark_swarm_unit->sprite->elevationLevel = 11;
+			dark_swarm_unit->sprite->elevationLevel = 11;	//0x0B
 
 			//update various stuff (set hp, set shield...) not finished on CreateUnit
 			function_004A01F0(dark_swarm_unit);
-
 			updateUnitStrength(dark_swarm_unit);
 
 			if(
 				dark_swarm_unit->removeTimer == 0 ||
 				dark_swarm_unit->removeTimer > 900
 			)
-				dark_swarm_unit->removeTimer = 900;
+				dark_swarm_unit->removeTimer = 900;	//0x0384
 
 		}
 
@@ -518,6 +538,8 @@ namespace hooks {
 					inPos.x = current_x;
 					moveArea.right = current_x + 32;
 
+					//if impossible to avoid a collision even within moveArea,
+					//skip the broodling creation code for the current position
 					jump_to_end_of_loop = !scbw::checkUnitCollisionPos(attacker,&inPos,&outPos,&moveArea,false,0);
 
 					if(!jump_to_end_of_loop) {
@@ -551,14 +573,13 @@ namespace hooks {
 
 						//update various stuff (set hp, set shield...) not finished on CreateUnit
 						function_004A01F0(created_broodling);
-
 						updateUnitStrength(created_broodling);
 
 						if(created_broodling->status & UnitStatus::IsHallucination)
-							timerBeforeDisappearance = 1350;
+							timerBeforeDisappearance = 1350;	//probably old unremoved code
 						else
 						if(created_broodling->id == UnitId::ZergBroodling)
-							timerBeforeDisappearance = 1800;
+							timerBeforeDisappearance = 1800;	//0x708
 						else
 							timerBeforeDisappearance = 0;
 
@@ -568,6 +589,8 @@ namespace hooks {
 						)
 							created_broodling->removeTimer = timerBeforeDisappearance;
 
+						//AI stuff (may establish relationship between queen and broodling and/or
+						//be about supplies management, or something else?
 						if(attacker->pAI != NULL)
 							AI_TrainingUnit(attacker,created_broodling);
 
@@ -575,7 +598,7 @@ namespace hooks {
 
 				} //if(!jump_to_end_of_loop)
 
-				//F4A82 (end of loop
+				//F4A82 (end of loop)
 				current_y += 4;
 				current_x += 4;
 				broodlings_to_spawn--;
@@ -586,12 +609,18 @@ namespace hooks {
 
 		//F4A9F
 
+		//give the target death as a kill to the queen
 		incrementUnitDeathScores(attacker,attacker->playerId);
+
+		//kill the target
 		target->remove();
 
 		if(attacker->killCount < 255)
 			attacker->killCount++;
 
+		//code for the case where interceptors would be firing
+		//the broodling-generating weapon, to give +1 kill to the
+		//carrier owning the interceptor making the kill
 		if(
 			attacker->id == UnitId::ProtossInterceptor &&
 			attacker->interceptor.parent != NULL
@@ -962,14 +991,17 @@ namespace {
 
 	;
 
-	const u32 Func_setAllImageGroupFlagsPal11 = 0x00497430;
+	//Identical to setAllImageGroupFlagsPal11 @ 0x00497430;
 	void setAllImageGroupFlagsPal11(CSprite* sprite) {
 
-		__asm {
-			PUSHAD
-			MOV EAX, sprite
-			CALL Func_setAllImageGroupFlagsPal11
-			POPAD
+		for(
+			CImage* current_image = sprite->images.head; 
+			current_image != NULL;
+			current_image = current_image->link.next
+		)
+		{
+			if(current_image->paletteType == PaletteType::RLE_HPFLOATDRAW)
+				current_image->flags |= CImage_Flags::Redraw;
 		}
 
 	}
