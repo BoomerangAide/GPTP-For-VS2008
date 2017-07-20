@@ -1,3 +1,8 @@
+Version 4.013
+-resync files of Weapon/Spell Hit hook with offline version (missing bugfix)
+
+---------------------------------------
+
 Version 4.012
 -fix in Medic Orders hook
 
