@@ -50,12 +50,12 @@ namespace {
 			PUSH EBP
 			MOV EBP, ESP
 
-			MOV EAX, [EBP+0x08]
-			MOV attackingPlayerId, EAX
-
-			MOV target, EDI
-
 			MOV bullet, EBX
+
+			MOV EBX, [EBP+0x08]			//borrowing EBX
+			MOV attackingPlayerId, EBX
+
+			MOV target, EAX
 
 			PUSHAD
 
@@ -79,7 +79,7 @@ namespace {
 		static CBullet* bullet;
 
 		__asm {
-			MOV EAX, bullet
+			MOV bullet, EAX
 			MOV target, EBX
 			PUSHAD
 		}
