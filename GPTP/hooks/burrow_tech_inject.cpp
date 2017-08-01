@@ -1,4 +1,4 @@
-//Injector source file for the Enter Nydus Order hook module.
+//Injector source file for the Burrow Tech hooks module.
 #include "burrow_tech.h"
 #include <hook_tools.h>
 
