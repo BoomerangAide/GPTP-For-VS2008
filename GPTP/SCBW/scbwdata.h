@@ -285,7 +285,7 @@ SCBW_DATA(Bool8*,	CanBeInterrupted,	ordersDat[6].address);	//00665040
 //SCBW_DATA(u8*,	???,				ordersDat[7].address);	//00665100
 //SCBW_DATA(u8*,	???,				ordersDat[8].address);	//00665700 //"Can Be Queued" according to EUDDB
 //SCBW_DATA(u8*,	???,				ordersDat[9].address);	//006651C0
-//SCBW_DATA(u8*,	???,				ordersDat[10].address);	//006654C0 //"Can Be Obstructed?" according to EUDDB
+SCBW_DATA(u8*,		CanBeObstructed,	ordersDat[10].address);	//006654C0 //"Can Be Obstructed?" according to EUDDB
 //SCBW_DATA(u8*,	???,				ordersDat[11].address);	//00664C80
 //SCBW_DATA(u8*,	???,				ordersDat[12].address);	//00664BC0
 SCBW_DATA(u8*,		OrderWeaponId,		ordersDat[13].address);	//00665880
