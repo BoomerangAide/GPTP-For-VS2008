@@ -61,9 +61,9 @@ void orders_Feedback(CUnit* unit) {
 						u8 overlaySize = hasOverlay(target);
 
 						if(target->subunit != NULL)
-							target->subunit->sprite->createOverlay(overlaySize + ImageId::Feedback_Small,0,0,0);
+							target->subunit->sprite->createTopOverlay(overlaySize + ImageId::Feedback_Small,0,0,0);
 						else
-							target->sprite->createOverlay(overlaySize + ImageId::Feedback_Small,0,0,0);
+							target->sprite->createTopOverlay(overlaySize + ImageId::Feedback_Small,0,0,0);
 
 						unit->orderToIdle();
 
