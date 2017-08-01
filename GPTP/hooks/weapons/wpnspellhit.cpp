@@ -362,7 +362,7 @@ namespace hooks {
 				current_unit != attacker &&				//EMP doesn't affect the attacker
 				(
 					attacker == NULL ||					//EMP doesn't affect the attacker
-					current_unit == attacker->subunit	//subunit
+					current_unit != attacker->subunit	//subunit
 				)
 			)
 			{
