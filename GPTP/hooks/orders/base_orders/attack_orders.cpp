@@ -12,7 +12,7 @@
 
 namespace {
 
-bool unitCanSeeCloakedTarget(CUnit* unit, CUnit* target);												//0x00401D60
+bool unitCantSeeCloakedTarget(CUnit* unit, CUnit* target);												//0x00401D60
 bool isInfestableUnit(CUnit* unit);																		//0x00402210
 bool unitCanInfest(CUnit* unit);																		//0x00402750
 void AI_AttackUnit(CUnit* unit);																		//0x0043FFD0
@@ -209,7 +209,7 @@ void orders_TurretAttack(CUnit* unit) {
 		target == NULL ||
 		target->status & UnitStatus::Invincible ||
 		target->sprite->flags & CSprite_Flags::Hidden ||
-		unitCanSeeCloakedTarget(unit, target)
+		unitCantSeeCloakedTarget(unit, target)
 	)
 		jump_to_77A45 = true;
 	else {
@@ -525,7 +525,7 @@ void orders_AttackFixedRange(CUnit* unit) {
 		target == NULL ||
 		target->status & UnitStatus::Invincible ||
 		target->sprite->flags & CSprite_Flags::Hidden ||
-		unitCanSeeCloakedTarget(unit,target)
+		unitCantSeeCloakedTarget(unit,target)
 	)
 		jump_to_77E48 = true;
 	else {
@@ -976,8 +976,8 @@ void orders_AttackUnit(CUnit* unit) {
 
 namespace {
 
-const u32 Func_unitCanSeeCloakedTarget = 0x00401D60;
-bool unitCanSeeCloakedTarget(CUnit* unit, CUnit* target) {
+const u32 Func_unitCantSeeCloakedTarget = 0x00401D60;
+bool unitCantSeeCloakedTarget(CUnit* unit, CUnit* target) {
 
 	static Bool32 bPreResult;
 
@@ -985,7 +985,7 @@ bool unitCanSeeCloakedTarget(CUnit* unit, CUnit* target) {
 		PUSHAD
 		PUSH unit
 		MOV EAX, target
-		CALL Func_unitCanSeeCloakedTarget
+		CALL Func_unitCantSeeCloakedTarget
 		MOV bPreResult, EAX
 		POPAD
 	}
