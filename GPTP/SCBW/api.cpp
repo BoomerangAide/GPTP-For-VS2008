@@ -532,15 +532,15 @@ void MoveScreenToUnit(CUnit* unit, u32 playerId) {
 		int x,y;
 
 		x = (s16)unit->sprite->position.x;
-		y = (s16)unit->sprite->position.x;
+		y = (s16)unit->sprite->position.y;
 
 		if(x < 0) 
 			x += 31;
 		if(y < 0) 
 			y += 31;
 
-		x = ((x/32) - 6) * 32;
-		y = ((y/32) - 10) * 32;
+		x = ((x/32) - 10) * 32;
+		y = ((y/32) - 6) * 32;
 
 		__asm {
 			PUSHAD
