@@ -1,3 +1,14 @@
+Version 4.014
+
+-renamed a function based on effect in attack orders hook.
+-fix a wrong function use in Feedback spell hook.
+-fix an error in Weapon/Spell hit hook.
+-fix a comment in burrow tech injector file.
+-fixes in function MoveScreenToUnit of api.cpp.
+-unlock an entry in scbwdata.h for a future function.
+
+---------------------------------------
+
 Version 4.013
 -resync files of Weapon/Spell Hit hook with offline version (missing bugfix)
 
