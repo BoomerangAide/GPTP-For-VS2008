@@ -1,3 +1,10 @@
+
+Version 4.015
+
+-add new Receive Command hook
+
+---------------------------------------
+
 Version 4.014
 
 -renamed a function based on effect in attack orders hook.
