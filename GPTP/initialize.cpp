@@ -58,6 +58,7 @@
 #include "hooks/orders/merge_units.h"
 #include "hooks/orders/spells/nuke_orders.h"
 #include "hooks/orders/spells/recall_spell.h"
+#include "hooks/receive_command.h"
 #include "hooks/orders/research_upgrade_orders.h"
 #include "hooks/interface/selection.h"
 #include "hooks/orders/siege_transform.h"
@@ -122,6 +123,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectHallucinationSpellHook();
 	hooks::injectFeedbackSpellHook();	
 	hooks::injectBtnsCondHook();
+	hooks::injectRecvCmdHook();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
