@@ -254,6 +254,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\create_init_units.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\create_init_units_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hooks\orders\base_orders\die_order.cpp"
 				>
 			</File>
@@ -913,6 +921,10 @@
 			</File>	
 			<File
 				RelativePath=".\hooks\orders\spells\cast_order.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\create_init_units.h"
 				>
 			</File>			
 			<File
