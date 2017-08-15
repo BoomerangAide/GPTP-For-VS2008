@@ -101,7 +101,7 @@ namespace hooks {
 
 				bool bStopLoop = false;
 
-				while(unit->orderQueueTail != NULL & !bStopLoop) {
+				while(unit->orderQueueTail != NULL && !bStopLoop) {
 					if(
 						!orders_dat::CanBeInterrupted[unit->orderQueueTail->orderId] &&
 						unit->orderQueueTail->orderId != OrderId::Unburrow
