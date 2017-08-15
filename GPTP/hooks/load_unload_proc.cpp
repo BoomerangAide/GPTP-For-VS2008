@@ -138,9 +138,6 @@ void loadUnitProc(CUnit* unit, CUnit* unitToLoad) {
 
 	if(unit->status & UnitStatus::GroundedBuilding) {
 
-		u8 pathingFlags;
-		u8 elevationLevel;
-
 		unitToLoad->status = (unitToLoad->status & ~UnitStatus::IsBuilding) | UnitStatus::InBuilding;
 
 		if(unitToLoad->path != NULL) {
@@ -166,25 +163,6 @@ void loadUnitProc(CUnit* unit, CUnit* unitToLoad) {
 			unitToLoad->pathingFlags |= 1;
 		else
 			unitToLoad->pathingFlags &= ~1;
-
-		//pathingFlags = unitToLoad->pathingFlags;
-		//elevationLevel = unitToLoad->sprite->elevationLevel;
-
-		//__asm {
-		//	PUSHAD
-		//	MOV CL, pathingFlags
-		//	MOV AL, elevationLevel
-		//	CMP AL, 0x0C
-		//	SETB AL
-		//	XOR AL, CL
-		//	AND AL, 0x01
-		//	XOR CL, AL
-		//	MOV pathingFlags, CL
-		//	POPAD
-		//}
-		//;
-
-		//unitToLoad->pathingFlags = pathingFlags;
 
 		if(
 			unitToLoad->subunit != NULL &&
@@ -221,26 +199,6 @@ void loadUnitProc(CUnit* unit, CUnit* unitToLoad) {
 				subUnit->pathingFlags |= 1;
 			else
 				subUnit->pathingFlags &= ~1;
-
-			//pathingFlags = subUnit->pathingFlags;
-			//elevationLevel = subUnit->sprite->elevationLevel;
-
-			//__asm {
-			//	PUSHAD
-			//	MOV BL, pathingFlags
-			//	MOV AL, elevationLevel
-			//	CMP AL, 0x0C
-			//	SETB AL
-			//	XOR AL, BL
-			//	MOV CL, BL
-			//	AND AL, 0x01
-			//	XOR CL, AL
-			//	MOV pathingFlags, CL
-			//	POPAD
-			//}
-			//;
-
-			//subUnit->pathingFlags = pathingFlags;
 
 		}
 		else //E7B51
