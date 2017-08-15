@@ -1,4 +1,13 @@
 
+Version 4.016
+
+-fix an error in burrow tech hook.
+-removed useless content in Load/Unload proc.
+-added startPositions to scbwdata.h.
+-add Create Initial Units hooks.
+
+---------------------------------------
+
 Version 4.015
 
 -add new Receive Command hook
