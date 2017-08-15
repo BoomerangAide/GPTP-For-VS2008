@@ -44,6 +44,7 @@
 #include "hooks/orders/building_making/building_terran.h"
 #include "hooks/burrow_tech.h"
 #include "hooks/orders/spells/cast_order.h"
+#include "hooks/create_init_units.h"
 #include "hooks/orders/base_orders/die_order.h"
 #include "hooks/orders/enter_nydus.h"
 #include "hooks/orders/spells/feedback_spell.h"
@@ -124,6 +125,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectFeedbackSpellHook();	
 	hooks::injectBtnsCondHook();
 	hooks::injectRecvCmdHook();
+	hooks::injectCreateInitUnitsHooks();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
