@@ -286,6 +286,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\give_unit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\give_unit_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hooks\orders\spells\hallucination_spell.cpp"
 				>
 			</File>
@@ -947,6 +955,10 @@
 				RelativePath=".\SCBW\enumerations\FlingyId.h"
 				>
 			</File>	
+			<File
+				RelativePath=".\hooks\give_unit.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\orders\spells\hallucination_spell.h"
 				>
