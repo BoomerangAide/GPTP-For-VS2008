@@ -1,8 +1,5 @@
 #include "create_init_units.h"
 #include <SCBW/api.h>
-#include <logger.h>
-
-#define WRITE_TO_LOG(x)GPTP::logger<<x<<std::endl
 
 //helper functions def
 
@@ -104,18 +101,22 @@ void CreateInitialMeleeUnits() {
 
 		if(*(raceIdOffset-1) == 2 || *(raceIdOffset-1) == 1) {
 
-			u8 unk1 = (u8)(*(u16*)(0x00596871));
+			//0 is use map settings,1 is Workers, 2 is Workers + Main Building
+			u8 startingUnits = (u8)(*(u16*)(0x00596871));
+
+			static u8* victory_conditions = (u8*)0x0059686D;
+			static u8* user_select_slots = (u8*)0x0059BDA8;
 
 			if(
-				*(u8*)(0x0059686D) == 0 &&
-				unk1 == 0 &&
-				*(u16*)(0x00596877) == 0 &&
+				*victory_conditions == 0 && //check triggers for conditions
+				startingUnits == 0 &&		//use map units
+				*(u16*)(0x00596877) == 0 &&	//unknown maybe related to tournaments
 				playerId < 8 &&
-				(((u8*)0x0059BDA8)[playerId]) != 0
+				(user_select_slots[playerId]) != 0	//race selected instead of using map settings?
 			)
-				unk1 = 2;
+				startingUnits = 2;
 
-			if(unk1 != 1 && unk1 == 2) {
+			if(startingUnits != 1 && startingUnits == 2) {
 
 				CreateInitialMeleeBuildings(*raceIdOffset,playerId);
 
@@ -124,7 +125,7 @@ void CreateInitialMeleeUnits() {
 
 			}
 
-			if(unk1 == 2) {
+			if(startingUnits == 2) {
 
 				u8 unitId;
 				CUnit* created_unit;
