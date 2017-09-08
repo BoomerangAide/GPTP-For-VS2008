@@ -1,4 +1,11 @@
 
+Version 4.017
+
+-identified some unknown content in create init units hook
+-added the Give Unit hook
+
+---------------------------------------
+
 Version 4.016
 
 -fix an error in burrow tech hook.
