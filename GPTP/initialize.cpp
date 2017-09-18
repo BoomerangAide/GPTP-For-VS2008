@@ -60,11 +60,12 @@
 #include "hooks/orders/merge_units.h"
 #include "hooks/orders/spells/nuke_orders.h"
 #include "hooks/orders/spells/recall_spell.h"
-#include "hooks/receive_command.h"
+#include "hooks/recv_commands/receive_command.h"
 #include "hooks/orders/research_upgrade_orders.h"
 #include "hooks/interface/selection.h"
 #include "hooks/orders/siege_transform.h"
 #include "hooks/orders/base_orders/stopholdpos_orders.h"
+#include "hooks/recv_commands/train_cmd_receive.h"
 #include "hooks/orders/unit_making/unit_morph.h"
 #include "hooks/orders/unit_making/unit_train.h"
 #include "hooks/interface/wireframe.h"
@@ -128,6 +129,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectRecvCmdHook();
 	hooks::injectCreateInitUnitsHooks();
 	hooks::injectGiveUnitHook();
+	hooks::injectTrainCmdRecvHooks();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
