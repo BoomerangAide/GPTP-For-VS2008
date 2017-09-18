@@ -410,11 +410,11 @@
 				>
 			</File>	
 			<File
-				RelativePath=".\hooks\receive_command.cpp"
+				RelativePath=".\hooks\recv_commands\receive_command.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\hooks\receive_command_inject.cpp"
+				RelativePath=".\hooks\recv_commands\receive_command_inject.cpp"
 				>
 			</File>			
 			<File
@@ -449,6 +449,14 @@
 				RelativePath=".\hooks\orders\base_orders\stopholdpos_orders_inject.cpp"
 				>
 			</File>	
+			<File
+				RelativePath=".\hooks\recv_commands\train_cmd_receive.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\train_cmd_receive_inject.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\hooks\orders\unit_making\unit_morph.cpp"
 				>
@@ -1024,7 +1032,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\hooks\receive_command.h"
+				RelativePath=".\hooks\recv_commands\receive_command.h"
 				>
 			</File>			
 			<File
@@ -1049,6 +1057,10 @@
 			</File>	
 			<File
 				RelativePath=".\hooks\orders\base_orders\stopholdpos_orders.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\train_cmd_receive.h"
 				>
 			</File>			
 			<File
