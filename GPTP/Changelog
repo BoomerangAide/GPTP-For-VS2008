@@ -1,4 +1,12 @@
 
+Version 4.018
+
+-added the recv_commands folder
+-moved receive command hook to the new folder
+-added new Train Command Receive hook
+
+---------------------------------------
+
 Version 4.017
 
 -identified some unknown content in create init units hook
