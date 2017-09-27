@@ -226,11 +226,11 @@
 				>
 			</File>	
 			<File
-				RelativePath=".\hooks\burrow_tech.cpp"
+				RelativePath=".\hooks\recv_commands\burrow_tech.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\hooks\burrow_tech_inject.cpp"
+				RelativePath=".\hooks\recv_commands\burrow_tech_inject.cpp"
 				>
 			</File>			
 			<File
@@ -247,6 +247,14 @@
 			</File>
 			<File
 				RelativePath=".\hooks\orders\spells\cast_order_inject.cpp"
+				>
+			</File>	
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_SiegeTank.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_SiegeTank_inject.cpp"
 				>
 			</File>			
 			<File
@@ -928,7 +936,7 @@
 				>
 			</File>	
 			<File
-				RelativePath=".\hooks\burrow_tech.h"
+				RelativePath=".\hooks\recv_commands\burrow_tech.h"
 				>
 			</File>			
 			<File
@@ -939,6 +947,10 @@
 				RelativePath=".\hooks\orders\spells\cast_order.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_SiegeTank.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\create_init_units.h"
 				>
