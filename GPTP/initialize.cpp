@@ -42,8 +42,9 @@
 #include "hooks/interface/buttonsets.h"
 #include "hooks/orders/building_making/building_protoss.h"
 #include "hooks/orders/building_making/building_terran.h"
-#include "hooks/burrow_tech.h"
+#include "hooks/recv_commands/burrow_tech.h"
 #include "hooks/orders/spells/cast_order.h"
+#include "hooks/recv_commands/CMDRECV_SiegeTank.h"
 #include "hooks/create_init_units.h"
 #include "hooks/orders/base_orders/die_order.h"
 #include "hooks/orders/enter_nydus.h"
@@ -130,11 +131,12 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectCreateInitUnitsHooks();
 	hooks::injectGiveUnitHook();
 	hooks::injectTrainCmdRecvHooks();
+	hooks::injectCMDRECV_SiegeTankHooks();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
 	hooks::injectBunkerHooks();
-	hooks::injectCloakNearbyUnits();
+	//hooks::injectCloakNearbyUnits();
 	hooks::injectCloakingTechHooks();
 	hooks::injectDetectorHooks();
 	hooks::injectHarvestResource();
