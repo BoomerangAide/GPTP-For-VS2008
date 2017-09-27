@@ -37,7 +37,7 @@ void CMDRECV_TrainFighter() {
 		else
 			unitToBuild = 0; //not translating it as marine as it's an error case
 
-		if(current_selection->canMakeUnit(unitToBuild,*ACTIVE_NATION_ID) &&
+		if(current_selection->canMakeUnit(unitToBuild,*ACTIVE_NATION_ID) == 1 &&
 			HasMoneyCanMake(current_selection,unitToBuild) //add unit to build queue if successful
 			) 
 		{
@@ -79,7 +79,7 @@ void CMDRECV_Train(u16 wUnitType) {
 
 	if(builder != NULL && getActivePlayerNextSelection() == NULL) {
 
-		if(builder->canMakeUnit(wUnitType,*ACTIVE_NATION_ID) &&
+		if(builder->canMakeUnit(wUnitType,*ACTIVE_NATION_ID) == 1 &&
 			wUnitType <= UnitId::Spell_DisruptionWeb //id before buildings id
 		)
 		{
