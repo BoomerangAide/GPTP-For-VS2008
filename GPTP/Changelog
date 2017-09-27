@@ -1,4 +1,12 @@
 
+Version 4.019
+-minor fixes in train_cmd_receive.cpp
+-moved burrowed tech hooks into recv_commands folder
+-added CMDRECV_SiegeTank hooks
+-disabled cloak nearby units hook (broken)
+
+---------------------------------------
+
 Version 4.018
 
 -added the recv_commands folder
