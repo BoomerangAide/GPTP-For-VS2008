@@ -1,4 +1,13 @@
 
+Version 4.020
+-fix mistakes that caused a crash in hooks/orders/unit_making/unit_train.cpp
+-removed a comment in hooks/recv_commands/train_cmd_receive.cpp
+-improvements and fixes in hooks/create_init_units.cpp
+-added CMDRECV_MergeArchon hook
+-added CMDRECV_Morph hook
+
+---------------------------------------
+
 Version 4.019
 -minor fixes in train_cmd_receive.cpp
 -moved burrowed tech hooks into recv_commands folder
