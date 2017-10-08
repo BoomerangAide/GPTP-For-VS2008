@@ -63,19 +63,31 @@ void secondaryOrd_TrainFighter(CUnit* unit) {
 			CUnit* builtUnit = unit->currentBuildUnit;
 			u32 hpGain;
 
-			hpGain = getHPGainForRepair(builtUnit);
+			if(builtUnit != NULL) {
 
-			buildingAddon(builtUnit,hpGain,0);
+				hpGain = getHPGainForRepair(builtUnit);
 
-			if(builtUnit->status & UnitStatus::Completed) {
+				buildingAddon(builtUnit,hpGain,0);
 
-				addHangarUnit(unit,builtUnit);
+				if(builtUnit->status & UnitStatus::Completed) {
 
-				unit->buildQueue[unit->buildQueueSlot] = UnitId::None;
-				unit->buildQueueSlot++;
+					addHangarUnit(unit,builtUnit);
 
-				if(unit->buildQueueSlot >= 5)
-					unit->buildQueueSlot = 0;
+					unit->buildQueue[unit->buildQueueSlot] = UnitId::None;
+					unit->buildQueueSlot++;
+
+					if(unit->buildQueueSlot >= 5)
+						unit->buildQueueSlot = 0;
+
+					scbw::refreshConsole();
+
+					unit->currentBuildUnit = NULL;
+					unit->secondaryOrderState = 0;
+
+				}
+
+			}
+			else {
 
 				scbw::refreshConsole();
 
@@ -104,7 +116,7 @@ void secondaryOrd_TrainFighter(CUnit* unit) {
 						inHangarChild = inHangarChild->interceptor.hangar_link.next;
 
 					if(inHangarChild != NULL)
-						inHangarChild->hitPoints += 128;
+						inHangarChild->setHp(inHangarChild->hitPoints + 128);
 
 				}
 
