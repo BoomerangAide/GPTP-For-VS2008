@@ -248,7 +248,23 @@
 			<File
 				RelativePath=".\hooks\orders\spells\cast_order_inject.cpp"
 				>
-			</File>	
+			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_MergeArchon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_MergeArchon_inject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_Morph.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_Morph_inject.cpp"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\recv_commands\CMDRECV_SiegeTank.cpp"
 				>
@@ -947,6 +963,14 @@
 				RelativePath=".\hooks\orders\spells\cast_order.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_MergeArchon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_Morph.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\recv_commands\CMDRECV_SiegeTank.h"
 				>
