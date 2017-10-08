@@ -44,6 +44,8 @@
 #include "hooks/orders/building_making/building_terran.h"
 #include "hooks/recv_commands/burrow_tech.h"
 #include "hooks/orders/spells/cast_order.h"
+#include "hooks/recv_commands/CMDRECV_MergeArchon.h"
+#include "hooks/recv_commands/CMDRECV_Morph.h"
 #include "hooks/recv_commands/CMDRECV_SiegeTank.h"
 #include "hooks/create_init_units.h"
 #include "hooks/orders/base_orders/die_order.h"
@@ -132,6 +134,8 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectGiveUnitHook();
 	hooks::injectTrainCmdRecvHooks();
 	hooks::injectCMDRECV_SiegeTankHooks();
+	hooks::injectCMDRECV_MergeArchonHooks();
+	hooks::injectCMDRECV_MorphHooks();	
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
