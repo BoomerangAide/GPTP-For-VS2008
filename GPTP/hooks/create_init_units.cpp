@@ -105,18 +105,19 @@ void CreateInitialMeleeUnits() {
 			u8 startingUnits = (u8)(*(u16*)(0x00596871));
 
 			static u8* victory_conditions = (u8*)0x0059686D;
+			static u8* tournament_mode = (u8*)0x00596877;
 			static u8* user_select_slots = (u8*)0x0059BDA8;
 
 			if(
 				*victory_conditions == 0 && //check triggers for conditions
 				startingUnits == 0 &&		//use map units
-				*(u16*)(0x00596877) == 0 &&	//unknown maybe related to tournaments
+				*tournament_mode == 0 &&	//tournament mode off
 				playerId < 8 &&
 				(user_select_slots[playerId]) != 0	//race selected instead of using map settings?
 			)
 				startingUnits = 2;
 
-			if(startingUnits != 1 && startingUnits == 2) {
+			if(startingUnits == 2) {
 
 				CreateInitialMeleeBuildings(*raceIdOffset,playerId);
 
@@ -125,7 +126,7 @@ void CreateInitialMeleeUnits() {
 
 			}
 
-			if(startingUnits == 2) {
+			if(startingUnits == 1 || startingUnits == 2) {
 
 				u8 unitId;
 				CUnit* created_unit;
@@ -237,14 +238,14 @@ void CreateInitialOverlord(u8 playerId) {
 	CUnit* created_unit;
 
 	if(startPositions[playerId].x < *maxBoxRightValue / 2)
-		overlordStartX = startPositions[playerId].x + *(u16*)(0x00661BE4) + *(u16*)(0x00661BE0) + 1;
+		overlordStartX = startPositions[playerId].x + units_dat::UnitBounds[UnitId::ZergHatchery].right + units_dat::UnitBounds[UnitId::ZergHatchery].left + 1;
 	else
-		overlordStartX = startPositions[playerId].x - (*(u16*)(0x00661BE4) + *(u16*)(0x00661BE0) + 1);
+		overlordStartX = startPositions[playerId].x - (units_dat::UnitBounds[UnitId::ZergHatchery].right + units_dat::UnitBounds[UnitId::ZergHatchery].left + 1);
 
 	if(startPositions[playerId].y < *maxBoxBottomValue / 2)
-		overlordStartY = startPositions[playerId].y + *(u16*)(0x00661BE6) + *(u16*)(0x00661BE2) + 1;
+		overlordStartY = startPositions[playerId].y + units_dat::UnitBounds[UnitId::ZergHatchery].bottom + units_dat::UnitBounds[UnitId::ZergHatchery].top + 1;
 	else
-		overlordStartY = startPositions[playerId].y - (*(u16*)(0x00661BE6) + *(u16*)(0x00661BE2) + 1);
+		overlordStartY = startPositions[playerId].y - (units_dat::UnitBounds[UnitId::ZergHatchery].bottom + units_dat::UnitBounds[UnitId::ZergHatchery].top + 1);
 
 	created_unit = createUnit(UnitId::ZergOverlord,overlordStartX,overlordStartY,playerId);
 
