@@ -5,7 +5,7 @@
 
 namespace {
 
-bool HasMoneyCanMake(CUnit* builder, u32 unitToBuild);	//67250		//HasMoneyCanMake
+bool HasMoneyCanMake(CUnit* builder, u32 unitToBuild);	//67250
 
 } //unnamed namespace
 
