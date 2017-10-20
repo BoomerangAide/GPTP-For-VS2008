@@ -44,9 +44,11 @@
 #include "hooks/orders/building_making/building_terran.h"
 #include "hooks/recv_commands/burrow_tech.h"
 #include "hooks/orders/spells/cast_order.h"
+#include "hooks/recv_commands/CMDRECV_Cancel.h"
 #include "hooks/recv_commands/CMDRECV_MergeArchon.h"
 #include "hooks/recv_commands/CMDRECV_Morph.h"
 #include "hooks/recv_commands/CMDRECV_SiegeTank.h"
+#include "hooks/recv_commands/CMDRECV_Stop.h"
 #include "hooks/create_init_units.h"
 #include "hooks/orders/base_orders/die_order.h"
 #include "hooks/orders/enter_nydus.h"
@@ -135,12 +137,14 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectTrainCmdRecvHooks();
 	hooks::injectCMDRECV_SiegeTankHooks();
 	hooks::injectCMDRECV_MergeArchonHooks();
-	hooks::injectCMDRECV_MorphHooks();	
+	hooks::injectCMDRECV_MorphHooks();
+	hooks::injectCMDRECV_StopHooks();
+	hooks::injectCMDRECV_CancelHooks();	
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
 	hooks::injectBunkerHooks();
-	//hooks::injectCloakNearbyUnits();
+	hooks::injectCloakNearbyUnits();
 	hooks::injectCloakingTechHooks();
 	hooks::injectDetectorHooks();
 	hooks::injectHarvestResource();
