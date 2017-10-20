@@ -183,7 +183,6 @@ namespace {
 			MOV EAX, 0
 			MOV EDX, 0
 			MOV EBX, unitId
-			MOV ECX, unk2
 			MOV ESI, unit
 			PUSH unk1
 			PUSH unk2
