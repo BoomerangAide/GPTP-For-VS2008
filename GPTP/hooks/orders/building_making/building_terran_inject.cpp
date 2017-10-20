@@ -45,6 +45,8 @@ void __declspec(naked) orders_SCVBuild2Wrapper() {
 	}
 
 }
+	
+;
 
 void __declspec(naked) orders_SCVBuildWrapper() {
 
