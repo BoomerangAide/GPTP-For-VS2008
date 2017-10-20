@@ -1,4 +1,14 @@
 
+Version 4.021
+-minor change in hooks\orders\building_making\building_terran_inject.cpp
+-improvement in hooks\orders\building_making\make_nydus_exit.cpp (identification of code)
+-minor change in hooks\recv_commands\burrow_tech.cpp
+-fixed the broken Cloak Nearby Units hook
+-added the CMDRECV_Stop hooks
+-added the CMDRECV_Cancel hooks
+
+---------------------------------------
+
 Version 4.020
 -fix mistakes that caused a crash in hooks/orders/unit_making/unit_train.cpp
 -removed a comment in hooks/recv_commands/train_cmd_receive.cpp
