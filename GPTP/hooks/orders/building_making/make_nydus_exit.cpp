@@ -18,13 +18,11 @@ namespace hooks {
 
 void orders_Build5(CUnit* nydus_canal) {
 
-	static const Point16* size = (Point16*)0x00662A78;
-
 	int x,y;
 	u32 result_f00473FB0;
 
-	x = size->x;
-	y = size->y;
+	x = units_dat::BuildingDimensions[UnitId::ZergNydusCanal].x;
+	y = units_dat::BuildingDimensions[UnitId::ZergNydusCanal].y;
 
 	if(x < 0)
 		x++;
