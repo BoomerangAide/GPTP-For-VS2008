@@ -7,7 +7,6 @@
 namespace {
 	void insertFirstOrder(CUnit* unit, u8 orderId);			//0x004749D0
 	u8 hasOverlay(CUnit* unit);								//0x0047B720
-	void function_004934B0(CUnit* unit, CUnit* battery);	//0x004934B0
 	void makeToHoldPosition(CUnit* unit);					//0x004EB5B0
 	bool orderToMoveToTarget(CUnit* unit, CUnit* target);	//0x004EB980
 	bool isHangarUnit(CUnit* unit);
@@ -16,28 +15,37 @@ namespace {
 //-------- Actual hook functions --------//
 
 //This function is called every frame when a unit recharges shields.
+//Equivalent to 004934B0  sub_4934B0
 void rechargeShieldsProc(CUnit* target, CUnit* battery) {
-  //Default StarCraft behavior
 
-  s32 shieldGain = 1280, energySpent = 640;
-  const s32 maxShields = units_dat::MaxShieldPoints[target->id] << 8;
+	const s32 maxShields = units_dat::MaxShieldPoints[target->id] * 256;
 
-   if (maxShields - target->shields < shieldGain) {
-    shieldGain = maxShields - target->shields;
-    energySpent = shieldGain / 2;
-  }
-  if (energySpent > battery->energy) {
-    energySpent = battery->energy;
-    shieldGain = energySpent * 2;
-  }
+	s32 shieldGain = 1280, energySpent = 640;
 
-  s32 shields = target->shields + shieldGain;
-  if (shields > maxShields)
-    shields = maxShields;
-  target->shields = shields;
+	if (maxShields - target->shields < shieldGain) {
 
-  if (!scbw::isCheatEnabled(CheatFlags::TheGathering))
-    battery->energy -= energySpent;
+		shieldGain = maxShields - target->shields;
+
+		if(shieldGain < 0)
+			shieldGain++;
+
+		energySpent = shieldGain / 2;
+
+	}
+
+	if (energySpent > battery->energy) {
+		energySpent = battery->energy;
+		shieldGain = energySpent * 2;
+	}
+
+	target->shields = target->shields + shieldGain;
+
+	if (target->shields > maxShields)
+		target->shields = maxShields;
+
+	if (!scbw::isCheatEnabled(CheatFlags::TheGathering))
+		battery->energy -= energySpent;
+
 }
 
 ;
@@ -53,10 +61,10 @@ Bool32 unitCanRechargeShieldsHook(CUnit* target, CUnit* battery) {
 	if (	target->playerId != battery->playerId ||								//Is not owned by the player
 			!(units_dat::ShieldsEnabled[target->id]) ||								//Does not have shields
 			!(target->status & UnitStatus::Completed) ||							//Is incomplete?
-			!(target->status & UnitStatus::IsBuilding) ||							//Is building (like archon build self)
+			!(target->status & UnitStatus::IsBuilding) ||							//Is building (like archon build self)?
 			target->status & UnitStatus::GroundedBuilding ||						//Is a building
 			target->getRace() != RaceId::Protoss ||									//Check target race
-			target->shields >= (units_dat::MaxShieldPoints[target->id] / 256) ||	//Already has max shields
+			target->shields >= (units_dat::MaxShieldPoints[target->id] * 256) ||	//Already has max shields
 			!(battery->status & UnitStatus::Completed) ||
 			battery->energy == 0 ||
 			battery->isFrozen() ||
@@ -69,6 +77,7 @@ Bool32 unitCanRechargeShieldsHook(CUnit* target, CUnit* battery) {
 	else { //Separate check for AI-controlled units
 		if (target->mainOrderId == OrderId::RechargeShields1 || target->mainOrderId == OrderId::Pickup4)
 			result = 0;
+		else
 		if (target->orderQueueHead != NULL && target->orderQueueHead->orderId == OrderId::RechargeShields1)
 			result = 0;
 		else
@@ -92,7 +101,18 @@ void orderRechargeShieldsHook(CUnit* unit) {
 	//Skip if the Shield Battery does not exist, has no energy, or is disabled
 	//isFrozen code was hardcoded rather than function call in original code
 	if (battery == NULL || battery->energy == 0 || battery->isFrozen()) {
-		unit->orderToIdle();
+
+		if (unit->orderQueueHead == NULL) {
+			unit->userActionFlags |= 1;
+			prepareForNextOrder(unit);
+		}
+		else {
+			if (unit->pAI != NULL)
+				unit->orderComputerCL(OrderId::ComputerAI);
+			else
+				unit->orderComputerCL(units_dat::ReturnToIdleOrder[unit->id]);
+		}
+
 	}
 	else 
 	if(unit->mainOrderState <= 3)
@@ -101,28 +121,30 @@ void orderRechargeShieldsHook(CUnit* unit) {
 		bool bStopThere = false;
 
 		if(unit->mainOrderState == 0) {
-			if(!orderToMoveToTarget(unit,battery))
+
+			if(orderToMoveToTarget(unit,battery))
 				unit->mainOrderState = 1;
+
+			bStopThere = true;
+
 		}
 		else
 		if(unit->mainOrderState == 1) {
 
 			u32 movableState = unit->getMovableState();
 
-			if(movableState == 2) {
-				unit->orderToIdle();
-				bStopThere = true;
-			}
-			else
 			if(movableState == 0) {
 				if(!unit->isTargetWithinMinRange(battery, BATTERY_RANGE))
 					bStopThere = true;
-
 			}
-
-			if(!bStopThere) {
+			else
+			if(movableState == 1) {
 				makeToHoldPosition(unit);
 				unit->mainOrderState = 2;
+			}
+			else{
+				unit->orderToIdle();
+				bStopThere = true;
 			}
 
 		}
@@ -150,15 +172,15 @@ void orderRechargeShieldsHook(CUnit* unit) {
 				battery->orderTarget.unit = unit;
 
 			//do 1 recharge action? (increase unit shield, decrease battery energy)
-			function_004934B0(unit,battery);
+			rechargeShieldsProc(unit,battery);
 
 			if(
 				unit->shields >= units_dat::MaxShieldPoints[unit->id] * 256 ||
-				battery->energy != 0
+				battery->energy == 0
 			)
 			{
 
-				if(battery->orderTarget.unit != NULL)
+				if(battery->orderTarget.unit == unit)
 					battery->orderTarget.unit = NULL;
 
 				unit->orderToIdle();
