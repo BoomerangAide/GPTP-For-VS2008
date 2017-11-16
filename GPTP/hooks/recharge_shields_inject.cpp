@@ -50,7 +50,7 @@ namespace hooks {
 
 void injectRechargeShieldsHooks() {
 	jmpPatch(unitCanRechargeShieldsWrapper,	0x00493520, 1);
-	jmpPatch(orderRechargeShieldsWrapper,		0x00493DD0, 1);
+	jmpPatch(orderRechargeShieldsWrapper,	0x00493DD0, 1);
 }
 
 } //hooks
