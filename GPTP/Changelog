@@ -1,4 +1,10 @@
 
+
+Version 4.022
+Fixed lots of error in Recharge Shields hook, making it working properly
+
+---------------------------------------
+
 Version 4.021
 -minor change in hooks\orders\building_making\building_terran_inject.cpp
 -improvement in hooks\orders\building_making\make_nydus_exit.cpp (identification of code)
