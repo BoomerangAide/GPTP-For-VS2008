@@ -407,7 +407,7 @@ void CUnit::reduceDefensiveMatrixHp(s32 amount) {
 
 	assert(this);
 
-	if (this->defensiveMatrixHp >= amount)
+	if (this->defensiveMatrixHp > amount)
 		this->defensiveMatrixHp -= amount;
 	else {
 
@@ -439,6 +439,7 @@ void CUnit::reduceDefensiveMatrixHp(s32 amount) {
 
 	if (this->defensiveMatrixTimer != 0 && !(this->status & UnitStatus::Burrowed)) {
 		CUnit* unit = this->subunit ? this->subunit : this;
+		//getUnitOverlayAdjustment code was hardcoded into function in original code)
 		unit->sprite->createTopOverlay(scbw::getUnitOverlayAdjustment(unit) + ImageId::DefensiveMatrixHit_Small);
 	}
 
