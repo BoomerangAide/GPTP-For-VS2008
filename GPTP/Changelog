@@ -1,4 +1,9 @@
+Version 4.023
 
+Fixed an error in CUnit.cpp reduceDefensiveMatrixHp function causing
+defensive matrix overlay to never disappear
+
+---------------------------------------
 
 Version 4.022
 Fixed lots of error in Recharge Shields hook, making it working properly
