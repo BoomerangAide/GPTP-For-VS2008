@@ -116,6 +116,7 @@ namespace hooks {
 					incrementUnitDeathScores(unitInfested, unitInfesting->playerId);
 
 					//effect unknown, don't seem to affect score screen at endgame
+					//not a very good implementation, better not to touch it
 					incrementUnitScores(unitInfested, -1);
 					incrementUnitScores(unitInfested, 1);
 
@@ -126,17 +127,24 @@ namespace hooks {
 					readUnitsArray_Sub49EFA0(unitInfested, unitInfesting->playerId);
 					initializeEmptyUnitsLinkedListRef_Sub49E4E0(unitInfested, unitInfesting->playerId);
 
-					//Related to infestation process
-					unitInfested->setSecondaryOrder(OrderId::Nothing2);
+					//Related to infestation process, don't use unitInfested->setSecondaryOrder
+					//because here it is supposed to perform all actions even if 
+					//unitInfested->secondaryOrderId == OrderId::Nothing2 beforehand
+					unitInfested->secondaryOrderPos.y = 0;
+					unitInfested->secondaryOrderPos.x = 0;
+					unitInfested->currentBuildUnit = NULL;
+					unitInfested->secondaryOrderState = 0;
+					unitInfested->secondaryOrderId = OrderId::Nothing2;
 
 					//refund what the unit was producing
 					refundAllQueueSlots(unitInfested);
 
 					//clear the orders queue of the unit (hardcoding function @ 0x004744D0)
+					//original code used the actual function instead of hardcoding
 					while(unitInfested->orderQueueHead != NULL)
 						removeOrderFromUnitQueue(unitInfested, unitInfested->orderQueueHead);
 
-					if((unitInfested->status & UnitStatus::GroundedBuilding)) {
+					if(unitInfested->status & UnitStatus::GroundedBuilding) {
 
 						CImage* current_image = unitInfested->sprite->images.head;
 
@@ -155,18 +163,15 @@ namespace hooks {
 					//Just use ImageId::InfestedCommandCenterOverlay instead
 					//if you're modding this file and you're going for the
 					//default infestation overlay for any target.
-					infestationOverlayId = units_dat::ConstructionGraphic[UnitId::infested_command_center];
+					infestationOverlayId = units_dat::ConstructionGraphic[infestedUnitNewId];
 
-					//asm would compare with hardcoded 999
-					if(infestationOverlayId != ImageId::None)
+					if(infestationOverlayId < ImageId::None)
 						unitInfested->sprite->createOverlay(infestationOverlayId);
 
-					//Assembly code is using
-					//*(u16*)(0x00662350 + unitInfested->id)
-					unitInfested->setHp(units_dat::MaxHitPoints[unitInfested->id]);
+					unitInfested->setHp(units_dat::MaxHitPoints[infestedUnitNewId]);
 
 					//give the proper button set to the unit
-					changeUnitButtonSet_Sub_4E5D60(unitInfested, unitInfested->id);
+					changeUnitButtonSet_Sub_4E5D60(unitInfested, infestedUnitNewId);
 
 					scbw::refreshConsole();
 
@@ -215,15 +220,16 @@ namespace hooks {
 			//EA2CC
 			//Infestation timer ended
 
-			//code made based on similar code in api.cpp, seems to work, but this really came out
-			//different from the assembly code
-			if(scbw::checkUnitCollisionPos(unitInfesting, &unitInfested->sprite->position, &actualpos)) {
+			//using unitInfesting->sprite->position because the queen and command center are
+			//indeed at the same location, and more importantly, if the infested unit got
+			//destroyed, then access to unitInfested->sprite->position would cause a crash
+			if(scbw::checkUnitCollisionPos(unitInfesting, &unitInfesting->sprite->position, &actualpos)) {
 
 				scbw::setUnitPosition(unitInfesting, actualpos.x, actualpos.y);
 				makeToHoldPosition(unitInfesting);
 				showAndEnableUnit(unitInfesting);
 
-				if(unitInfesting->orderQueueHead != NULL) {
+				if(unitInfesting->orderQueueHead == NULL) {
 					unitInfesting->orderSimple(units_dat::ReturnToIdleOrder[unitInfesting->id],false);
 					bReturnToIdle = true;
 				}
@@ -281,7 +287,7 @@ namespace hooks {
 						0, 
 						NULL, 
 						UnitId::None, 
-						true);
+						false);
 
 					actUnitReturnToIdle(unitInfesting);
 
@@ -307,12 +313,12 @@ namespace {
 const u32 Func_OrderReturnToIdle = 0x00463770;
 void orderReturnToIdle(CUnit* unit) {
 
-  __asm {
-    PUSHAD
-	MOV ESI, unit
-    CALL Func_OrderReturnToIdle
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV ESI, unit
+		CALL Func_OrderReturnToIdle
+		POPAD
+	}
 
 }
 
@@ -321,12 +327,12 @@ void orderReturnToIdle(CUnit* unit) {
 const u32 Func_Sub_464930 = 0x00464930;
 void disconnectFromAddOn(CUnit* unit) {
 
-  __asm {
-    PUSHAD
-    MOV EAX, unit
-    CALL Func_Sub_464930
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV EAX, unit
+		CALL Func_Sub_464930
+		POPAD
+	}
 
 }
 
@@ -335,12 +341,12 @@ void disconnectFromAddOn(CUnit* unit) {
 const u32 Func_RefundAllQueueSlots = 0x00466E80;
 void refundAllQueueSlots(CUnit* unit) {
 
-  __asm {
-    PUSHAD
-	MOV EAX, unit
-	CALL Func_RefundAllQueueSlots
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV EAX, unit
+		CALL Func_RefundAllQueueSlots
+		POPAD
+	}
 
 }
 
@@ -349,13 +355,13 @@ void refundAllQueueSlots(CUnit* unit) {
 const u32 Func_removeOrderFromUnitQueue = 0x004742D0;
 void removeOrderFromUnitQueue(CUnit* unit, COrder* order) {
 
-  __asm {
-    PUSHAD
-	MOV ECX, unit
-	MOV EAX, order
-	CALL Func_removeOrderFromUnitQueue
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV ECX, unit
+		MOV EAX, order
+		CALL Func_removeOrderFromUnitQueue
+		POPAD
+	}
 
 }
 
@@ -364,12 +370,12 @@ void removeOrderFromUnitQueue(CUnit* unit, COrder* order) {
 const u32 Func_ActUnitReturnToIdle = 0x00475420;
 void actUnitReturnToIdle(CUnit* unit) {
 
-  __asm {
-    PUSHAD
-    MOV EAX, unit
-    CALL Func_ActUnitReturnToIdle
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV EAX, unit
+		CALL Func_ActUnitReturnToIdle
+		POPAD
+	}
 
 }
 
@@ -379,12 +385,12 @@ void actUnitReturnToIdle(CUnit* unit) {
 const u32 Func_sub_4EB290 = 0x004EB290;
 void setNextWaypoint_Sub4EB290(CUnit* unit) {
 
-  __asm {
-    PUSHAD
-    MOV EAX, unit
-    CALL Func_sub_4EB290
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV EAX, unit
+		CALL Func_sub_4EB290
+		POPAD
+	}
 }
 
 ;
@@ -392,13 +398,13 @@ void setNextWaypoint_Sub4EB290(CUnit* unit) {
 const u32 Func_IncrementUnitDeathScores = 0x00488AF0;
 void incrementUnitDeathScores(CUnit* unit, u8 player) {
 
-  __asm {
-    PUSHAD
-    MOV EDI, unit
-    MOVZX EDX, player
-    CALL Func_IncrementUnitDeathScores
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV EDI, unit
+		MOVZX EDX, player
+		CALL Func_IncrementUnitDeathScores
+		POPAD
+	}
 
 }
 
@@ -422,7 +428,7 @@ void incrementUnitScores(CUnit* unit, s8 value) {
 			JE neg_value_skip
 
 			PUSH 0x00
-			MOV ECX, 0x0000FFFF
+			MOV ECX, 0xFFFFFFFF
 			CALL Func_IncrementUnitScoresEx
 
 			neg_value_skip:
@@ -462,18 +468,18 @@ void incrementUnitScores(CUnit* unit, s8 value) {
 const u32 Func_Sub_49E4E0 = 0x0049E4E0;
 void initializeEmptyUnitsLinkedListRef_Sub49E4E0(CUnit* unit, u8 playerId) {
 
-  __asm {
+	__asm {
 
-    PUSHAD
+		PUSHAD
 
-	MOV DL, playerId
-	MOV ECX, unit
+		MOV DL, playerId
+		MOV ECX, unit
 
-	CALL Func_Sub_49E4E0
+		CALL Func_Sub_49E4E0
 
-    POPAD
+		POPAD
 
-  }
+	}
 
 }
 
@@ -483,23 +489,23 @@ const u32 Func_Sub_49EFA0 = 0x0049EFA0;
 //non-generic version specific to this context
 void readUnitsArray_Sub49EFA0(CUnit* unit, u8 playerId) {
 
-  __asm {
+	__asm {
 
-    PUSHAD
+		PUSHAD
 
-	XOR EAX, EAX
-	MOV AL, playerId
+		XOR EAX, EAX
+		MOV AL, playerId
 
-	PUSH 0x01
+		PUSH 0x01
 
-	MOV ECX, unit
-	PUSH EAX
+		MOV ECX, unit
+		PUSH EAX
 
-	CALL Func_Sub_49EFA0
+		CALL Func_Sub_49EFA0
 
-    POPAD
+		POPAD
 
-  }
+	}
 
 }
 
@@ -539,12 +545,13 @@ void hideAndDisableUnit(CUnit* unit) {
 const u32 Func_InitUnitTrapDoodad = 0x004E6490;
 void showAndEnableUnit(CUnit* unit) {
 
-  __asm {
-    PUSHAD
-    MOV EDI, unit
-    CALL Func_InitUnitTrapDoodad
-    POPAD
-  }
+	__asm {
+		PUSHAD
+		MOV EDI, unit
+		CALL Func_InitUnitTrapDoodad
+		POPAD
+	}
+
 }
 
 
