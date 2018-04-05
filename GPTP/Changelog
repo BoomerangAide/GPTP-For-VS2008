@@ -1,3 +1,9 @@
+Version 4.025
+-Fixed another mistake in hooks/orders/infestation.cpp (caused Issue #30)
+-Minor changes in helper functions for the same hook
+
+---------------------------------------
+
 Version 4.024
 -Fixed a major mistake in hooks/orders/infestation.cpp (caused Issue #29)
 -Various minor fix in hooks/orders/infestation.cpp
