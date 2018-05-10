@@ -10,7 +10,7 @@ namespace {
 	void function_00476D30(CUnit* unit);									//76D30
 	void incrementUnitScores(CUnit* unit, s32 unkScore);					//88BF0
 	void incrementUnitScoresEx(CUnit* unit, s32 unkScore, s32 unk2);		//88D50
-	void GiveUnitHelper(CUnit* unit, u32 playerId, s32 unkScore);	//9EFA0
+	void GiveUnitHelper(CUnit* unit, u32 playerId, s32 unkScore);			//9EFA0
 	void function_004A1E50(CUnit* unit, u32 unk);							//A1E50
 	void CreateUnitSelection(CUnit* unit, u32 selectionIndex);				//E6180
 	void DestroyUnitSelection(CUnit* unit);									//E6290
