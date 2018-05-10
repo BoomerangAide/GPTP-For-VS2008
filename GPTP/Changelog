@@ -1,3 +1,10 @@
+Version 4.026
+-Fixed some minor (no effects on testing) mistakes in hooks/interface/selection_inject.cpp
+-added the select_larva hooks
+-Minor cosmetics changes
+
+---------------------------------------
+
 Version 4.025
 -Fixed another mistake in hooks/orders/infestation.cpp (caused Issue #30)
 -Minor changes in helper functions for the same hook
