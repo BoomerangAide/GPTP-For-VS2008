@@ -1,9 +1,8 @@
 #include "selection.h"
 #include <hook_tools.h>
 
-namespace hooks {
+namespace {
 
-	const u32 Hook_function_0046FB40 = 0x0046FB40;
 	const u32 Func_function_0046F3A0 = 0x0046F3A0;
 	void __declspec(naked) function_0046FB40_Wrapper() {
 
@@ -45,7 +44,6 @@ namespace hooks {
 
 	;
 	
-	const u32 Hook_SortAllUnits = 0x0046F0F0;
 	void __declspec(naked) SortAllUnits_Wrapper() {
 
 		static CUnit* unit;
@@ -77,12 +75,16 @@ namespace hooks {
 		}
 
 	}
-	
+
 	;
 
+}//unnamed namespace
+
+namespace hooks {
+
 	void injectSelectMod() {
-		jmpPatch(function_0046FB40_Wrapper,	Hook_function_0046FB40, 27);
-		jmpPatch(SortAllUnits_Wrapper,		Hook_SortAllUnits,		 1);
+		jmpPatch(function_0046FB40_Wrapper,	0x0046FB40, 27);
+		jmpPatch(SortAllUnits_Wrapper,		0x0046F0F0,	 1);
 	}
 
 }
