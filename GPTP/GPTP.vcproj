@@ -464,6 +464,14 @@
 			<File
 				RelativePath=".\hooks\orders\research_upgrade_orders_inject.cpp"
 				>
+			</File>
+			<File
+				RelativePath=".\hooks\interface\select_larva.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\interface\select_larva_inject.cpp"
+				>
 			</File>			
 			<File
 				RelativePath=".\hooks\interface\selection.cpp"
@@ -1097,6 +1105,10 @@
 			</File>			
 			<File
 				RelativePath=".\hooks\orders\research_upgrade_orders.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\interface\select_larva.h"
 				>
 			</File>			
 			<File
