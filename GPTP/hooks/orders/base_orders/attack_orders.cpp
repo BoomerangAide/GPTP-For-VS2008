@@ -674,12 +674,10 @@ void orders_SapUnit(CUnit* unit) {
 			} //if(unit->mainOrderState == 0)
 			
 			if(!bStopThere && unit->mainOrderState == 1) { //78975
-
-				u32 unitMovableState = unit->getMovableState();
 				
 				if(
 					!unit->isTargetWithinMinRange(target,4) &&
-					unitMovableState != 2
+					unit->getMovableState() != 2
 				)
 				{ //78998
 
