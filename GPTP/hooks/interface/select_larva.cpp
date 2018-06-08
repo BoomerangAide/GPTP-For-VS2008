@@ -46,7 +46,7 @@ namespace hooks {
 				if(!bStopLoop) {
 					unitList++;
 					current_unit = *unitList;
-					bStopLoop = (current_unit != NULL);
+					bStopLoop = (current_unit == NULL);
 				}
 
 			}
