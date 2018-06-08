@@ -204,6 +204,7 @@ void orders_WarpingDarkArchon(CUnit* unit) {
 
 			//94724
 
+											//unit unmovable			
 			if(unit->mainOrderState != 0 && unit->getMovableState() == 2) {
 				makeToHoldPosition(unit);
 				unit->orderToIdle();
@@ -389,6 +390,7 @@ void orders_WarpingArchon(CUnit* unit) {
 
 			//94944
 
+											//unit unmovable
 			if(unit->mainOrderState != 0 && unit->getMovableState() == 2) {
 				makeToHoldPosition(unit);
 				unit->orderToIdle();
