@@ -1,3 +1,15 @@
+Version 4.027
+-Fixed an error in getLarvaeUnitsFromList from hooks/interface/select_larva.cpp
+-Added the missing lines in initialize.cpp preventing Select Larva hooks to be used
+-Fixed comments for getMovableState() in SCBW/structures/CUnit.cpp (also added some asm info somewhere else)
+-Added some asm info for getAngle() in SCBW/api.cpp
+-Minor change in the way unit->getMovableState() is used/commented in some files
+-Cleaned old comments and fixed an error in hooks/spider_mine.cpp
+-Added Repair order hook
+-Added Stats panel display hook
+
+---------------------------------------
+
 Version 4.026
 -Fixed some minor (no effects on testing) mistakes in hooks/interface/selection_inject.cpp
 -added the select_larva hooks
