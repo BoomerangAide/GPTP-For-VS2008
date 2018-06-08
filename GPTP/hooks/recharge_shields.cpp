@@ -133,16 +133,16 @@ void orderRechargeShieldsHook(CUnit* unit) {
 
 			u32 movableState = unit->getMovableState();
 
-			if(movableState == 0) {
+			if(movableState == 0) { //not reached destination
 				if(!unit->isTargetWithinMinRange(battery, BATTERY_RANGE))
 					bStopThere = true;
 			}
 			else
-			if(movableState == 1) {
+			if(movableState == 1) { //unit reached destination
 				makeToHoldPosition(unit);
 				unit->mainOrderState = 2;
 			}
-			else{
+			else { //probably movableState == 2 == unit unmovable
 				unit->orderToIdle();
 				bStopThere = true;
 			}
