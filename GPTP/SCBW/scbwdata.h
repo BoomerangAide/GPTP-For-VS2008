@@ -343,6 +343,10 @@ SCBW_DATA(const UnitsSel*, activePlayerSelection, 0x006284B8);
 typedef CUnit* (__cdecl *GetActivePlayerNextSelectionFunc)();
 SCBW_DATA(GetActivePlayerNextSelectionFunc, getActivePlayerNextSelection, 0x0049A850);
 
+/// Selections of all players
+struct PlayersSel { CUnit* unit[PLAYABLE_PLAYER_COUNT][SELECTION_ARRAY_LENGTH]; };
+SCBW_DATA(const PlayersSel*, playersSelections, 0x006284E8);
+
 typedef void (__fastcall *PrepareForNextOrderFunc)(CUnit*);
 SCBW_DATA(PrepareForNextOrderFunc, prepareForNextOrder, 0x00475000);
 
