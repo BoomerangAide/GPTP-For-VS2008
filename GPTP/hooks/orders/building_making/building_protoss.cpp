@@ -47,12 +47,9 @@ namespace hooks {
 				distance_wanted = 70;
 
 			if(distance / 256 > distance_wanted) {
-
-				u32 movableState = unit->getMovableState();
 				
-				if(movableState != 0)
+				if(unit->getMovableState() != 0)
 					function_004EB9C0(unit,unit->orderTarget.pt.x,unit->orderTarget.pt.y);
-
 
 			}
 			else { //E4DA9
@@ -76,9 +73,7 @@ namespace hooks {
 
 				if(!isDistanceGreaterThanHaltDistance(unit, unit->orderTarget.pt.x, unit->orderTarget.pt.y, distance_wanted)) {
 
-					u32 movableState = unit->getMovableState();
-					
-					if(movableState != 0)
+					if(unit->getMovableState() != 0)
 						function_004EB9C0(unit,unit->orderTarget.pt.x,unit->orderTarget.pt.y);
 
 				}
