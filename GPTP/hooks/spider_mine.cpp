@@ -46,45 +46,6 @@ class SpiderMineTargetFinder: public scbw::UnitFinderCallbackMatchInterface {
     SpiderMineTargetFinder(CUnit* spiderMine) : spiderMine(spiderMine) {}
 };
 
-//StarCraft.exe+40EC0- mov al,[ecx+4C]			//AL = target->playerId
-//StarCraft.exe+40EC3- cmp al,0B				
-//StarCraft.exe+40EC5- mov dl,[edx+4C]			//DL = unit->playerId
-//StarCraft.exe+40EC8- jne StarCraft.exe+40ED0	//if(target->playerId != 11) jump
-
-//StarCraft.exe+40ECA- mov eax,[ecx+0C]			//EAX = target->sprite
-//StarCraft.exe+40ECD- mov al,[eax+0A]			//AL = target->sprite->playerId
-
-//40ED0:
-
-//StarCraft.exe+40ED0- movzx edx,dl								//...
-//StarCraft.exe+40ED3- movzx eax,al								//...
-//StarCraft.exe+40ED6- push ebx									//...
-//StarCraft.exe+40ED7- lea edx,[edx+edx*2]						//...
-//StarCraft.exe+40EDA- mov bl,[eax+edx*4+StarCraft.exe+18D634]	//BL = playerAlliance[unit->playerId].flags[targetOwnerId]
-//StarCraft.exe+40EE1- test bl,bl
-//StarCraft.exe+40EE3- pop ebx
-//StarCraft.exe+40EE4- jne StarCraft.exe+40F0A					//if(allied) jump to return false
-
-//StarCraft.exe+40EE6- mov eax,[ecx+000000DC]					
-//StarCraft.exe+40EEC- test eax,04000000						//if target invincible jump
-
-//StarCraft.exe+40EF1- jne StarCraft.exe+40F0A
-
-//StarCraft.exe+40EF3- test al,06
-//StarCraft.exe+40EF5- jne StarCraft.exe+40F0A					//if(target GroundedBuilding+InAir return false
-
-//StarCraft.exe+40EF7- movzx ecx,word ptr [ecx+64]
-//StarCraft.exe+40EFB- cmp byte ptr [ecx+StarCraft.exe+260FC8],-3F	if(hover return false
-//StarCraft.exe+40F02- je StarCraft.exe+40F0A
-
-//StarCraft.exe+40F04- mov eax,00000001
-//StarCraft.exe+40F09- ret 
-
-//40F0A:
-
-//StarCraft.exe+40F0A- xor eax,eax
-//StarCraft.exe+40F0C- ret 
-
 namespace hooks {
 
 const int SPIDERMINE_BURROW_TIME = 60;
@@ -212,14 +173,14 @@ void orders_VultureMine(CUnit* unit) {
 				if(unit->isTargetWithinMinRange(unit->orderTarget.unit,SPIDERMINE_DETONATE_RANGE))
 					bIsCompletelyInRange = true; //jump to 63F22
 				else
-				if(unit->getMovableState() != 2)
+				if(unit->getMovableState() != 2) //unit not unmovable
 					bEndThere = true;
 
 			}
 
 		}
 
-		if(!bEndThere) { //63F14
+		if(!bEndThere && !bIsCompletelyInRange) { //63F14
 			setNextWaypoint_Sub4EB290(unit);
 			unit->mainOrderState = 1;
 		}
