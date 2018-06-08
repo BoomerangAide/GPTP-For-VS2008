@@ -1,3 +1,10 @@
+Version 4.028
+-cosmetic minor change in hooks/give_unit_inject.cpp
+-new playersSelections variable available from SCBW/scbwdata.h (used in utils hooks)
+-new Utils hooks (bool unit_IsStandardAndMovable(CUnit* unit) and CUnit* getActivePlayerFirstSelection())
+
+---------------------------------------
+
 Version 4.027
 -Fixed an error in getLarvaeUnitsFromList from hooks/interface/select_larva.cpp
 -Added the missing lines in initialize.cpp preventing Select Larva hooks to be used
