@@ -76,6 +76,7 @@
 #include "hooks/recv_commands/train_cmd_receive.h"
 #include "hooks/orders/unit_making/unit_morph.h"
 #include "hooks/orders/unit_making/unit_train.h"
+#include "hooks/utils/utils.h"
 #include "hooks/interface/wireframe.h"
 #include "hooks/weapons/wpnspellhit.h"
 
@@ -146,6 +147,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectSelectLarvaHooks();
 	hooks::injectRepairOrderHook();
 	hooks::injectStatsPanelDisplayHook();
+	hooks::injectUtilsHooks();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
