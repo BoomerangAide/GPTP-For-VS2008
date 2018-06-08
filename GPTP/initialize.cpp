@@ -66,9 +66,12 @@
 #include "hooks/orders/spells/nuke_orders.h"
 #include "hooks/orders/spells/recall_spell.h"
 #include "hooks/recv_commands/receive_command.h"
+#include "hooks/orders/repair_order.h"
 #include "hooks/orders/research_upgrade_orders.h"
+#include "hooks/interface/select_larva.h"
 #include "hooks/interface/selection.h"
 #include "hooks/orders/siege_transform.h"
+#include "hooks/interface/stats_panel_display.h"
 #include "hooks/orders/base_orders/stopholdpos_orders.h"
 #include "hooks/recv_commands/train_cmd_receive.h"
 #include "hooks/orders/unit_making/unit_morph.h"
@@ -139,7 +142,10 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectCMDRECV_MergeArchonHooks();
 	hooks::injectCMDRECV_MorphHooks();
 	hooks::injectCMDRECV_StopHooks();
-	hooks::injectCMDRECV_CancelHooks();	
+	hooks::injectCMDRECV_CancelHooks();
+	hooks::injectSelectLarvaHooks();
+	hooks::injectRepairOrderHook();
+	hooks::injectStatsPanelDisplayHook();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
