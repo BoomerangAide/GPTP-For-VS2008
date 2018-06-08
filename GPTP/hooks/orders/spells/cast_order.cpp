@@ -126,7 +126,7 @@ void orders_Spell(CUnit* unit) {
 
 				if(result_00492620 == 0) {
 
-					if(unit->getMovableState() == 2)
+					if(unit->getMovableState() == 2) //unmovable
 						unit->orderToIdle();
 
 				}
