@@ -125,11 +125,10 @@ void orders_SCVBuild2(CUnit* unit) {
 
 			u32 movableState = unit->getMovableState();
 
-			if(movableState == 2) {
+			if(movableState == 2) //unmovable
 				unit->orderToIdle();
-			}
 			else
-			if(movableState == 1) {
+			if(movableState == 1) { //reached destination
 
 				scbw::refreshConsole();
 
@@ -1044,6 +1043,8 @@ Bool32 function_004F1870(CUnit* unit, int x, int y) {
 	return rValue;
 
 }
+	
+;
 
 } //Unnamed namespace
 
