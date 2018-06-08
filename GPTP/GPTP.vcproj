@@ -538,6 +538,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\utils\utils.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\utils\utils_inject.cpp"
+				>
+			</File>		
+			<File
 				RelativePath=".\hooks\interface\wireframe.cpp"
 				>
 			</File>
@@ -1169,6 +1177,10 @@
 			</File>
 			<File
 				RelativePath=".\hooks\orders\unit_making\unit_train.h"
+				>
+			</File>	
+			<File
+				RelativePath=".\hooks\utils\utils.h"
 				>
 			</File>			
 			<File
