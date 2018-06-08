@@ -220,6 +220,7 @@ int arctangent(int slope) {
 }
 
 //Identical to function @ 0x00495300
+			//    EDX		[EBP+08]	ECX			EAX
 s32 getAngle(s32 xStart, s32 yStart, s32 xEnd, s32 yEnd) {
 
 	s32 dx = xEnd - xStart, dy = yEnd - yStart;
