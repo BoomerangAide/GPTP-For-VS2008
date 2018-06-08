@@ -236,7 +236,7 @@ void orders_MedicHeal1(CUnit* unit) {
 
 			if(	target != NULL &&
 				function_004EB900(unit,target) != 0 &&
-				unit->getMovableState() != 2
+				unit->getMovableState() != 2 //unit not unmovable
 			)
 			{
 				if(unit->isTargetWithinMinRange(target,30)) {
