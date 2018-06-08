@@ -35,6 +35,8 @@ namespace {
 		}
 
 	}
+	
+	;
 
 }//unnamed namespace
 
