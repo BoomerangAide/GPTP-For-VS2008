@@ -287,8 +287,8 @@ bool CUnit::isValidCaster() const {
 
 //Identical to function @ 0x00401DC0
 //Returns:	0 - Unit has not reached destination
-//					1 - Unit cannot move
-//					2 - Unit has reached destination
+//					1 - Unit has reached destination
+//					2 - Unit cannot move
 u32 CUnit::getMovableState() {
 	if (this->moveTarget.pt != this->sprite->position)
 		return 0;
@@ -525,6 +525,9 @@ void	CUnit::spendUnitEnergy(u32 energy) {
 //-------- Unit orders --------//
 
 //Logically equivalent to function @ 0x004752B0
+//ESI = this
+//EAX = target
+//[ebp+08] = orderId
 void CUnit::orderTo(u8 orderId, CUnit* target) {
 	assert(this);
 
