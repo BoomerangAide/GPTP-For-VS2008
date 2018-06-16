@@ -42,16 +42,27 @@ struct Box32 {
   s32 bottom;
 };
 
+struct Bounds {
+  u16 left;
+  u16 top;
+  u16 right;
+  u16 bottom;
+  u16 width;
+  u16 height;
+};
+
 C_ASSERT(sizeof(Point8) == 2);
 C_ASSERT(sizeof(Point16) == 4);
 C_ASSERT(sizeof(Point32) == 8);
 C_ASSERT(sizeof(Box16) == 8);
 C_ASSERT(sizeof(Box32) == 16);
+C_ASSERT(sizeof(Bounds) == 12);
 
 //static_assert(sizeof(Point8)  == 2,   "The size of the Point8 structure is invalid");
 //static_assert(sizeof(Point16) == 4,   "The size of the Point16 structure is invalid");
 //static_assert(sizeof(Point32) == 8,   "The size of the Point32 structure is invalid");
 //static_assert(sizeof(Box16)   == 8,   "The size of the Box16 structure is invalid");
 //static_assert(sizeof(Box32)   == 16,  "The size of the Box32 structure is invalid");
+//static_assert(sizeof(Bounds) == 12, "The size of the Bounds structure is invalid");
 
 #pragma pack()
