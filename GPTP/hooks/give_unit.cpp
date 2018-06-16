@@ -10,7 +10,6 @@ namespace {
 	void function_00476D30(CUnit* unit);									//76D30
 	void incrementUnitScores(CUnit* unit, s32 unkScore);					//88BF0
 	void incrementUnitScoresEx(CUnit* unit, s32 unkScore, s32 unk2);		//88D50
-	void GiveUnitHelper(CUnit* unit, u32 playerId, s32 unkScore);			//9EFA0
 	void function_004A1E50(CUnit* unit, u32 unk);							//A1E50
 	void CreateUnitSelection(CUnit* unit, u32 selectionIndex);				//E6180
 	void DestroyUnitSelection(CUnit* unit);									//E6290
@@ -98,7 +97,7 @@ namespace hooks {
 			function_00463040(unit);
 
 			if(unit->subunit != NULL && units_dat::BaseProperty[unit->subunit->id] & UnitProperty::Subunit)
-				GiveUnitHelper(unit->subunit,playerId,unkScore);
+				GiveUnit(unit->subunit,playerId,unkScore);
 
 			ApplySpeedUpgradeFromUnitType(unit);
 
@@ -191,22 +190,6 @@ namespace {
 			MOV ECX, unk2
 			PUSH unkScore
 			CALL Func_incrementUnitScoresEx
-			POPAD
-		}
-
-	}
-
-	;
-
-	const u32 Func_Sub49EFA0 = 0x0049EFA0;
-	void GiveUnitHelper(CUnit* unit, u32 playerId, s32 unkScore) {
-
-		__asm {
-			PUSHAD
-			MOV ECX, unit
-			PUSH unkScore
-			PUSH playerId
-			CALL Func_Sub49EFA0
 			POPAD
 		}
 
