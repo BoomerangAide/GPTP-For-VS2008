@@ -1,6 +1,14 @@
 #include "building_terran.h"
 #include <SCBW/api.h>
 
+#ifndef FALSE
+#define FALSE 0
+#endif
+
+#ifndef TRUE
+#define TRUE 1
+#endif
+
 //helper functions def
 
 namespace {
@@ -11,7 +19,7 @@ bool isUnitPositions2Equal(CUnit* unit);											//02160
 void AI_TrainingOverlord(CUnit* main_unit, CUnit* created_unit);					//35770
 bool function_00467030(CUnit* unit);												//67030
 CUnit* function_004678A0(CUnit* unit, u32 unitId);									//678A0
-Bool32 buildingAddon(CUnit* unit, u32 hpGain, u32 someFlag);						//679A0
+Bool32 buildingAddon(CUnit* unit, u32 hpGain, Bool32 canBeAborted);					//679A0
 void function_00474760(CUnit* unit, COrder* order, u8 orderId);						//74760
 void function_004749A0(CUnit* unit, COrder* order, u8 orderId);						//749A0
 void refreshLayer3And4();															//8D9A0
@@ -102,6 +110,7 @@ void orders_TerranBuildSelf(CUnit* building) {
 
 ;
 
+//Go to build on an existing building
 void orders_SCVBuild2(CUnit* unit) {
 
 	CUnit* builtUnit = unit->orderTarget.unit;
@@ -137,11 +146,11 @@ void orders_SCVBuild2(CUnit* unit) {
 					builtUnit->connectedUnit != unit &&
 					(builtUnit->connectedUnit)->orderTarget.unit == builtUnit
 				)
-					unit->orderToIdle();
+					unit->orderToIdle(); //another SCV is already on the job
 				else { //67AF9
 
 					builtUnit->connectedUnit = unit;
-					unit->status &= ~UnitStatus::IsNormal;
+					unit->status &= ~UnitStatus::IsNormal;	//remove UnitStatus::IsNormal if present
 					unit->sprite->elevationLevel = units_dat::Elevation[unit->id] + 1;
 
 					unit->orderSimple(OrderId::ResetCollision1,false);
@@ -368,7 +377,7 @@ void orders_SCVBuild2(CUnit* unit) {
 			if(*CHEAT_STATE & CheatFlags::OperationCwal)
 				hpGain *= 16;
 
-			buildingAddon(builtUnit,hpGain,0);
+			buildingAddon(builtUnit,hpGain,FALSE);
 
 			if(builtUnit->status & UnitStatus::Completed) {
 
@@ -505,6 +514,7 @@ void orders_SCVBuild2(CUnit* unit) {
 
 ;
 
+////Go to build a not yet existing building
 void orders_SCVBuild(CUnit* unit) {
 
 	bool bEndThere = false;
@@ -734,7 +744,9 @@ CUnit* function_004678A0(CUnit* unit, u32 unitId) {
 ;
 
 const u32 Func_buildingAddon = 0x004679A0;
-Bool32 buildingAddon(CUnit* unit, u32 hpGain, u32 someFlag) {
+//if canBeAborted is TRUE, the unit can be aborted because there's
+//no room around the constructing building
+Bool32 buildingAddon(CUnit* unit, u32 hpGain, Bool32 canBeAborted) {
 
 	static Bool32 bResult;
 
@@ -742,7 +754,7 @@ Bool32 buildingAddon(CUnit* unit, u32 hpGain, u32 someFlag) {
 		PUSHAD
 		MOV EDX, hpGain
 		MOV EAX, unit
-		PUSH someFlag
+		PUSH canBeAborted
 		CALL Func_buildingAddon
 		MOV bResult, EAX
 		POPAD
