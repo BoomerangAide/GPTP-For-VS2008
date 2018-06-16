@@ -146,12 +146,14 @@ namespace hooks {
 
 					u16 unitNewId = unit->id;
 
-					//equivalent to @00463310
+					//identical to @00463310
 					if(unit->id == UnitId::TerranSiegeTankTankMode)
 						unitNewId = UnitId::TerranSiegeTankSiegeMode;
 					else
 					if(unit->id == UnitId::Hero_EdmundDukeTankMode)
 						unitNewId = UnitId::Hero_EdmundDukeSiegeMode;
+					else
+						unitNewId = unit->id;					
 
 					replaceUnitWithType(unit,unitNewId);
 					unit->mainOrderState = 3;
