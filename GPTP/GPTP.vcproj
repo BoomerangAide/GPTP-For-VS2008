@@ -416,7 +416,15 @@
 			<File
 				RelativePath=".\hooks\orders\merge_units_inject.cpp"
 				>
-			</File>	
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\mindcontrol_spell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\mindcontrol_spell_inject.cpp"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\orders\spells\nuke_orders.cpp"
 				>
@@ -1106,6 +1114,10 @@
 			<File
 				RelativePath=".\hooks\orders\merge_units.h"
 			>
+			</File>
+			<File
+				RelativePath=".\hooks\orders\spells\mindcontrol_spell.h"
+				>
 			</File>			
 			<File
 				RelativePath=".\MPQDraftPlugin.h"
