@@ -1,4 +1,4 @@
-#include "recall_spell.h"
+#include "hallucination_spell.h"
 #include <SCBW/api.h>
 
 //helper functions def
@@ -9,7 +9,6 @@ bool ordersSpell_Sub_4926D0(CUnit* unit, u32 techId, u16* techEnergyCost, u32 si
 void UnitDestructor(CUnit* unit);																					//A0990
 bool function_004F66D0(CUnit* unit);																				//F66D0
 CUnit* createHallucinationUnit(CUnit* target, u32 playerId);														//F6B90
-
 
 } //unnamed namespace
 
