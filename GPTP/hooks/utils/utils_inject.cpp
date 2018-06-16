@@ -3,6 +3,32 @@
 #include <hook_tools.h>
 
 namespace {
+	
+void __declspec(naked) InitializeDialogWrapper() {
+
+	static BinDlg* dialog;
+	static void* dlgFunc;
+
+	__asm {
+		PUSH EBP
+		MOV EBP, ESP
+		MOV dialog, ESI
+		MOV dlgFunc, EAX
+		PUSHAD
+	}
+
+	hooks::InitializeDialog(dialog, dlgFunc);
+
+	__asm {
+		POPAD
+		MOV ESP, EBP
+		POP EBP
+		RETN
+	}
+
+}
+
+;
 
 void __declspec(naked) unit_IsStandardAndMovableWrapper() {
 
@@ -25,7 +51,9 @@ void __declspec(naked) unit_IsStandardAndMovableWrapper() {
 		RETN
 	}
 
-};
+}
+	
+;
 
 void __declspec(naked) getActivePlayerFirstSelectionWrapper() {
 
@@ -50,6 +78,7 @@ void __declspec(naked) getActivePlayerFirstSelectionWrapper() {
 namespace hooks {
 
 void injectUtilsHooks() {
+	jmpPatch(InitializeDialogWrapper,				0x00419D20, 1);
 	jmpPatch(unit_IsStandardAndMovableWrapper,		0x0047B770, 2);
 	jmpPatch(getActivePlayerFirstSelectionWrapper,	0x0049A850, 2);
 }
