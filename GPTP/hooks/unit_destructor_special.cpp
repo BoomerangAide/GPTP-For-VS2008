@@ -6,6 +6,7 @@
 #include "../hook_tools.h"
 
 //Identical to 00466170  sub_466170
+//Not hooked but used by hooked unitDestructorSpecialHook
 void killAllHangarUnits(CUnit* unit) {
 
 	u32 random_value;
@@ -71,6 +72,7 @@ void killAllHangarUnits(CUnit* unit) {
 
 
 //Identical to 00468770 sub_468770
+//Not hooked but used by hooked unitDestructorSpecialHook
 void freeResourceContainer(CUnit* resource) {
 
 	resource->building.resource.gatherQueueCount = 0;
@@ -100,7 +102,7 @@ void freeResourceContainer(CUnit* resource) {
 
 }
 
-
+//Hooked down there instead of a specific inject.cpp
 void unitDestructorSpecialHook(CUnit* unit) {
 
 	//Destroy interceptors and scarabs
