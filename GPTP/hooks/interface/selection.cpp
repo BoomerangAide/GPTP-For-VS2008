@@ -488,8 +488,8 @@ namespace hooks {
 							CMDACT_Select(local_temp_array_1,arrayIndex);
 
 							//tell the GUI to update stuff
-							*someDialogUnknown = 0;
-							*someDialogUnknownUser = 0;
+							*someDialogUnknown = NULL;
+							*someDialogUnknownUser = NULL;
 							*bCanUpdateSelectedUnitData = 1;
 							*bCanUpdateCurrentButtonSet = 1;
 							*bCanUpdateSelectedUnitPortrait = 1;
@@ -543,8 +543,8 @@ namespace hooks {
 				*bCanUpdateCurrentButtonSet = 1;
 				*bCanUpdateSelectedUnitPortrait = 1;
 				*bCanUpdateStatDataDialog = 1;
-				*someDialogUnknown = 0;
-				*someDialogUnknownUser = 0;
+				*someDialogUnknown = NULL;
+				*someDialogUnknownUser = NULL;
 
 			}
 
