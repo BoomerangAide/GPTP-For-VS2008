@@ -63,6 +63,7 @@
 #include "hooks/orders/building_making/make_nydus_exit.h"
 #include "hooks/orders/medic_orders.h"
 #include "hooks/orders/merge_units.h"
+#include "hooks/orders/spells/mindcontrol_spell.h"
 #include "hooks/orders/spells/nuke_orders.h"
 #include "hooks/orders/spells/recall_spell.h"
 #include "hooks/recv_commands/receive_command.h"
@@ -148,6 +149,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectRepairOrderHook();
 	hooks::injectStatsPanelDisplayHook();
 	hooks::injectUtilsHooks();
+	hooks::injectMindControlSpellHook();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
