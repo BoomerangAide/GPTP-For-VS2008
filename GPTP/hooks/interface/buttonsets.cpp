@@ -326,7 +326,7 @@ namespace hooks {
 		currentUnitMainOrderId = *BUTTONSET_UNIT_MAINORDERID;
 		currentUnitButtonIcon = orders_dat::ButtonIcon[currentUnitMainOrderId];
 
-		currentButtonDlg = (BinDlg*)((*BUTTONSET_DIALOG)->childrenSmk);
+		currentButtonDlg = (*BUTTONSET_DIALOG)->childrenDlg;
 
 		currentSubUnitMainOrderId = *BUTTONSET_SUBUNIT_MAINORDERID;
 
@@ -665,7 +665,7 @@ namespace hooks {
 
 	;
 
-	void updateButtonSet_Sub4591D0() {
+void updateButtonSet_Sub4591D0() {
 
 	BinDlg**	const BUTTONSET_DIALOG	=				(BinDlg**)	0x0068C148;
 	u16*		const BUTTONSET_PORTRAIT_BUTTONSETID =	(u16*)		0x0068C14C;
@@ -690,7 +690,7 @@ namespace hooks {
 		current_dialog = current_dialog->parent;
 
 	//59203:
-	current_dialog = (BinDlg*)current_dialog->childrenSmk;
+	current_dialog = current_dialog->childrenDlg;
 
 	while(current_dialog != NULL && current_dialog->index != 1)
 		current_dialog = current_dialog->next;
@@ -741,7 +741,7 @@ namespace hooks {
 				else {
 
 					//592B5
-					current_dialog->user = (u32*)current_button;
+					current_dialog->buttonUser = current_button;
 
 					if(current_dialog->graphic != current_button->iconID) {
 
@@ -751,8 +751,8 @@ namespace hooks {
 							u32 unknown_value_2;	//[EBP-18]
 							u32 not_allocated;		//[EBP-14]
 							u16 unknown_value_3;	//[EBP-10]
-							s16 mouseY;				//[EBP-0E]
-							s16 mouseX;				//[EBP-0C]
+							s16 mouseX;				//[EBP-0E]
+							s16 mouseY;				//[EBP-0C]
 							u16 not_allocated_2;	//[EBP-0A]
 							u32 buttonState;		//[EBP-08]
 							BUTTON_SET* buttonset;	//[EBP-04]
@@ -822,7 +822,7 @@ namespace hooks {
 			//5933C
 			hideDialog(current_dialog);
 			current_dialog->graphic = 0xFFFF;
-			current_dialog->user = NULL;
+			current_dialog->buttonUser = NULL;
 		}
 
 		//5934E
@@ -955,7 +955,7 @@ namespace {
 
 	;
 
-	//dev info: this call 4598D0
+	//dev info: in this context this call 4598D0 statbtn_Btn_Interact
 	u32 fxnInteract(BinDlg* dialog, u32 data_struct_offset) {
 
 		static u32 return_value;
