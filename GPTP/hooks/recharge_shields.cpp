@@ -12,10 +12,9 @@ namespace {
 	bool isHangarUnit(CUnit* unit);
 } //unnamed namespace
 
-//-------- Actual hook functions --------//
-
 //This function is called every frame when a unit recharges shields.
 //Equivalent to 004934B0  sub_4934B0
+//Not hooked
 void rechargeShieldsProc(CUnit* target, CUnit* battery) {
 
 	const s32 maxShields = units_dat::MaxShieldPoints[target->id] * 256;
@@ -49,6 +48,8 @@ void rechargeShieldsProc(CUnit* target, CUnit* battery) {
 }
 
 ;
+
+//-------- Actual hook functions --------//
 
 namespace hooks {
 
