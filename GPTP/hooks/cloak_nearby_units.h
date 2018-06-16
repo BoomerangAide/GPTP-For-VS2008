@@ -3,7 +3,7 @@
 
 namespace hooks {
 
-void cloakNearbyUnitsHook(CUnit* unit);
+void cloakNearbyUnitsHook(CUnit* unit);	//00491C20
 
 void injectCloakNearbyUnits();
 
