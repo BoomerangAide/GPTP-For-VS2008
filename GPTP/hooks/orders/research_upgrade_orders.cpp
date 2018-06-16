@@ -92,7 +92,7 @@ namespace hooks {
 				MOV EDX, ECX
 				SHR EDX, 0x3
 				AND ECX, 0x80000007
-				LEA EAX, [EDX+EAX*0x8+0x0058F3E0]
+				LEA EAX, [EDX+EAX*0x8+0x0058F3E0] //EAX = &(UpgradesBw->currentLevel[unit->playerId][unit->building.upgradeType CONVERTED?])
 				JNS lbl547E7
 
 				DEC ECX
@@ -221,7 +221,7 @@ namespace hooks {
 				SHR EDX, 0x3
 				AND ECX, 0x80000007
 				LEA EAX, [EAX+EAX*0x2]
-				LEA EAX, [EDX+EAX*0x2+0x0058F230]
+				LEA EAX, [EDX+EAX*0x2+0x0058F230] //EAX = &(TechBw->isResearched[unit->playerId][unit->building.techType CONVERTED?])
 				JNS lbl549C7
 
 				DEC ECX
