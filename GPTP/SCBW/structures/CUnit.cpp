@@ -358,7 +358,7 @@ void CUnit::setHp(s32 hitPoints) {
 	}
 }
 
-extern const u32 Func_DoWeaponDamage = 0x00479930; //Note: Also used by weaponDamageHook()
+const u32 Func_DoWeaponDamage = 0x00479930; //Note: hooked in hooks/weapons/weapon_damage files
 void CUnit::damageWith(s32 damage, u8 weaponId, CUnit* attacker,
 											 u8 attackingPlayer, s8 direction, u8 damageDivisor) {
 	assert(this);
