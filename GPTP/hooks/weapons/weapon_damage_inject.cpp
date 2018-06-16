@@ -49,7 +49,7 @@ void __declspec(naked) weaponDamageWrapper() {
 namespace hooks {
 
 void injectWeaponDamageHook() {
-	jmpPatch(weaponDamageWrapper, Func_DoWeaponDamage, 1);
+	jmpPatch(weaponDamageWrapper, 0x00479930, 1);
 }
 
 } //hooks
