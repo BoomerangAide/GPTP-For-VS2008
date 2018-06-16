@@ -27,7 +27,7 @@ void __declspec(naked) transferUnitUpgradesToPlayerWrapper() {
 
 	}
 
-	hooks::transferUnitTechToPlayerHook(sourceUnit, targetPlayerId, researchUpgradeFunc);
+	hooks::transferUnitUpgradesToPlayerHook(sourceUnit, targetPlayerId, researchUpgradeFunc);
 
 	__asm {
 		POPAD
@@ -37,6 +37,8 @@ void __declspec(naked) transferUnitUpgradesToPlayerWrapper() {
 	}
 
 }
+	
+;
 
 void __declspec(naked) transferUnitTechToPlayerWrapper() {
 
@@ -71,6 +73,8 @@ void __declspec(naked) transferUnitTechToPlayerWrapper() {
 	}
 
 }
+	
+;
 
 } //Unnamed namespace
 
