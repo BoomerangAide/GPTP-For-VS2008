@@ -3,8 +3,6 @@
 
 namespace {
 
-//Inject with jmpPatch()
-const u32 Hook_GetModifiedWeaponCooldown = 0x00475DC0;
 void __declspec(naked) getModifiedWeaponCooldownWrapper() {
 
 	static CUnit* unit;
@@ -31,7 +29,7 @@ void __declspec(naked) getModifiedWeaponCooldownWrapper() {
 namespace hooks {
 
 void injectWeaponCooldownHook() {
-	jmpPatch(getModifiedWeaponCooldownWrapper, Hook_GetModifiedWeaponCooldown, 2);
+	jmpPatch(getModifiedWeaponCooldownWrapper, 0x00475DC0, 2);
 }
 
 } //hooks
