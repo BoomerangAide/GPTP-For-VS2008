@@ -74,12 +74,12 @@ void applyUpgradeFlagsToNewUnitHook(CUnit* unit) {
 
 
 		if(bSpeedUpgrade == 1) {
-			unit->status |=UnitStatus::SpeedUpgrade;
+			unit->status |= UnitStatus::SpeedUpgrade;
 			unit->updateSpeed();
 		}
 
 		if(bCooldownUpgrade == 1) {
-			unit->status |=UnitStatus::CooldownUpgrade;
+			unit->status |= UnitStatus::CooldownUpgrade;
 			unit->updateSpeed();
 		}
 
@@ -93,6 +93,7 @@ void applyUpgradeFlagsToNewUnitHook(CUnit* unit) {
 
 //This function is called when an upgrade is finished, or when transferring a
 //unit's ownership from one player to another (via triggers or Mind Control).
+//Should be equivalent or identical to ApplySpeedUpgradeFromUpgradeType @ 00454540
 void applyUpgradeFlagsToExistingUnitsHook(CUnit* unit, u8 upgradeId) {
 
 	const u32 UnitUpgradeRestrictionProc =		0x00453DC0;
