@@ -56,25 +56,11 @@ void __declspec(naked) applyUpgradeFlagsToExistingUnitsWrapper() {
 
 namespace hooks {
 
-const u32 Hook_ApplyUpgradeFlagsToExistingUnits = 0x00454540;
-
 void injectApplyUpgradeFlags() {
 	jmpPatch(applyUpgradeFlagsToNewUnitWrapper,			0x00454370, 2);
 	jmpPatch(applyUpgradeFlagsToExistingUnitsWrapper,	0x00454540, 2);
 }
-
+	
 ;
-
-void applyUpgradeFlagsToExistingUnits(CUnit* unit, u8 upgradeId) {
-
-	__asm {
-		PUSHAD
-		PUSH unit
-		MOV AL, upgradeId
-		CALL Hook_ApplyUpgradeFlagsToExistingUnits
-		POPAD
-	}
-
-}
 
 } //hooks
