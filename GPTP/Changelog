@@ -1,3 +1,21 @@
+Version 4.100 (big update)
+
+-Rewritten BinDlg structure to take more in account its variable content
+-Modified various files to adapt to the changes of the BinDlg structure
+
+-Fixed an error in hooks/interface/buttonsets.cpp (inverted mouseX and mouseY, though never saw an issue from that ingame)
+-Minor changes to hooks/orders/building_making/building_terran.cpp (comments, variables names...)
+-Fixed the .h include in hooks/orders/spells/hallucination_spell.cpp (somehow had no bad effect anyways)
+-Minor changes to hooks/orders/unit_making/unit_train.cpp (comments, variables names...)
+-Fixed an error in hooks/transfer_tech_upgrades_inject.cpp (wrong function call in injected, effect surprisingly never seen ingame)
+
+-Added void InitializeDialog(BinDlg* dialog, void* dlgFunc) //00419D20 to hooks/utils Utils hooks.
+-Added Mind Control spell order hook
+
+-Minor changes and fixes
+
+---------------------------------------
+
 Version 4.028
 -cosmetic minor change in hooks/give_unit_inject.cpp
 -new playersSelections variable available from SCBW/scbwdata.h (used in utils hooks)
