@@ -13,7 +13,7 @@ void incrementUnitDeathScores(CUnit* unit, u8 player);								//0x00488AF0
 void incrementUnitScores(CUnit* unit, s32 unkScore);								//0x00488BF0
 void incrementUnitScoresEx(CUnit* unit, s32 unkScore, s32 unk2);					//0x00488D50
 void initializeEmptyUnitsLinkedListRef_Sub49E4E0(CUnit* unit, u8 playerId);			//0x0049E4E0
-void readUnitsArray_Sub49EFA0(CUnit* unit, u32 playerId, u32 unk);					//0x0049EFA0
+void GiveUnitHelper(CUnit* unit, u32 playerId, s32 unkScore);						//0x0049EFA0
 void changeUnitButtonSet_Sub_4E5D60(CUnit* unit, u16 unitId);						//0x004E5D60
 void hideAndDisableUnit(CUnit* unit);												//0x004E6340
 void showAndEnableUnit(CUnit* unit);												//0x004E6490
@@ -129,7 +129,7 @@ namespace hooks {
 						incrementUnitScoresEx(unitInfested,0,1);
 
 					//I don't really know, advanced internal mechanics, just have to work with it
-					readUnitsArray_Sub49EFA0(unitInfested, unitInfesting->playerId, 1);
+					GiveUnitHelper(unitInfested, unitInfesting->playerId, 1);
 					initializeEmptyUnitsLinkedListRef_Sub49E4E0(unitInfested, unitInfesting->playerId);
 
 					//Related to infestation process, don't use unitInfested->setSecondaryOrder
@@ -453,11 +453,11 @@ void initializeEmptyUnitsLinkedListRef_Sub49E4E0(CUnit* unit, u8 playerId) {
 ;
 
 const u32 Func_Sub_49EFA0 = 0x0049EFA0;
-void readUnitsArray_Sub49EFA0(CUnit* unit, u32 playerId, u32 unk) {
+void GiveUnitHelper(CUnit* unit, u32 playerId, s32 unkScore) {
 
 	__asm {
 		PUSHAD
-		PUSH unk
+		PUSH unkScore
 		MOV ECX, unit
 		PUSH playerId
 		CALL Func_Sub_49EFA0
