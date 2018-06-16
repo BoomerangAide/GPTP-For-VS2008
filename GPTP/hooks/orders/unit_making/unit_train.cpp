@@ -1,6 +1,13 @@
 #include "unit_train.h"
 #include <SCBW/api.h>
 
+#ifndef TRUE
+#define TRUE 1
+#endif
+#ifndef FALSE
+#define FALSE 0
+#endif
+
 //helper functions def
 
 namespace {
@@ -10,7 +17,7 @@ void refundUnitTrainCost(u32 unitId, u8 playerId);							//2CEC0
 void function_00432430(CUnit* unit, u32 buildQueueSlot);					//32430
 void addHangarUnit(CUnit* main_unit, CUnit* added_unit);					//66300
 void orderNewUnitToRally(CUnit* unit, CUnit* factory);						//66F50
-Bool32 buildingAddon(CUnit* unit, u32 hpGain, u32 someFlag);				//679A0
+Bool32 buildingAddon(CUnit* unit, u32 hpGain, Bool32 canBeAborted);			//679A0
 CUnit* attemptTrainHatchUnit(CUnit* trainer, u32 builtUnitID, u32 flag);	//68200
 void AI_CancelStructure(CUnit* unit);										//68280
 void AI_TrainingUnit(CUnit* unit_creator, CUnit* created_unit);				//A2830
@@ -67,7 +74,7 @@ void secondaryOrd_TrainFighter(CUnit* unit) {
 
 				hpGain = getHPGainForRepair(builtUnit);
 
-				buildingAddon(builtUnit,hpGain,0);
+				buildingAddon(builtUnit,hpGain,FALSE);
 
 				if(builtUnit->status & UnitStatus::Completed) {
 
@@ -190,7 +197,7 @@ void function_00468420(CUnit* unit) {
 
 				u32 hpGain = getHPGainForRepair(builtUnit);
 
-				if(buildingAddon(builtUnit,hpGain,1) != 0) {
+				if(buildingAddon(builtUnit,hpGain,TRUE)) {
 
 					if(builtUnit->status & UnitStatus::Completed) {
 
@@ -211,7 +218,7 @@ void function_00468420(CUnit* unit) {
 					}
 
 				}
-				else {
+				else { //unit was canceled due to lack of space around the building
 
 					u32 queueSlot = unit->buildQueueSlot % 5;
 
@@ -351,7 +358,9 @@ void orderNewUnitToRally(CUnit* unit, CUnit* factory) {
 ;
 
 const u32 Func_buildingAddon = 0x004679A0;
-Bool32 buildingAddon(CUnit* unit, u32 hpGain, u32 someFlag) {
+//if canBeAborted is TRUE, the unit can be aborted because there's
+//no room around the constructing building
+Bool32 buildingAddon(CUnit* unit, u32 hpGain, Bool32 canBeAborted) {
 
 	static Bool32 bResult;
 
@@ -359,7 +368,7 @@ Bool32 buildingAddon(CUnit* unit, u32 hpGain, u32 someFlag) {
 		PUSHAD
 		MOV EDX, hpGain
 		MOV EAX, unit
-		PUSH someFlag
+		PUSH canBeAborted
 		CALL Func_buildingAddon
 		MOV bResult, EAX
 		POPAD
