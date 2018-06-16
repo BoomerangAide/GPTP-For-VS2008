@@ -202,7 +202,7 @@ void stats_panel_display(BinDlg* dialog) {
 	else
 		current_dialog = dialog->parent;
 
-	if(current_dialog->childrenSmk != NULL) {
+	if(current_dialog->childrenDlg != NULL) {
 
 		while(current_dialog != NULL && current_dialog->index != index + 9)
 			current_dialog = current_dialog->next;
