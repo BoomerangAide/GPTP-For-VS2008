@@ -56,8 +56,8 @@ void __declspec(naked) CMDRECV_UnitMorphWrapper() {
 namespace hooks {
 
 	void injectCMDRECV_MorphHooks() {
-		jmpPatch(CMDRECV_BuildingMorphWrapper,	0x004C0CD0, 6);
-		jmpPatch(CMDRECV_UnitMorphWrapper,		0x004C0E90, 1);
+		jmpPatch(CMDRECV_BuildingMorphWrapper,	0x004C1910, 7);
+		jmpPatch(CMDRECV_UnitMorphWrapper,		0x004C1990, 3);
 	}
 
 } //hooks
