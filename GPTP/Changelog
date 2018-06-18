@@ -1,3 +1,12 @@
+
+Version 4.101
+-Added void statbtn_BIN_CustomCtrlID(BinDlg* dialog) to hooks/interface/buttonsets hooks
+-Minor changes in hooks/interface/buttonsets hooks
+-Fixed an error in hooks/recv_commands/CMDRECV_Morph_inject.cpp
+-Minor comment added on stack_placeholder in hooks/utils/utils.cpp
+
+---------------------------------------
+
 Version 4.100 (big update)
 
 -Rewritten BinDlg structure to take more in account its variable content
