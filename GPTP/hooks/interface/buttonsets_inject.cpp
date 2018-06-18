@@ -4,7 +4,6 @@
 namespace {
 
 //Originally 00458BC0  updateButtonSetEx
-const u32 Func_UpdateButtonSetEx = 0x00458BC0;
 void __declspec(naked) updateButtonSetExWrapper() {
 
 	__asm {
@@ -27,7 +26,6 @@ void __declspec(naked) updateButtonSetExWrapper() {
 ;
 
 //Originally 00458D50  sub_458D50
-const u32 Func_Sub_458D50 = 0x00458D50;
 void __declspec(naked) updateButtonSet_Sub458D50Wrapper() {
 
 	__asm PUSHAD
@@ -44,7 +42,6 @@ void __declspec(naked) updateButtonSet_Sub458D50Wrapper() {
 ;
 
 //Originally 00458DE0  updateButtonSet
-const u32 Func_UpdateButtonSet = 0x00458DE0;
 void __declspec(naked) updateButtonSetWrapper() {
 
 	__asm PUSHAD
@@ -60,7 +57,6 @@ void __declspec(naked) updateButtonSetWrapper() {
 
 ;
 
-const u32 Func_Sub_4591D0 = 0x004591D0;
 void __declspec(naked) function_4591D0Wrapper() {
 
 	__asm {
@@ -83,7 +79,6 @@ void __declspec(naked) function_4591D0Wrapper() {
 ;
 
 //Originally 004599A0  updateCurrentButtonset
-const u32 Func_UpdateCurrentButtonset = 0x004599A0;
 void __declspec(naked) updateCurrentButtonsetWrapper() {
 
 	__asm {
@@ -99,6 +94,26 @@ void __declspec(naked) updateCurrentButtonsetWrapper() {
 		MOV ESP, EBP
 		POP EBP
 		RET
+	}
+
+}
+
+;
+
+void __declspec(naked) statbtn_BIN_CustomCtrlIDWrapper() {
+
+	static BinDlg* dialog;
+
+	__asm {
+		MOV dialog, EAX
+		PUSHAD
+	}
+
+	hooks::statbtn_BIN_CustomCtrlID(dialog);
+
+	__asm {
+		POPAD
+		RETN
 	}
 
 }
@@ -124,8 +139,9 @@ void __declspec(naked) getButtonSetPatch_For_Sub4591D0() {
 	}
 
 	//In assembly, the index get multiplied to fit
-	//the size of the variable to get, which is
-	//why the value must get divided here.
+	//the size of the variable to get (1st by 3 then
+	//in the replaced code by 4), which is why the 
+	//value must get divided here.
 
 	returnValue = hooks::getButtonSet(index/3);
 
@@ -146,12 +162,13 @@ void __declspec(naked) getButtonSetPatch_For_Sub4591D0() {
 namespace hooks {
 
 void injectButtonSetHooks() {
-	jmpPatch(getButtonSetPatch_For_Sub4591D0,	Func_Sub_4591ED, 1);
-	jmpPatch(updateButtonSetExWrapper,			Func_UpdateButtonSetEx, 1);
-	jmpPatch(updateButtonSet_Sub458D50Wrapper,	Func_Sub_458D50, 2);
-	jmpPatch(updateButtonSetWrapper,			Func_UpdateButtonSet);
-	jmpPatch(function_4591D0Wrapper,			Func_Sub_4591D0, 1);
-	jmpPatch(updateCurrentButtonsetWrapper,		Func_UpdateCurrentButtonset, 6);
+	jmpPatch(getButtonSetPatch_For_Sub4591D0,	Func_Sub_4591ED, 2);
+	jmpPatch(updateButtonSetExWrapper,			0x00458BC0, 1);
+	jmpPatch(updateButtonSet_Sub458D50Wrapper,	0x00458D50, 2);
+	jmpPatch(updateButtonSetWrapper,			0x00458DE0);
+	jmpPatch(function_4591D0Wrapper,			0x004591D0, 1);
+	jmpPatch(updateCurrentButtonsetWrapper,		0x004599A0, 6);
+	jmpPatch(statbtn_BIN_CustomCtrlIDWrapper,	0x00459AD0, 2);
 }
 
 } //hooks
