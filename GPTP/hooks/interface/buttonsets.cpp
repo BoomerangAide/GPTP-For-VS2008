@@ -1,19 +1,22 @@
 #include "buttonsets.h"
 
+//Helper functions
+
 namespace {
 
-	//Helper function
-	void disableDialog(BinDlg* dialog);		/*0x00418640*/
-	void showDialog(BinDlg* dialog);		/*0x004186A0*/
-	void hideDialog(BinDlg* dialog);		/*0x00418700*/
-	void function_418E00(BinDlg* dialog);	/*0x00418E00*/
-	void updateDialog(BinDlg* dialog);		/*0x0041C400*/
-	void replayStatBtns(BinDlg* dialog);	/*0x00427A80*/
-	void function_4591D0();					/*0x004591D0*/
-	void function_459770();					/*0x00459770*/
+void registerUserDialogAction(BinDlg* dialog,u32 array_of_fxnInteractFunc,u32 sizeOfArray);	//18100
+void disableDialog(BinDlg* dialog);															//18640
+void showDialog(BinDlg* dialog);															//186A0
+void hideDialog(BinDlg* dialog);															//18700
+void function_418E00(BinDlg* dialog);														//18E00
+void updateDialog(BinDlg* dialog);															//1C400
+void replayStatBtns(BinDlg* dialog);														//27A80
+void function_4591D0();																		//591D0
+void function_459770();																		//59770
+void BINDLG_BlitSurface(BinDlg* dialog);													//C35F0
 
-	u32 fxnInteract(BinDlg* dialog, u32 data_struct);
-	s32 req_check(u32 reqFunc, u16 reqVar, u32 playerId, CUnit* unit);
+u32 fxnInteract(BinDlg* dialog, u32 data_struct_offset);
+s32 req_check(u32 reqFunc, u16 reqVar, u32 playerId, CUnit* unit);
 
 } //unnamed namespace
 
@@ -747,16 +750,16 @@ void updateButtonSet_Sub4591D0() {
 
 						//592C2
 						static struct {
-							u32 unknown_value_1;	//[EBP-1C]
-							u32 unknown_value_2;	//[EBP-18]
-							u32 not_allocated;		//[EBP-14]
-							u16 unknown_value_3;	//[EBP-10]
-							s16 mouseX;				//[EBP-0E]
-							s16 mouseY;				//[EBP-0C]
-							u16 not_allocated_2;	//[EBP-0A]
-							u32 buttonState;		//[EBP-08]
-							BUTTON_SET* buttonset;	//[EBP-04]
-						} stack_placeholder;						
+							u32 unknown_value_1;	//[EBP-1C]	[00]
+							u32 unknown_value_2;	//[EBP-18]	[04]
+							u32 not_allocated;		//[EBP-14]	[08]
+							u16 unknown_value_3;	//[EBP-10]	[0C]
+							s16 mouseX;				//[EBP-0E]	[0E]
+							s16 mouseY;				//[EBP-0C]	[10]
+							u16 not_allocated_2;	//[EBP-0A]	[12]
+							u32 buttonState;		//[EBP-08]	[14]
+							BUTTON_SET* buttonset;	//[EBP-04]	[18]
+						} stack_placeholder;					
 
 						current_dialog->graphic = current_button->iconID;
 
@@ -839,9 +842,30 @@ void updateButtonSet_Sub4591D0() {
 
 } //void updateButtonSet_Sub4591D0()
 
-;
+	; //459AD0
 
-;
+	//Identical to array at 0x0051AD30
+	//size is 40 = 4 * 10 = 0x28
+	//0x004598D0 is statbtn_Btn_Interact
+	//0x00459890 is statbtn_BIN_ReplayProgressbar
+	const u32 Btn_fxnInteractFuncs[] =
+	{
+		0x004598D0, 0x004598D0, 0x004598D0,
+		0x004598D0, 0x004598D0, 0x004598D0,
+		0x004598D0, 0x004598D0, 0x004598D0,
+		0x00459890
+	};
+
+	//Using a local array instead of the original may allow to go past
+	//the 9 buttons limitations
+	//May need a special case using the original array adress and size
+	//when in replay if modified
+	void statbtn_BIN_CustomCtrlID(BinDlg* dialog) {
+		registerUserDialogAction(dialog,(u32)&Btn_fxnInteractFuncs,sizeof(Btn_fxnInteractFuncs));
+		BINDLG_BlitSurface(dialog);
+	}
+
+	;
 
 } //hooks
 
@@ -850,6 +874,22 @@ void updateButtonSet_Sub4591D0() {
 namespace {
 
 	/**** Definitions of helper functions. Do NOT modify anything below! ****/
+	
+	const u32 Func_registerUserDialogAction = 0x00418100;
+	void registerUserDialogAction(BinDlg* dialog,u32 array_of_fxnInteractFunc,u32 sizeOfArray) {
+
+		__asm {
+			PUSHAD
+			MOV EAX, dialog
+			MOV EDI, array_of_fxnInteractFunc
+			MOV ECX, sizeOfArray
+			CALL Func_registerUserDialogAction
+			POPAD
+		}
+
+	}
+
+	;	
 
 	const u32 Func_DisableDialog = 0x00418640;
 	void disableDialog(BinDlg* dialog) {
@@ -954,6 +994,18 @@ namespace {
 	}
 
 	;
+	
+	const u32 Func_BINDLG_BlitSurface = 0x004C35F0;
+	void BINDLG_BlitSurface(BinDlg* dialog) {
+		__asm {
+			PUSHAD
+			MOV ESI, dialog
+			CALL Func_BINDLG_BlitSurface
+			POPAD
+		}
+	}
+
+	;	
 
 	//dev info: in this context this call 4598D0 statbtn_Btn_Interact
 	u32 fxnInteract(BinDlg* dialog, u32 data_struct_offset) {
