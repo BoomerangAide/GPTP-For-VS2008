@@ -61,7 +61,6 @@ void InitializeDialog(BinDlg* dialog, void* dlgFunc) {
 	stack_placeholder.always_zero_here = 0;
 	stack_placeholder.mouseY = mouse->y;
 
-	//probably do nothing in this context
 	fxnInteract(dialog, (u32)&stack_placeholder);
 
 	dialog->bounds.right += dialog->bounds.left;
@@ -73,7 +72,6 @@ void InitializeDialog(BinDlg* dialog, void* dlgFunc) {
 	stack_placeholder.always_zero_here = 0;
 	stack_placeholder.mouseX = mouse->x;
 
-	//probably do nothing in this context
 	fxnInteract(dialog, (u32)&stack_placeholder);
 
 	stack_placeholder.mouseX = mouse->x;
@@ -82,7 +80,6 @@ void InitializeDialog(BinDlg* dialog, void* dlgFunc) {
 	stack_placeholder.always_zero_here = 0;
 	stack_placeholder.mouseY = mouse->y;
 	
-	//do something in this context
 	fxnInteract(dialog, (u32)&stack_placeholder);
 
 	SetCallbackTimer(dialog,12,100,0);
