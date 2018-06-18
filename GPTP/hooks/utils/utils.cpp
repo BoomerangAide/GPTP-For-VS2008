@@ -24,13 +24,13 @@ namespace hooks {
 void InitializeDialog(BinDlg* dialog, void* dlgFunc) {
 
 	static struct {
-		u32 unknown_value;		//[EBP-0x14]
-		u32 always_zero_here;	//[EBP-0x10]
-		u32 not_allocated_2;	//[EBP-0x0C]
-		u16 always_14_here;		//[EBP-0x08]
-		s16 mouseX;				//[EBP-0x06]
-		s16 mouseY;				//[EBP-0x04]
-		u16 not_allocated_1;	//[EBP-0x02]
+		u32 unknown_value;		//[EBP-0x14]	[00]
+		u32 always_zero_here;	//[EBP-0x10]	[04]
+		u32 not_allocated_2;	//[EBP-0x0C]	[08]
+		u16 always_14_here;		//[EBP-0x08]	[0C]
+		s16 mouseX;				//[EBP-0x06]	[0E]
+		s16 mouseY;				//[EBP-0x04]	[10]
+		u16 not_allocated_1;	//[EBP-0x02]	[12]
 	} stack_placeholder;
 
 	//not allocated on original code, but result
