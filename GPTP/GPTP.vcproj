@@ -250,6 +250,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_Build.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_Build_inject.cpp"
+				>
+			</File>			
+			<File
 				RelativePath=".\hooks\recv_commands\CMDRECV_Cancel.cpp"
 				>
 			</File>
@@ -1019,6 +1027,10 @@
 				RelativePath=".\hooks\orders\spells\cast_order.h"
 				>
 			</File>
+			<File
+				RelativePath=".\hooks\recv_commands\CMDRECV_Build.h"
+				>
+			</File>			
 			<File
 				RelativePath=".\hooks\recv_commands\CMDRECV_Cancel.h"
 				>
