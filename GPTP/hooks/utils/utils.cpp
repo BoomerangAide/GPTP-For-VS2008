@@ -23,7 +23,7 @@ namespace hooks {
 //00419D20
 void InitializeDialog(BinDlg* dialog, void* dlgFunc) {
 
-	static struct {
+	struct {
 		u32 unknown_value;		//[EBP-0x14]	[00]
 		u32 always_zero_here;	//[EBP-0x10]	[04]
 		u32 not_allocated_2;	//[EBP-0x0C]	[08]
