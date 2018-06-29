@@ -749,7 +749,7 @@ void updateButtonSet_Sub4591D0() {
 					if(current_dialog->graphic != current_button->iconID) {
 
 						//592C2
-						static struct {
+						struct {
 							u32 unknown_value_1;	//[EBP-1C]	[00]
 							u32 unknown_value_2;	//[EBP-18]	[04]
 							u32 not_allocated;		//[EBP-14]	[08]
