@@ -1,4 +1,13 @@
 
+Version 4.102
+-Fixed a potential source of bug/error in hooks/interface/buttonsets.cpp
+-Fixed an error in hooks/utils/utils.cpp
+-Unlocked and gave the proper type to unitsDat[37] (AddonPlacement) in scbwdata.h
+-Added a development trick and removed version number in definitions.h
+-Added CMDRECV_Build hooks
+
+---------------------------------------
+
 Version 4.101
 -Added void statbtn_BIN_CustomCtrlID(BinDlg* dialog) to hooks/interface/buttonsets hooks
 -Minor changes in hooks/interface/buttonsets hooks
