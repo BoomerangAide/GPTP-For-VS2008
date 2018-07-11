@@ -1,4 +1,19 @@
 
+Version 4.103
+Unlocked and identified ordersDat[17] as RequirementsOffset
+Added some clues (as comments) for the use of ordersDat 2,3,5 and 12
+Improvements in CMDRECV_Stop.cpp:
+	-better identification of the last parameter of parseRequirementOpcodes()
+	-identification of 006655XX as use of orders_dat::RequirementsOffset[FixedOrderId]
+Changes in receive_command.cpp:
+	-changed the name order to orderId for clarity
+	-renamed "u32 function_0049A480()" to "bool CanTargetSelf()"
+	-replaced the call of CanTargetSelf() with fully modifiable code
+	(because void receive_command() is the only function that use it
+	so there was no need for a hook)
+	
+---------------------------------------
+
 Version 4.102
 -Fixed a potential source of bug/error in hooks/interface/buttonsets.cpp
 -Fixed an error in hooks/utils/utils.cpp
