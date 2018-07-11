@@ -6,7 +6,7 @@
 namespace {
 
 void parseOrdersDatReqs();																							//6D450
-int parseRequirementOpcodes(CUnit* unit, u32 orderId, u32 playerId, u32 address, u32 unknown);						//6D610
+int parseRequirementOpcodes(CUnit* unit, u32 orderId, u32 playerId, u32 address, u32 req_offset);						//6D610
 void removeOrderFromUnitQueue(CUnit* unit, COrder* order);															//742D0
 void function_004754F0(CUnit* unit,u32 unitId,u32 unk1,u32 unk2,u32 orderId,u32 unk3,u32 bCommandType,u32 unk5);	//754F0
 
@@ -21,7 +21,6 @@ namespace hooks {
 void CMDRECV_ReaverStop() {
 
 	CUnit* current_unit;
-	static u16* u16_0066558E = (u16*)0x0066558E;
 	static u32* u32_0066FF60 = (u32*)0x0066FF60;
 
 	*selectionIndexStart = 0;
@@ -32,7 +31,7 @@ void CMDRECV_ReaverStop() {
 
 		*u32_0066FF60 = 0x00;
 
-		if(*u16_0066558E == 0xFFFF)
+		if(orders_dat::RequirementsOffset[OrderId::ReaverStop] == 0xFFFF)
 			parseOrdersDatReqs();
 
 		if(current_unit->playerId != *ACTIVE_NATION_ID)
@@ -77,10 +76,16 @@ void CMDRECV_ReaverStop() {
 		)
 			*u32_0066FF60 = 0x08;
 		else
-		if(*u16_0066558E == 0)
+		if(orders_dat::RequirementsOffset[OrderId::ReaverStop] == 0)
 			*u32_0066FF60 = 0x17;
 		else
-		if(parseRequirementOpcodes(current_unit,OrderId::ReaverStop,*ACTIVE_NATION_ID,0x00514CF8,*u16_0066558E) == 1) {
+		if(parseRequirementOpcodes(
+			current_unit,
+			OrderId::ReaverStop,
+			*ACTIVE_NATION_ID,
+			0x00514CF8,
+			orders_dat::RequirementsOffset[OrderId::ReaverStop]
+		) == 1) {
 
 			current_unit->userActionFlags |= 1;
 
@@ -121,7 +126,6 @@ void CMDRECV_ReaverStop() {
 void CMDRECV_CarrierStop() {
 
 	CUnit* current_unit;
-	static u16* u16_006655E8 = (u16*)0x006655E8;
 	static u32* u32_0066FF60 = (u32*)0x0066FF60;
 
 	*selectionIndexStart = 0;
@@ -132,7 +136,7 @@ void CMDRECV_CarrierStop() {
 
 		*u32_0066FF60 = 0x00;
 
-		if(*u16_006655E8 == 0xFFFF)
+		if(orders_dat::RequirementsOffset[OrderId::CarrierStop] == 0xFFFF)
 			parseOrdersDatReqs();
 
 		if(current_unit->playerId != *ACTIVE_NATION_ID)
@@ -177,10 +181,16 @@ void CMDRECV_CarrierStop() {
 		)
 			*u32_0066FF60 = 0x08;
 		else
-		if(*u16_006655E8 == 0)
+		if(orders_dat::RequirementsOffset[OrderId::CarrierStop] == 0)
 			*u32_0066FF60 = 0x17;
 		else
-		if(parseRequirementOpcodes(current_unit,OrderId::CarrierStop,*ACTIVE_NATION_ID,0x00514CF8,*u16_006655E8) == 1) {
+		if(parseRequirementOpcodes(
+			current_unit,
+			OrderId::CarrierStop,
+			*ACTIVE_NATION_ID,
+			0x00514CF8,
+			orders_dat::RequirementsOffset[OrderId::CarrierStop]
+		) == 1) {
 
 			current_unit->userActionFlags |= 1;
 
@@ -221,7 +231,6 @@ void CMDRECV_CarrierStop() {
 void CMDRECV_Stop(u8 bCommandType) {
 
 	CUnit* current_unit;
-	static u16* u16_00665582 = (u16*)0x00665582;
 	static u32* u32_0066FF60 = (u32*)0x0066FF60;
 
 	*selectionIndexStart = 0;
@@ -232,7 +241,7 @@ void CMDRECV_Stop(u8 bCommandType) {
 
 		*u32_0066FF60 = 0x00;
 
-		if(*u16_00665582 == 0xFFFF)
+		if(orders_dat::RequirementsOffset[OrderId::Stop] == 0xFFFF)
 			parseOrdersDatReqs();
 
 		if(current_unit->playerId != *ACTIVE_NATION_ID)
@@ -272,10 +281,16 @@ void CMDRECV_Stop(u8 bCommandType) {
 		)
 			*u32_0066FF60 = 0x08;
 		else
-		if(*u16_00665582 == 0)
+		if(orders_dat::RequirementsOffset[OrderId::Stop] == 0)
 			*u32_0066FF60 = 0x17;
 		else
-		if(parseRequirementOpcodes(current_unit,OrderId::Stop,*ACTIVE_NATION_ID,0x00514CF8,*u16_00665582) == 1)
+		if(parseRequirementOpcodes(
+			current_unit,
+			OrderId::Stop,
+			*ACTIVE_NATION_ID,
+			0x00514CF8,
+			orders_dat::RequirementsOffset[OrderId::Stop]
+		) == 1)
 			function_004754F0(
 				current_unit,
 				UnitId::None,
@@ -315,13 +330,13 @@ void parseOrdersDatReqs() {
 ;
 
 const u32 Func_parseRequirementOpcodes = 0x0046D610;
-int parseRequirementOpcodes(CUnit* unit, u32 orderId, u32 playerId, u32 address, u32 unknown) {
+int parseRequirementOpcodes(CUnit* unit, u32 orderId, u32 playerId, u32 address, u32 req_offset) {
 
 	static int return_value;
 
 	__asm {
 		PUSHAD
-		MOV EAX, unknown
+		MOV EAX, req_offset
 		MOV ESI, unit
 		PUSH address
 		PUSH playerId
