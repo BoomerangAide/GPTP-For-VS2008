@@ -5,11 +5,11 @@
 
 namespace {
 
-Bool32 OrderAllowed(CUnit* unit, u16 order, u32 nationID);								//0x0046DC20
-void function_004756B0(CUnit* unit, u8 order, u32 unk1, u32 unk2, u32 bCommandType);	//0x004756B0
-void function_004756E0(CUnit* unit, CUnit* target, u32 order, u32 bCommandType);		//0x004756E0
-u32 function_0049A410(CUnit* unit, u8 order);											//0x0049A410
-u32 function_0049A480(CUnit* unit, u8 order);											//0x0049A480
+Bool32 OrderAllowed(CUnit* unit, u16 orderId, u32 nationID);							//0x0046DC20
+void function_004756B0(CUnit* unit, u8 orderId, u32 unk1, u32 unk2, u32 bCommandType);	//0x004756B0
+void function_004756E0(CUnit* unit, CUnit* target, u32 orderId, u32 bCommandType);		//0x004756E0
+u32 function_0049A410(CUnit* unit, u8 orderId);											//0x0049A410
+bool CanTargetSelf(CUnit* unit, u8 orderId);											//0x0049A480
 void function_0049A500(CUnit* unit,	u8* array_of_data);									//0x0049A500
 void function_0049A8C0(u8* array_of_data,Bool32 bCanBeObstructed);						//0x0049A8C0
 
@@ -63,7 +63,7 @@ namespace hooks {
 				if(bOrderAllowed) {
 
 					if(current_unit == unitParam) { //target is the caster/ordered unit
-						if(function_0049A480(current_unit,bActionOrder) == 0)
+						if(!CanTargetSelf(current_unit,bActionOrder))
 							jump_to_9AD7E = true;
 					}
 
@@ -286,13 +286,13 @@ namespace hooks {
 namespace {
 
 const u32 Func_OrderAllowed = 0x0046DC20;
-Bool32 OrderAllowed(CUnit* unit, u16 order, u32 nationID) {
+Bool32 OrderAllowed(CUnit* unit, u16 orderId, u32 nationID) {
 
 	static Bool32 bResult;
 
 	__asm {
 		PUSHAD
-		MOV BX, order
+		MOV BX, orderId
 		MOV EAX, unit
 		PUSH nationID
 		CALL Func_OrderAllowed
@@ -307,11 +307,11 @@ Bool32 OrderAllowed(CUnit* unit, u16 order, u32 nationID) {
 ;
 
 const u32 Func_Sub4756B0 = 0x004756B0;
-void function_004756B0(CUnit* unit, u8 order, u32 unk1, u32 unk2, u32 bCommandType) {
+void function_004756B0(CUnit* unit, u8 orderId, u32 unk1, u32 unk2, u32 bCommandType) {
 
 	__asm {
 		PUSHAD
-		MOV DL, order
+		MOV DL, orderId
 		MOV ESI, unit
 		PUSH unk1
 		PUSH unk2
@@ -325,13 +325,13 @@ void function_004756B0(CUnit* unit, u8 order, u32 unk1, u32 unk2, u32 bCommandTy
 ;
 
 const u32 Func_Sub4756E0 = 0x004756E0;
-void function_004756E0(CUnit* unit, CUnit* target, u32 order, u32 bCommandType) {
+void function_004756E0(CUnit* unit, CUnit* target, u32 orderId, u32 bCommandType) {
 
 	__asm {
 		PUSHAD
 		MOV EDX, target
 		MOV ESI, unit
-		PUSH order
+		PUSH orderId
 		PUSH bCommandType
 		CALL Func_Sub4756E0
 		POPAD
@@ -342,14 +342,14 @@ void function_004756E0(CUnit* unit, CUnit* target, u32 order, u32 bCommandType) 
 ;
 
 const u32 Func_Sub49A410 = 0x0049A410;
-u32 function_0049A410(CUnit* unit, u8 order) {
+u32 function_0049A410(CUnit* unit, u8 orderId) {
 
 	static u32 result; 
 
 	__asm {
 		PUSHAD
 		MOV EAX, unit
-		MOV DL, order
+		MOV DL, orderId
 		CALL Func_Sub49A410
 		MOV result, EAX
 		POPAD
@@ -361,21 +361,41 @@ u32 function_0049A410(CUnit* unit, u8 order) {
 
 ;
 
-const u32 Func_Sub49A480 = 0x0049A480;
-u32 function_0049A480(CUnit* unit, u8 order) {
+//Logically identical to 0049A480 sub_49A480
+bool CanTargetSelf(CUnit* unit, u8 orderId) {
 
-	static u32 result; 
+	bool return_value;
 
-	__asm {
-		PUSHAD
-		MOV ESI, unit
-		MOV DL, order
-		CALL Func_Sub49A480
-		MOV result, EAX
-		POPAD
-	}
+	if(
+		unit->status & UnitStatus::GroundedBuilding &&
+		(orderId == OrderId::RallyPoint1 || orderId == OrderId::RallyPoint2)
+	)
+		return_value = true;
+	else
+	if(
+		(unit->id == UnitId::ZergDefiler || unit->id == UnitId::Hero_UncleanOne) &&
+		orderId == OrderId::DarkSwarm
+	)
+		return_value = true;
+	else
+	if(unit->status & UnitStatus::IsHallucination)
+		return_value = false;
+	else
+	if(
+		unit->id == UnitId::ZergOverlord &&
+		UpgradesSc->currentLevel[unit->playerId][UpgradeId::VentralSacs] == 0
+	)
+		return_value = false;
+	else
+	if(units_dat::SpaceProvided[unit->id] == 0)
+		return_value = false;
+	else
+	if(orderId == OrderId::MoveUnload)
+		return_value = true;
+	else
+		return_value = false;
 
-	return result;
+	return return_value;
 
 }
 
