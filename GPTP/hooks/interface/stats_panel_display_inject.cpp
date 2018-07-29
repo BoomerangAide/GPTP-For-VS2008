@@ -33,8 +33,7 @@ void __declspec(naked) stats_panel_display_Wrapper() {
 namespace hooks {
 
 void injectStatsPanelDisplayHook() {
-	//jmpPatch(getLarvaeUnitsFromList_Wrapper,	0x00423190, 1);
-	//jmpPatch(BTNSACT_SelectLarva_Wrapper,		0x00423930,	1);
+	jmpPatch(stats_panel_display_Wrapper, 0x00426C60, 1);
 }
 
 } //hooks
