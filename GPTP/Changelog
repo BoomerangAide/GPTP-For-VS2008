@@ -1,3 +1,8 @@
+Version 4.104
+
+Fixed non-working hook hooks/interface/stats_panel_display
+
+---------------------------------------
 
 Version 4.103
 Unlocked and identified ordersDat[17] as RequirementsOffset
