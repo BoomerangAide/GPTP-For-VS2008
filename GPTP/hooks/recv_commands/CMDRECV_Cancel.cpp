@@ -5,11 +5,11 @@
 
 namespace {
 
+void CancelResearch_Proc(CUnit* unit);			//53E30
 void CancelUpgrade_Proc(CUnit* unit);			//54280
 void refundQueueSlot(CUnit* unit, u16 slot);	//66A70
 void function_00466E40(CUnit* unit);			//66E40
 void AI_CancelStructure(CUnit* unit);			//68280
-void CancelResearch_Proc(CUnit* unit);			//C0070
 void CancelAddon_Proc(CUnit* unit);				//E66E0
 
 } //unnamed namespace
@@ -212,6 +212,20 @@ void CMDRECV_CancelConstruction() {
 //-------- Helper function definitions. Do NOT modify! --------//
 
 namespace {
+	
+const u32 Func_Sub453E30 = 0x00453E30;
+void CancelResearch_Proc(CUnit* unit) {
+
+	__asm {
+		PUSHAD
+		MOV EDX, unit
+		CALL Func_Sub453E30
+		POPAD
+	}
+
+}
+
+;
 
 const u32 Func_Sub454280 = 0x00454280;
 void CancelUpgrade_Proc(CUnit* unit) {
@@ -263,20 +277,6 @@ void AI_CancelStructure(CUnit* unit) {
 		PUSHAD
 		MOV ECX, unit
 		CALL Func_AI_CancelStructure
-		POPAD
-	}
-
-}
-
-;
-
-const u32 Func_Sub4C0070 = 0x004C0070;
-void CancelResearch_Proc(CUnit* unit) {
-
-	__asm {
-		PUSHAD
-		MOV EDX, unit
-		CALL Func_Sub4C0070
 		POPAD
 	}
 
