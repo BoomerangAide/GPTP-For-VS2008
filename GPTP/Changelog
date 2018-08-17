@@ -1,3 +1,9 @@
+Version 4.105
+
+Fixed an error in hooks/recv_commands/CMDRECV_Cancel.cpp
+
+---------------------------------------
+
 Version 4.104
 
 Fixed non-working hook hooks/interface/stats_panel_display
