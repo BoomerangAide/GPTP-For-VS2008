@@ -1,8 +1,6 @@
 #include "detector.h"
 #include "../hook_tools.h"
 
-extern const u32 Func_CanDetect;  //Defined in CUnit.cpp
-
 namespace {
 
 //Inject with jmpPatch()
@@ -56,8 +54,8 @@ void __declspec(naked) getCloakedTargetVisibilityWrapper() {
 namespace hooks {
 
 void injectDetectorHooks() {
-  jmpPatch(unitCanDetectWrapper, Func_CanDetect);
-  jmpPatch(getCloakedTargetVisibilityWrapper, 0x004408A0, 9);
+  jmpPatch(unitCanDetectWrapper,				0x00403430);
+  jmpPatch(getCloakedTargetVisibilityWrapper,	0x004408A0, 9);
 }
 
 } //hooks
