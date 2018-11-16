@@ -181,7 +181,7 @@ struct CUnitLayout {
 /*0x0D9*/         u8        resourceBelongsToAI;
                 } resource;  /** When the unit is resource container */
 /*0x0D0*/       CUnit*    nydusExit; /** connected nydus canal */
-/*0x0D0*/       CUnit*    ghostNukeMissile;	//confirmed to be CUnit* and not CSprite*
+/*0x0D0*/       CUnit*    ghostNukeMissile; //confirmed to be CUnit* and not CSprite*
 /*0x0D0*/       CSprite*  pylonAura;
                 struct {
 /*0x0D0*/         CUnit*  nuke;  // attached nuke
@@ -223,7 +223,7 @@ struct CUnitLayout {
 /*0x107*/ Bool8      isBeingHealed;		// 1 if a medic is currently healing this unit
 /*0x108*/ Box16     contourBounds;      // A rect that specifies the closest contour (collision) points
 
-/*0x110*/ u16       removeTimer;        // Hallucination, Dark Swarm, Disruption Web, Broodling (but not Scanner Sweep according to BWAPI)
+/*0x110*/ s16       removeTimer;        // Hallucination, Dark Swarm, Disruption Web, Broodling (but not Scanner Sweep according to BWAPI)
 /*0x112*/ u16       defensiveMatrixHp;
 /*0x114*/ u8        defensiveMatrixTimer;
 /*0x115*/ u8        stimTimer;
@@ -253,7 +253,7 @@ struct CUnitLayout {
 /*0x14E*/ Point8    driftPos;           // (mapsizex / 1.5 max)
 };
 
-C_ASSERT(sizeof(CUnitLayout) == 336);
+C_ASSERT(sizeof(CUnitLayout) == 336);	//0x150
 //static_assert(sizeof(CUnitLayout) == 336, "The size of the CUnitLayout structure is invalid");
 
 #pragma pack()
