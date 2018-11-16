@@ -1,6 +1,6 @@
 #include "Plugin.h"
 
-//The main for users is hooks/game_hooks.cpp
+//The main for users is hooks/main/game_hooks.cpp
 
 Plugin plugin;
 
