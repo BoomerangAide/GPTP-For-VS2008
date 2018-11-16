@@ -249,6 +249,52 @@ s32 getPolarY(s32 distance, u8 angle) {
 
 //-------- Player information --------//
 
+//Logically identical (checked) to getSuppliesAvailable @ 0x00488900
+u32 getSuppliesAvailable(u8 playerId, u8 raceId) {
+
+	u32 supplyAvailable;
+
+	if(
+		raceId == RaceId::Protoss || 
+		raceId == RaceId::Terran ||
+		raceId == RaceId::Zerg
+	) {
+
+		if(raceSupply[raceId].provided[playerId] < raceSupply[raceId].max[playerId])
+			supplyAvailable = raceSupply[raceId].provided[playerId];
+		else
+			supplyAvailable = raceSupply[raceId].max[playerId];
+
+	}
+	else
+		supplyAvailable = 0;
+
+	return supplyAvailable;
+
+}
+
+;
+
+//Logically identical (checked) to getSuppliesUsed @ 004888C0
+u32 getSuppliesUsed(u8 playerId, u8 raceId) {
+
+	u32 supplyUsed;
+
+	if(
+		raceId == RaceId::Protoss || 
+		raceId == RaceId::Terran ||
+		raceId == RaceId::Zerg
+	)
+		supplyUsed = raceSupply[raceId].used[playerId];
+	else
+		supplyUsed = 0;
+
+	return supplyUsed;
+
+}
+
+;
+
 s32 getSupplyRemaining(u8 playerId, u8 raceId) {
 	assert(raceId <= 2);
 	assert(playerId < PLAYER_COUNT);
@@ -263,6 +309,8 @@ s32 getSupplyRemaining(u8 playerId, u8 raceId) {
 	return supplyProvided - raceSupply[raceId].used[playerId];
 
 }
+
+;
 
 bool hasTechResearched(u8 playerId, u16 techId) {
 	assert(playerId < PLAYER_COUNT);
@@ -326,6 +374,44 @@ u32 getGroundHeightAtPos(s32 x, s32 y) {
 
 	return height;
 }
+
+;
+
+bool getMapSwitch(int switch_number) {
+
+	assert(switch_number >= 1 && switch_number <= 256);
+
+	bool switch_state;
+	int index1, index2;
+
+	index1 = (switch_number - 1) / 32;
+	index2 = (switch_number - 1) % 32;
+
+	switch_state = ( ( switchStatesBW[index1] & (1 << index2) ) != 0 );
+
+	return switch_state;
+
+}
+
+;
+
+void setMapSwitch(int switch_number, bool value) {
+
+	assert(switch_number >= 1 && switch_number <= 256);
+
+	int index1, index2;
+
+	index1 = (switch_number - 1) / 32;
+	index2 = (switch_number - 1) % 32;
+
+	if(value)
+		switchStatesBW[index1] |= (1 << index2);
+	else
+		switchStatesBW[index1] &= ~(1 << index2);
+
+}
+
+;
 
 //-------- Moving Units --------//
 
