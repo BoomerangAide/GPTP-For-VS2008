@@ -1,3 +1,32 @@
+GITHUB IS DESTROYED, ALL FEATURES ARE BROKEN TO THE POINT UPDATE IS
+NO LONGER POSSIBLE PROPERLY.
+I WILL POST AN UPDATE HERE WHEN I WILL HAVE FOUND A NEW PLACE.
+I KEEP THE V4.106 LOG HERE TO KNOW HOW TO FIX STUFF IF I FIND
+A NEW PLACE.
+IF YOU ARRIVE HERE AFTER V4.105, AND THE PROJECT NO LONGER WORK, TRY
+FINDING THE PRE-4.106 VERSION OF THE FILES.
+SORRY FOR THAT, MAYBE I WILL FIND A WAY TO FIX IT A BIT BETTER BEFORE
+ABANDONNING THINGS FOR GOOD REGARDING THIS PLACE.
+
+Version 4.106 (!!!FAILED FAILED FAILED!!!)
+
+Moved game_hooks.cpp into hooks/main/game_hooks.cpp
+Added functions to get supplies information in api.cpp/api.h
+Added functions to get or set a switch on the current map in api.cpp/api.h
+Some changes in scbwdata.h for current/future changes
+Replaced the way ExtendSightLimit was made by an actual real hook
+Upgraded CUnit files to be less likely to act differently from original code
+Minor upgrade of BinDlg struct
+Minor fixes in hooks/orders/load_unload_orders.cpp
+Minor fixes in hooks/load_unload_proc.cpp
+Minor changes
+
+Added some hooks related to harvesting, but in AI/experimental folder, since
+mostly used by AI.Those are disabled by default, and since they're hard to 
+test, there's a risk they don't do exactly what they should.
+
+---------------------------------------
+
 Version 4.105
 
 Fixed an error in hooks/recv_commands/CMDRECV_Cancel.cpp
