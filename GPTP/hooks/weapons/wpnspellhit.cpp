@@ -569,7 +569,7 @@ namespace hooks {
 					}
 					else { //F4A26
 
-						u32 timerBeforeDisappearance;
+						s32 timerBeforeDisappearance;
 
 						//update various stuff (set hp, set shield...) not finished on CreateUnit
 						function_004A01F0(created_broodling);
