@@ -43,7 +43,7 @@ enum CoordType {
 };
 
 /// Resets all previous graphics and clears error messages. This should be
-/// called every frame in game_hooks.cpp.
+/// called every frame in hooks/main/game_hooks.cpp.
 void resetAllGraphics();
 
 void drawText(int x, int y, const std::string& str,
