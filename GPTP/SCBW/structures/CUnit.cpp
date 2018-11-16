@@ -5,7 +5,7 @@
 
 //-------- Unit stats and properties --------//
 
-extern const u32 Func_CanDetect = 0x00403430; //unitHasNoStatusAilments
+const u32 Func_CanDetect = 0x00403430; //unitHasNoStatusAilments
 //Behavior can be modified with detector hook
 bool CUnit::canDetect() const {
 	assert(this);
@@ -93,20 +93,22 @@ u16 CUnit::getMaxEnergy() const {
 	return result;
 }
 
-//Similar to function @ 0x00401400
+//Identical to function @ 0x00401400
 u32 CUnit::getMaxHpInGame() const {
-	assert(this);
 	
-	u32 maxHp = units_dat::MaxHitPoints[this->id];
+	u32 maxHp = units_dat::MaxHitPoints[this->id] / 256;
+
 	if (maxHp == 0) {
-		maxHp = this->getCurrentHpInGame();
+
+		maxHp = ( (this->hitPoints + 255) / 256 );
+
 		if (maxHp == 0)
 			maxHp = 1;
+
 	}
-	else
-		maxHp = maxHp >> 8;
 
 	return maxHp;
+
 }
 
 extern const u32 Func_GetMaxWeaponRange = 0x00475870;
@@ -128,19 +130,26 @@ u32 CUnit::getMaxWeaponRange(u8 weaponId) const {
 	return maxWeaponRange;
 }
 
-const char* CUnit::getName() const {
+char* CUnit::getName() const {
 	assert(this);
 	return getName(this->id);
 }
 
 //Based on function @ 0x0047B090
-const char* CUnit::getName(u16 unitId) {
-	assert(unitId < UNIT_TYPE_COUNT);
+char* CUnit::getName(u16 unitId) {
 
-	if (units_dat::MapStringId[unitId])
-		return mapStringTbl->getString(units_dat::MapStringId[unitId]);
+	char* return_value;
+
+	if(unitId >= UNIT_TYPE_COUNT)
+		return_value = (char*)StringEmpty;
 	else
-		return statTxtTbl->getString(unitId + 1);
+	if (units_dat::MapStringId[unitId] != 0)
+		return_value = (char*)mapStringTbl->getString(units_dat::MapStringId[unitId]);
+	else
+		return_value = (char*)statTxtTbl->getString(unitId + 1);
+
+	return return_value;
+
 }
 
 RaceId::Enum CUnit::getRace() const {
@@ -212,10 +221,11 @@ bool CUnit::hasEnergy(u32 energy) const {
 
 }
 
-//Identical to function Unit__SpendEnergy @ 0x00476180
+//Equivalent to function AI_TargetUnitCanAttack @ 0x00476180
 bool CUnit::hasWeapon() const {
-	assert(this);
 
+	//getGroundWeapon include lurker check hardcoded in
+	//original code
 	if (this->getGroundWeapon() != WeaponId::None
 			|| this->getAirWeapon() != WeaponId::None)
 		return true;
@@ -629,6 +639,7 @@ void CUnit::performAnotherOrder(u8 orderId, s16 x, s16 y, CUnit* target, u16 tar
 
 }
 
+
 //Identical to @ 0x004743D0
 void CUnit::setSecondaryOrder(u8 orderId) {
 	assert(this);
@@ -779,7 +790,7 @@ u32 CUnit::getDistanceToTarget(CUnit* target) const {
 	assert(this);
 	assert(target);
 
-	CUnit* unit = (CUnit*) this;
+	CUnit* unit = (CUnit*)this;
 
 	if (this->isSubunit())
 		unit = this->subunit; // Current unit is a turret, so use it's base instead
@@ -957,41 +968,128 @@ u8 CUnit::getLastOwnerId() const {
 		return this->playerId;
 }
 
+;
+
+
+//Equivalent (checked) to getLoadedUnitFromIndex @ 0x004E6C40
 CUnit* CUnit::getLoadedUnit(int index) const {
-	assert(0 <= index && index < 8);
 
-	CUnit* loadedUnit = CUnit::getFromIndex(this->loadedUnit[index].index);
-	if (loadedUnit && loadedUnit->sprite
-			&& !(loadedUnit->mainOrderId == OrderId::Die && loadedUnit->mainOrderState == 1)
-			&& loadedUnit->targetOrderSpecial == this->loadedUnit[index].unitId)
-		return loadedUnit;
+	const CUnit* unitTable_0059CB58 = (CUnit*)(0x0059CB58);	//array of CUnit structures
 
-	return NULL;
-}
+	CUnit* loaded_unit = NULL;
 
-//Logically equivalent to function @ 0x004E6C90
-CUnit* CUnit::getFirstLoadedUnit() const {
-	assert(this);
+	if( *((u16*)&this->loadedUnit[index]) != 0 ) {
 
-	for (int i = 0; i < units_dat::SpaceProvided[this->id]; ++i) {
-		CUnit* firstLoadedUnit = getLoadedUnit(i);
-		if (firstLoadedUnit)
-			return firstLoadedUnit;
+		loaded_unit = (CUnit*)&unitTable_0059CB58[this->loadedUnit[index].index];
+
+		if(
+			loaded_unit->sprite == NULL ||
+			(loaded_unit->mainOrderId == OrderId::Die && loaded_unit->mainOrderState == 1) ||
+			this->loadedUnit[index].unitId != loaded_unit->targetOrderSpecial
+		)
+			loaded_unit = NULL;
+
 	}
 
-	return NULL;
+	return loaded_unit;
+
 }
 
-//Logically equivalent to function @ 0x004E7110
+;
+
+//Equivalent (checked) to function @ 0x004E6C90
+CUnit* CUnit::getFirstLoadedUnit() const {
+
+	const CUnit* unitTable_0059CB58 = (CUnit*)(0x0059CB58);	//array of CUnit structures
+
+	CUnit* loaded_unit;
+	bool bStopLoop = false;
+	int space_provided = units_dat::SpaceProvided[this->id];
+
+	if(space_provided > 0) {
+
+		for(int i = 0; !bStopLoop && i < space_provided; i++) {
+
+			if( *((u16*)&this->loadedUnit[i]) != 0 ) {
+
+				loaded_unit = (CUnit*)&unitTable_0059CB58[this->loadedUnit[i].index];
+
+				if(
+					loaded_unit->sprite != NULL &&
+					(
+						loaded_unit->mainOrderId != OrderId::Die ||
+						loaded_unit->mainOrderState != 1
+					) &&
+					loaded_unit->targetOrderSpecial == this->loadedUnit[i].unitId
+				)
+					bStopLoop = true;
+
+			}
+
+		}
+
+	}
+
+	if(!bStopLoop)
+		loaded_unit = NULL;
+
+	return loaded_unit;
+
+}
+
+;
+
+//Equivalent (checked) to function @ 0x004E7110
 bool CUnit::hasLoadedUnit() const {
-	assert(this);
 
-	for (int i = 0; i < 8; ++i)
-		if (!getLoadedUnit(i))
-			return true;
+	const CUnit* unitTable_0059CB58 = (CUnit*)(0x0059CB58);	//array of CUnit structures
 
-	return false;
+	bool return_value = false;
+
+	for(int i = 0; i < 8 && !return_value; i++) {
+
+		if( *((u16*)&this->loadedUnit[i]) != 0 ) {
+
+			CUnit* loaded_unit = (CUnit*)&unitTable_0059CB58[this->loadedUnit[i].index];
+
+			if(
+				loaded_unit->sprite != NULL &&
+				(
+					loaded_unit->mainOrderId != OrderId::Die ||
+					loaded_unit->mainOrderState != 1
+				) &&
+				loaded_unit->targetOrderSpecial == this->loadedUnit[i].unitId
+			)
+				return_value = true;
+
+		}
+
+	}
+
+	return return_value;
+
 }
+
+;
+
+const u32 Func_getLoadedSpaceAmount = 0x004E7170;
+u32 CUnit::getLoadedSpaceAmount() const {
+
+	static u32 loaded_space_amount;
+
+	__asm {
+		PUSHAD
+		MOV ECX, this
+		CALL Func_getLoadedSpaceAmount
+		MOV loaded_space_amount, EAX
+		POPAD
+	}
+
+	return loaded_space_amount;
+
+}
+
+;
 
 namespace {
 typedef u32 (__stdcall *GiveUnitToPlayerFunc)(CUnit* unit, u32 playerId);
