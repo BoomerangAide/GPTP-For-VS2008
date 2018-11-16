@@ -128,6 +128,16 @@ inline bool isUnitEnemy(u8 playerId, CUnit* unit) {
   return 0 == playerAlliance[playerId].flags[unitOwner];
 }
 
+/// Returns the total amount of supplies provided by all
+/// supply-providing units/buildings for the specified
+/// player for the specified race.
+u32 getSuppliesAvailable(u8 playerId, u8 raceId);
+
+/// Returns the total amount of supplies used by all
+/// supply-using units for the specified player for 
+/// the specified race.
+u32 getSuppliesUsed(u8 playerId, u8 raceId);
+
 /// Returns the amount of remaining supply (total available - total used) for
 /// the @p playerId, using @p raceId to determine the appropriate race to use.
 /// This is affected by the "Food For Thought" cheat flag.
@@ -162,6 +172,14 @@ inline ActiveTile& getActiveTileAt(s32 x, s32 y) {
 /// Returns the elevation of the tile at (x, y). 0 for low terrain, 1 for
 /// medium, and 2 for high terrain.
 u32 getGroundHeightAtPos(s32 x, s32 y);
+
+/// Returns the value (true for set, false for cleared) of the map switch 
+/// with the corresponding number (ranging from 1 to 256)
+bool getMapSwitch(int switch_number);
+
+/// Set the value (true for set, false for cleared) of the map switch 
+/// with the corresponding number (ranging from 1 to 256)
+void setMapSwitch(int switch_number, bool value);
 
 //////////////////////////////////////////////////////////////// @}
 
