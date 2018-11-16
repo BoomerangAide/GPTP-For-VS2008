@@ -186,6 +186,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\AI\experimental\ai_harvest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AI\experimental\ai_harvest_inject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\hooks\orders\base_orders\attack_orders.cpp"
 				>
 			</File>
@@ -719,11 +727,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\hooks\game_hooks.cpp"
+					RelativePath=".\hooks\main\game_hooks.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\hooks\game_hooks_inject.cpp"
+					RelativePath=".\hooks\main\game_hooks_inject.cpp"
 					>
 				</File>
 				<File
@@ -996,6 +1004,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\AI\experimental\ai_harvest.h"
+				>
+			</File>
+			<File
 				RelativePath=".\hooks\orders\base_orders\attack_orders.h"
 				>
 			</File>	
@@ -1065,6 +1077,10 @@
 			</File>
 			<File
 				RelativePath=".\hooks\orders\enter_nydus.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hooks\utils\ExtendSightLimit.h"
 				>
 			</File>
 			<File
@@ -1307,15 +1323,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\SCBW\ExtendSightLimit.h"
-					>
-				</File>
-				<File
 					RelativePath=".\graphics\Font.h"
 					>
 				</File>
 				<File
-					RelativePath=".\hooks\game_hooks.h"
+					RelativePath=".\hooks\main\game_hooks.h"
 					>
 				</File>
 				<File
