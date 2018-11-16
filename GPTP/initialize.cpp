@@ -3,7 +3,7 @@
 #include "hook_tools.h"
 
 //Hook header files
-#include "hooks/game_hooks.h"
+#include "hooks/main/game_hooks.h"
 #include "graphics/draw_hook.h"
 
 #include "hooks/apply_upgrade_flags.h"
@@ -53,6 +53,7 @@
 #include "hooks/create_init_units.h"
 #include "hooks/orders/base_orders/die_order.h"
 #include "hooks/orders/enter_nydus.h"
+#include "hooks/utils/ExtendSightLimit.h"
 #include "hooks/orders/spells/feedback_spell.h"
 #include "hooks/give_unit.h"
 #include "hooks/orders/spells/hallucination_spell.h"
@@ -83,6 +84,7 @@
 #include "hooks/weapons/wpnspellhit.h"
 
 //#include "AI/spellcasting.h"
+//#include "AI/experimental/ai_harvest.h"
 
 /// This function is called when the plugin is loaded into StarCraft.
 /// You can enable/disable each group of hooks by commenting them.
@@ -152,6 +154,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectUtilsHooks();
 	hooks::injectMindControlSpellHook();
 	hooks::injectCMDRECV_BuildHooks();
+	hooks::injectExtendSightLimitMod();
 
 	hooks::injectApplyUpgradeFlags();
 	hooks::injectAttackPriorityHooks();
@@ -184,6 +187,7 @@ BOOL WINAPI Plugin::InitializePlugin(IMPQDraftServer *lpMPQDraftServer) {
 	hooks::injectUnitTooltipHook();
 
 	//hooks::injectSpellcasterAI();
+	//hooks::injectAI_HarvestHooks();
 
 	return TRUE;
 }
