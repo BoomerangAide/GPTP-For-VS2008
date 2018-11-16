@@ -1,8 +1,5 @@
 #include "load_unload_orders.h"
 #include <SCBW/api.h>
-#include <logger.h>
-
-#define WRITE_TO_LOG(x)GPTP::logger<<x<<std::endl
 
 //helper functions def
 
@@ -340,8 +337,6 @@ namespace hooks {
 	//and nothing called this function)
 	void orders_Pickup4_0(CUnit* unit) {
 
-		WRITE_TO_LOG("orders_Pickup4_0 START");
-
 		if(unit->playerId == 11) {
 
 			unit->userActionFlags |= 1;
@@ -437,8 +432,6 @@ namespace hooks {
 
 		}
 
-		WRITE_TO_LOG("orders_Pickup4_0 END");
-
 	}
 
 	;
@@ -506,8 +499,7 @@ namespace hooks {
 
 	void orders_Unload(CUnit* unit) {
 
-		static CUnit* unitTable_0059CB58 = (CUnit*)(0x0059CB58);
-		static CUnit* unitTable_0059CB64 = (CUnit*)(0x0059CB64);
+		static CUnit* unitTable_0059CB58 = (CUnit*)(0x0059CB58);	//array of CUnit structures
 
 		if(
 			unit->status & UnitStatus::GroundedBuilding ||
@@ -520,7 +512,7 @@ namespace hooks {
 			bool bEndLoop = false;
 			bool bFoundUnitToUnload = false;
 
-			u32* loadedUnitOffset;
+			u16* loadedUnitOffset;
 
 			bool jump_to_E8191 = false;
 			bool jump_to_E8195 = false;
@@ -528,10 +520,10 @@ namespace hooks {
 
 			while(!bEndLoop) {
 
-				loadedUnitOffset = (u32*)&unit->loadedUnit[counter];
+				loadedUnitOffset = (u16*)&unit->loadedUnit[counter];
 
 				if(	*loadedUnitOffset != 0  &&
-					unitTable_0059CB64[unit->loadedUnit[counter].index].link.prev != NULL
+					unitTable_0059CB58[unit->loadedUnit[counter].index].sprite != NULL
 				)
 				{
 
