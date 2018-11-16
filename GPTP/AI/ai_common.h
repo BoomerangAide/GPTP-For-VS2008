@@ -1,7 +1,6 @@
 //Common functions used by the AI.
 #pragma once
 #include "../SCBW/UnitFinder.h"
-#include "../SCBW/structures/CUnit.h"
 #include "../SCBW/api.h"
 
 namespace AI {
