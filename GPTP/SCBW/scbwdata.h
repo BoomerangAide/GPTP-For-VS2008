@@ -71,9 +71,9 @@ SCBW_DATA(const char*,	  StringEmpty,			0x00501B7D);
 
 /// Units that are selected by the current player (or the player viewing the replay).
 struct UnitsSel { CUnit* unit[SELECTION_ARRAY_LENGTH]; };
-SCBW_DATA(const UnitsSel*, clientSelectionGroup, 0x00597208);
-SCBW_DATA(CUnit*, clientSelectionGroupEnd, 0x00597238);
-SCBW_DATA(const u8*,    clientSelectionCount,   0x0059723D);
+SCBW_DATA(UnitsSel*, clientSelectionGroup, 0x00597208);
+SCBW_DATA(CUnit**, clientSelectionGroupEnd, 0x00597238);
+SCBW_DATA(u8*,    clientSelectionCount,   0x0059723D);
 
 /// Screen position relative to the map
 SCBW_DATA(s32*,         screenX,                0x00628448);
@@ -120,6 +120,11 @@ SCBW_DATA(const s32*,     LOCAL_NATION_ID,      0x00512684);  //AKA g_LocalNatio
 SCBW_DATA(const s32*,     LOCAL_HUMAN_ID,       0x00512688);  //AKA g_LocalHumanID; Invalid in replay games.
 SCBW_DATA(const u8*,      CURRENT_TILESET,      0x00596828);  //Tileset of current map. Compare with TilesetType::Enum
 ////possible values were 0057F1DC and [00596828]
+
+// Array of 8 integers of 32 bits, thus 256 bits, one per switch
+// Use scbw::getMapSwitch() and scbw::setMapSwitch() to manipulate
+// a switch properly
+SCBW_DATA(u32*,			  switchStatesBW,		0x0058DC40);
 
 // Added from BWAPI Offsets.h, but made const since it would not be safe to modify those
 SCBW_DATA(const char*,	  CurrentMapFileName,	0x0057FD3C);
@@ -252,7 +257,7 @@ SCBW_DATA(u16*, GasCostFactor,      upgradesDat[3].address);	//006557C0
 SCBW_DATA(u16*, TimeCostBase,       upgradesDat[4].address);	//00655B80
 SCBW_DATA(u16*, TimeCostFactor,     upgradesDat[5].address);	//00655940
 //SCBW_DATA(u16*, ???,              upgradesDat[6].address);	//006558C0	//Restriction Flags according to EUDDB
-//SCBW_DATA(u16*, ???,              upgradesDat[7].address);	//00655AC0	//"Icon, cmdicons.grp frame" according to EUDDB
+SCBW_DATA(u16*, IconId,             upgradesDat[7].address);	//00655AC0	//"Icon, cmdicons.grp frame" according to EUDDB
 SCBW_DATA(u16*, Label,              upgradesDat[8].address);	//00655A40
 SCBW_DATA(u8*,  Race,               upgradesDat[9].address);	//00655BFC
 SCBW_DATA(u8*,  MaxRepeats,         upgradesDat[10].address);	//00655700
@@ -268,7 +273,7 @@ SCBW_DATA(u16*, TimeCost,           techdataDat[2].address);	//006563D8
 SCBW_DATA(u16*, EnergyCost,         techdataDat[3].address);	//00656380
 //SCBW_DATA(u16*, ???,				techdataDat[4].address);	//00656198
 //SCBW_DATA(u16*, ???,				techdataDat[5].address);	//006562F8	//Restriction Flags according to EUDDB
-//SCBW_DATA(u16*, ???,				techdataDat[6].address);	//00656430	//"Icon, cmdicons.grp frame" according to EUDDB
+SCBW_DATA(u16*, IconId,				techdataDat[6].address);	//00656430	//"Icon, cmdicons.grp frame" according to EUDDB
 SCBW_DATA(u16*, Label,              techdataDat[7].address);	//006562A0
 //SCBW_DATA(u8*, ???,				techdataDat[8].address);	//00656488	//Race according to EUDDB
 //SCBW_DATA(u8*, ???,				techdataDat[9].address);	//00656350	//"Researched" according to EUDDB
@@ -290,7 +295,7 @@ SCBW_DATA(Bool8*,	CanBeInterrupted,	ordersDat[6].address);	//00665040
 //SCBW_DATA(u8*,	???,				ordersDat[9].address);	//006651C0
 SCBW_DATA(u8*,		CanBeObstructed,	ordersDat[10].address);	//006654C0 //"Can Be Obstructed?" according to EUDDB
 //SCBW_DATA(u8*,	???,				ordersDat[11].address);	//00664C80
-//SCBW_DATA(u8*,	???,				ordersDat[12].address);	//00664BC0 ////May be "Order requires moving"
+//SCBW_DATA(u8*,	???,				ordersDat[12].address);	//00664BC0 //May be "Order requires moving"
 SCBW_DATA(u8*,		OrderWeaponId,		ordersDat[13].address);	//00665880
 SCBW_DATA(u8*,		TechUsed,           ordersDat[14].address);	//00664E00
 SCBW_DATA(u8*,		OrderIscriptAnim,	ordersDat[15].address);	//00664D40 //Animation (IscriptAnimation) according to EUDDB
@@ -417,7 +422,7 @@ struct PlayerFlags {
 SCBW_DATA(PlayerFlags<u8>*, playerAlliance,     0x0058D634);  //See scbw::isAlliedTo()
 SCBW_DATA(PlayerFlags<u32>*, playerVision,      0x0057F1EC);
 
-SCBW_DATA(CUnit* const*,  activePortraitUnit,   0x00597248);
+SCBW_DATA(CUnit**,  activePortraitUnit,   0x00597248);
 
 SCBW_DATA(AI_Main*,       AIScriptController,   0x0068FEE8);
 SCBW_DATA(AiCaptain* const*, AiRegionCaptains,  0x0069A604);
