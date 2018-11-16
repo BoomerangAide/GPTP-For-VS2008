@@ -57,11 +57,11 @@ struct CUnit: public CUnitLayout {
   
   /// Retrieves the in-game name of this unit. In UMS maps, this returns custom
   /// names (if they exist).
-  const char* getName() const;
+  char* getName() const;
 
   /// Retrieves the in-game name of the unit with @p unitId. In UMS maps, this
   /// returns custom unit names (if they exist).
-  static const char* getName(u16 unitId);
+  static char* getName(u16 unitId);
 
   /// Returns the race of the current unit.
   /// @return   RaceId::Terran, Zerg, Protoss, or Neutral.
@@ -78,7 +78,7 @@ struct CUnit: public CUnitLayout {
   /// Returns the sight range of this unit (with upgrades).
   /// If @p isForSpellCasting is true, also factors in status effects.
   u32 getSightRange(bool isForSpellCasting = false) const;
-  
+
   ///Return true if:
   /// * THE GATHERING cheat is enabled or
   /// * unit has at least @p energy available.
@@ -177,7 +177,7 @@ struct CUnit: public CUnitLayout {
 
   /// Removes the Acid Spores effect from the unit.
   void removeAcidSpores();
-  
+
   /// Spend an amount of energy, if no THE GATHERING cheat.
   void spendUnitEnergy(u32 energy);
   
@@ -206,7 +206,7 @@ struct CUnit: public CUnitLayout {
 
   /// Issues a new order to the unit.
   void order(u8 orderId, u16 x, u16 y, CUnit* target, u16 targetUnitId, bool stopPreviousOrders);
-    
+
   /// Probably add the @p order to the orders queue
   void performAnotherOrder(u8 orderId, s16 x, s16 y, CUnit* target, u16 targetUnitId, u32 unk = NULL);
 
@@ -338,6 +338,10 @@ struct CUnit: public CUnitLayout {
 
   /// Checks if this unit has other units loaded inside.
   bool hasLoadedUnit() const;
+
+  /// Return the amount of space currently occupied by the units inside.
+  /// Properly taking in account their size (1,2 or 4).
+  u32 getLoadedSpaceAmount() const;
 
   /// Transfers ownership of this unit to @p playerId. This function is
   /// identical to Mind Control and the "Give Units To Player" trigger action.
