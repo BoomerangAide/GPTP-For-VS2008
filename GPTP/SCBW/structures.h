@@ -270,6 +270,13 @@ struct UnitFinderData {
 C_ASSERT(sizeof(UnitFinderData) == 8);
 //static_assert(sizeof(UnitFinderData) == 8, "The size of the UnitFinderData structure is invalid");
 
+struct UnknownUserStruct {
+/*0x00*/ u32	unkUser_00;
+/*0x04*/ u16	iconId_04;
+/*0x06*/ u16	unknown_06;
+/*0x08*/ u16	id_08;
+};
+
 //BinDlg is defined in https://code.google.com/p/vgce/source/browse/trunk/docs/Blizzard/Starcraft/BIN%20FORMAT.txt
 //as Dialog Structure
 //That structure is variable depending on the content
@@ -286,11 +293,12 @@ struct BinDlg {
 /*0x24*/  u16     graphic;
 
 union {
-/*0x26*/  u32     *user;
-/*0x26*/  CUnit	  *unitUser;
-/*0x26*/  BinDlg  *dlgUser;
-/*0x26*/  BUTTON  *buttonUser;
-/*0x26*/  u32     nonUserValue;
+/*0x26*/  u32*					user;
+/*0x26*/  CUnit*				unitUser;
+/*0x26*/  BinDlg*				dlgUser;
+/*0x26*/  BUTTON*				buttonUser;
+/*0x26*/  u32					nonUserValue;
+/*0x26*/  UnknownUserStruct*	statUser;
 };
 
 /*0x2A*/  void    *fxnInteract;
@@ -492,24 +500,31 @@ struct _uavail {
 };
 
 class StringTbl {
-  public:
+
+public:
+
     /// Returns the number of string entries in the TBL file.
-    u16 getStringCount() const { return *buffer; }
+	u16 getStringCount() const { return *buffer; }
 
     /// Returns the string at @p index in the TBL file.
     /// If the @p index is 0, returns NULL.
     /// If the @p index is out of bounds, returns an empty string.
-    const char* getString(u16 index) const {
-      //Based on function @ 0x004C36F0
-      if (index == 0) return NULL;
-      else if (index <= getStringCount())
-        return (const char*)(buffer) + buffer[index];
-      else
-		  return (const char*)0x00501B7D;	//StringEmpty in scbwdata.h, SC default empty string
+	const char* getString(u16 index) const {
+
+		//Based on function @ 0x004C36F0
+
+		if (index == 0)
+			return NULL;
+		else 
+		if (index <= getStringCount())
+			return (const char*)(buffer) + buffer[index];
+		else
+			return (const char*)0x00501B7D;	//StringEmpty in scbwdata.h, SC default empty string
     }
 
-  private:
-    u16* buffer;
+private:
+	u16* buffer;
+
 };
 
 #pragma pack()
