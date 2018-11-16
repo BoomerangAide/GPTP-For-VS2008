@@ -23,25 +23,24 @@ void loadUnitProc(CUnit* unit, CUnit* unitToLoad) {
 	u32 loaded_index; 
 	int counter = 0;
 
-	static const CUnit* unitTable_0059CB58 = (CUnit*) 0x0059CB58;
-	static const CUnit* unitTable_0059CB64 = (CUnit*) 0x0059CB64;
+	static const CUnit* unitTable_0059CB58 = (CUnit*) 0x0059CB58;	//array of CUnit structures
 	static u32* u32_0x006BEE84 = (u32*)(0x006BEE84);
 	static u32* u32_0x006BEE8C = (u32*)(0x006BEE8C);
 
 	if(units_dat::SpaceProvided[unit->id] != 0) {
 
 		bool bEndLoop = false;
-		u32* loadedUnitOffset;
+		u16* loadedUnitOffset;
 
 		while(!bEndLoop) {
 
-			loadedUnitOffset = (u32*)&unit->loadedUnit[counter];
+			loadedUnitOffset = (u16*)&unit->loadedUnit[counter];
 
 			if(*loadedUnitOffset == 0)
 				bEndLoop = true;
 			else {
 
-				if(unitTable_0059CB64[unit->loadedUnit[counter].index].link.prev == NULL)
+				if(unitTable_0059CB58[unit->loadedUnit[counter].index].sprite == NULL)
 					bEndLoop = true;
 				else {
 
