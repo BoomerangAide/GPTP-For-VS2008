@@ -172,7 +172,7 @@ BUTTON_SET* getCustomButtonSet() {
 
 	//Use static variables to avoid memory allocation trouble
 	static BUTTON_SET customButtonSet;
-	static BUTTON customButtonsArray[50]; //
+	static BUTTON customButtonsArray[50]; //more than 9 buttons if 1 button can replace another (siege mode/tank mode,burrow/unburrow...)
 
 	//since it's a copy of the marine set, it would have the same amount of buttons
 	customButtonSet.buttonsInSet = buttonSetTable[UnitId::TerranMarine].buttonsInSet;
@@ -759,7 +759,7 @@ void updateButtonSet_Sub4591D0() {
 							u16 not_allocated_2;	//[EBP-0A]	[12]
 							u32 buttonState;		//[EBP-08]	[14]
 							BUTTON_SET* buttonset;	//[EBP-04]	[18]
-						} stack_placeholder;					
+						} stack_placeholder;
 
 						current_dialog->graphic = current_button->iconID;
 
@@ -767,6 +767,7 @@ void updateButtonSet_Sub4591D0() {
 							current_dialog->flags |= BinDlgFlags::Unknown0;
 							updateDialog(current_dialog);
 						}
+
 
 						stack_placeholder.not_allocated	= 0;
 						stack_placeholder.not_allocated_2 = 0;
@@ -874,7 +875,7 @@ void updateButtonSet_Sub4591D0() {
 namespace {
 
 	/**** Definitions of helper functions. Do NOT modify anything below! ****/
-	
+
 	const u32 Func_registerUserDialogAction = 0x00418100;
 	void registerUserDialogAction(BinDlg* dialog,u32 array_of_fxnInteractFunc,u32 sizeOfArray) {
 
@@ -889,7 +890,7 @@ namespace {
 
 	}
 
-	;	
+	;
 
 	const u32 Func_DisableDialog = 0x00418640;
 	void disableDialog(BinDlg* dialog) {
@@ -994,7 +995,7 @@ namespace {
 	}
 
 	;
-	
+
 	const u32 Func_BINDLG_BlitSurface = 0x004C35F0;
 	void BINDLG_BlitSurface(BinDlg* dialog) {
 		__asm {
@@ -1005,7 +1006,7 @@ namespace {
 		}
 	}
 
-	;	
+	;
 
 	//dev info: in this context this call 4598D0 statbtn_Btn_Interact
 	u32 fxnInteract(BinDlg* dialog, u32 data_struct_offset) {
