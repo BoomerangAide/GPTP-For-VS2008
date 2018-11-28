@@ -3,10 +3,8 @@
 #include "game_hooks.h"
 #include <graphics/graphics.h>
 #include <SCBW/api.h>
-#include <SCBW/ExtendSightLimit.h>
-#include "psi_field.h"
+#include "../psi_field.h"
 #include <cstdio>
-
 
 namespace hooks {
 
