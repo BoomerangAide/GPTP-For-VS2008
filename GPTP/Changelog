@@ -1,3 +1,18 @@
+Version 4.106f
+
+Fix  stuff broken in previous partial patch thanks to
+another computer not affected by Github destructive
+changes.
+This will still most likely be the last update here,
+as working with github this way is way too much a chore,
+and it's likely to get more broken in the future anyway.
+But the point is: logically, the features announced in
+4.106 should be working at the time I Commit this.
+If they don't, I should at least be able to fix them
+here.
+
+---------------------------------------
+
 GITHUB IS DESTROYED, ALL FEATURES ARE BROKEN TO THE POINT UPDATE IS
 NO LONGER POSSIBLE PROPERLY.
 I WILL POST AN UPDATE HERE WHEN I WILL HAVE FOUND A NEW PLACE.
