@@ -8,7 +8,7 @@ namespace {
 void refundBuildingCost(u16 unitId, u8 playerId);					//2CE70
 void function_00433FE0(CUnit* unit);								//33FE0
 bool isValidMorph(u16 buildingId);									//5CC60
-void updateNewUnitVision(CUnit* unit, int x, int y);				//5CE90
+void updateNewUnitVision(u16 unitId, int x, int y);				//5CE90
 void zergPlaceBuildingCntd(CUnit* unit);							//5D410
 void function_0047D770(CUnit* unit);								//7D770
 void function_0047DE40(CSprite* sprite, u32 unitId, int x, int y);	//7DE40
@@ -205,7 +205,7 @@ namespace hooks {
 					current_image = current_image->link.next;
 				}
 
-				updateNewUnitVision(building, building->sprite->position.x, building->sprite->position.y);
+				updateNewUnitVision(buildingId, building->sprite->position.x, building->sprite->position.y);
 
 			}
 
@@ -441,11 +441,11 @@ bool isValidMorph(u16 buildingId) {
 ;
 
 const u32 Func_updateNewUnitVision = 0x0045CE90;
-void updateNewUnitVision(CUnit* unit, int x, int y) {
+void updateNewUnitVision(u16 unitId, int x, int y) {
 
 	__asm {
 		PUSHAD
-		MOV ECX, unit
+		MOVZX ECX, unitId
 		PUSH y
 		PUSH x
 		CALL Func_updateNewUnitVision
