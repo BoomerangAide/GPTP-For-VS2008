@@ -1,3 +1,8 @@
+Version 4.106f-c
+
+Fix an error spotted in Issue 38
+https://github.com/BoomerangAide/GPTP-For-VS2008/issues/38
+
 Version 4.106f-b
 
 Fix an error spotted in Issue 37
