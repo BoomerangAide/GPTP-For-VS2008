@@ -554,7 +554,7 @@ void incrementUnitScoresEx(CUnit* building, s32 unk1, s32 unk2) {
 	__asm {
 		PUSHAD
 		MOV EDI, building
-		MOV unk1, ECX
+		MOV ECX, unk1
 		PUSH unk2
 		CALL Func_incrementUnitScoresEx
 		POPAD
